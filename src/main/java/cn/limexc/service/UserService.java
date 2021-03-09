@@ -1,6 +1,6 @@
 package cn.limexc.service;
 
-import cn.limexc.entity.User;
+import cn.limexc.model.User;
 
 import java.util.List;
 

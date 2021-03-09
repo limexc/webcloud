@@ -2,19 +2,22 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       https://www.springframework.org/schema/context/spring-context.xsd">
 
+    <!--声明service的注解 @Service所在包的位置-->
     <context:component-scan base-package="cn.limexc.service"/>
 
+    <!--声明数据源DataSource，作用是使用druid连接数据库-->
     <context:property-placeholder location="classpath:jdbc.properties"/>
     <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
           init-method="init" destroy-method="close">
         <property name="url" value="${jdbc.url}"/>
         <property name="username" value="${jdbc.username}"/>
         <property name="password" value="${jdbc.password}"/>
-        <property name="driver" value="${jdbc.driver}"/>
         <property name="maxActive" value="${jdbc.maxActive}"/>
-
     </bean>
 
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
@@ -22,9 +25,12 @@
         <property name="configLocation" value="classpath:mybatis.xml"/>
     </bean>
 
+    <!--声明mybatis扫描器，创建dao对象-->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
         <property name="basePackage" value="cn.limexc.dao"/>
     </bean>
+
+    <!--事务配置：注解的配置 或 aspectJ的配置-->
 
 </beans>

@@ -2,14 +2,30 @@
 <html>
 <head>
     <title>Test</title>
-    <script src="${pageContext.request.contextPath}/static/js/jquery/jquery-3.6.0.js"></script>
+    <script type="application/javascript" src="${pageContext.request.contextPath}/static/js/jquery/jquery-3.6.0.js"></script>
     <script type="application/javascript">
+
+        $(function (){
+            userinfo();
+        })
 
         function userinfo(){
             $.ajax({
-                url:"user/listuser",
-                type:"post",
+                url:"${pageContext.request.contextPath}/user/listUser",
+                //type:"post",
                 dataType:"json",
+                success:function (data){
+                    //清除数据
+                    $("#userbody").html("");
+                    //添加数据
+                    $.each(data,function (i,n){
+                        $("#userbody").append("<tr>")
+                        .append("<td>"+n.id+"</td>")
+                        .append("<td>"+n.name+"</td>")
+                        .append("<td>"+n.email+"</td>")
+                        .append("</tr>")
+                    })
+                }
 
             })
         }
@@ -29,6 +45,7 @@
 
             </tbody>
         </table>
+        <input type="button" value="查询" id="btnLoader">
     </div>
 
 </body>

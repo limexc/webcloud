@@ -1,4 +1,4 @@
-package cn.limexc.entity;
+package cn.limexc.model;
 
 import java.sql.Date;
 

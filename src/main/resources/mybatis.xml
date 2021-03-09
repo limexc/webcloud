@@ -4,5 +4,12 @@
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
 
+    <typeAliases>
+        <package name="cn.limexc.model"/>
+    </typeAliases>
+
+    <mappers>
+        <package name="cn.limexc.dao"/>
+    </mappers>
 
 </configuration>

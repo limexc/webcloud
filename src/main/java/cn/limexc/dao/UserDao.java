@@ -1,6 +1,6 @@
 package cn.limexc.dao;
 
-import cn.limexc.entity.User;
+import cn.limexc.model.User;
 
 import java.util.List;
 

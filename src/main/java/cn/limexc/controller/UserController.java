@@ -1,23 +1,33 @@
 package cn.limexc.controller;
 
 
-import cn.limexc.entity.User;
+import cn.limexc.model.User;
 import cn.limexc.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 @Controller
-@RequestMapping("/user")
+@RequestMapping(value = "/user")
 public class UserController {
+
+    @Resource
     private UserService userService;
 
-    @RequestMapping("listuser")
+    @RequestMapping(value = "/listUser")
     @ResponseBody
     public List<User> listUser(){
         List<User> users = userService.listUser();
         return users;
+    }
+
+    @RequestMapping(value = "/test",method = RequestMethod.GET)
+    public void test(){
+        System.out.println(new Date()+"访问到了");
     }
 }
