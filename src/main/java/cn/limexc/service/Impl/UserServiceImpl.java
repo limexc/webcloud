@@ -19,4 +19,9 @@ public class UserServiceImpl implements UserService {
     public List<User> listUser() {
         return userDao.selectUserList();
     }
+
+    @Override
+    public User login() {
+        return userDao.selectForNameAndPasswd();
+    }
 }
