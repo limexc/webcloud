@@ -1,0 +1,74 @@
+.login {
+    background-color: #2b73af;
+    /**透明度**/
+    opacity: 0.8;
+    width: 260px;
+    height: 300px;
+    border-radius: 10px;
+    margin: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+.login > h1{
+    position: relative;
+    top: 5px;
+    text-align: center;
+    font: bold 28px "微软雅黑";
+    color: #f2e7e5;
+}
+.login_main {
+    position: relative;
+    top: 10px;
+    width: 260px;
+    height: 240px;
+    background-color: #8abcd1;
+}
+.login_tips {
+    font: 20px "幼圆";
+
+}
+
+.login_input_text {
+    /**margin-left:10px;**/
+    width: 260px;
+    height: 45px;
+    /** 取消外边框**/
+    outline-style: none ;
+    padding: 10px;
+    border: 0px;
+
+}
+
+.login_btn {
+    position:relative;
+    top: 20px;
+    /**取消外边框**/
+    outline-style: none ;
+    border: 0px;
+    width: 260px;
+    height: 40px;
+    font: 24px "微软雅黑";
+}
+
+.other_tips {
+    position:relative;
+    top: 10px;
+    left: 130px;
+    font-size: 14px;
+    /**去掉文本下划线**/
+    text-decoration: none;
+    text-align: right;
+}
+#background_wrap{
+    z-index: -1;
+    position: fixed;
+    top: 0;left: 0;
+    height: 100%;width: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-image:url(https://img.limexc.cn/images/20210310231616.png);
+}

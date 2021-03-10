@@ -2,29 +2,46 @@
 <html>
 <head>
     <title>用户登录</title>
-    <link type="text/css" href="${pageContext.request.contextPath}/static/css/login.css">
+	<!---->
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/login.css">
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/default.css" />
     <script type="application/javascript" src="${pageContext.request.contextPath}/static/js/jquery-3.6.0.js"></script>
+
     <script type="application/javascript" >
 
+
+
     </script>
+	<!--html 测试用-->
+	<link rel="stylesheet" type="text/css" href="static/css/login.css">
+	<link rel="stylesheet" type="text/css" href="static/css/default.css" />
+	<script type="application/javascript" src="static/js/jquery-3.6.0.js"></script>
+	
 </head>
 <body>
-    <div style="">
-		<div>
-			<h1>登录</h1>
+
+	<!--登陆对话框窗体-->
+    <div class="login">
+        <h1>WEB CLOUD</h1>
+		<div class="login_main">
 			<form name="loginform" method="post" action="${pageContext.request.contextPath}/login">
-				<span>账号</span><br />
-                <input name="account" placeholder="请输入邮箱或用户名" id="accountText" type="text"/>
+                <span class="login_tips">账号</span><br />
+                <input class="login_input_text" name="account" placeholder="请输入邮箱或用户名" id="accountText" type="text"/>
                 <br />
-                <span>密码</span><br />
-				<input name="password" placeholder="密码" id="passwordText" type="password"/>
+                <span class="login_tips">密码</span><br />
+				<input class="login_input_text" name="password" placeholder="密码" id="passwordText" type="password"/>
                 <br />
-                <span><a href="#">忘记密码</a></span><br />
-                <input type="submit" value="登录" />
+                <span class="other_tips"><a id="refind" href="#">忘记密码</a>或<a id="signup" href="#">注册账号</a></span><br />
+                <input class="login_btn" type="submit" value="登录" />
 			</form>
 
 		</div>
     </div>
+
+
+
+
+    <div id="background_wrap"></div>
 
 </body>
 </html>
