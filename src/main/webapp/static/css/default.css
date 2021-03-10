@@ -1,0 +1,27 @@
+/*样式初始化*/
+* {
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    text-decoration: none;
+    color:#3170a7 ;
+}
+
+img {
+    border: 0;
+    vertical-align: middle;
+}
+
+ul li {
+    list-style: none;
+}
+
+body,h1,h2,h3,h4,h5,h6 {
+    font: 12px 宋体, Times New Roman;
+}
+
+body {
+    background: rgb(20, 33, 42)
+}
