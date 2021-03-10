@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!--<%@ page contentType="text/html;charset=UTF-8" language="java" %>-->
 <html>
 <head>
     <title>Test</title>
@@ -21,7 +21,7 @@
                     $.each(data,function (i,n){
                         $("#userbody").append("<tr>")
                         .append("<td>"+n.id+"</td>")
-                        .append("<td>"+n.name+"</td>")
+                        .append("<td>"+n.username+"</td>")
                         .append("<td>"+n.email+"</td>")
                         .append("</tr>")
                     })

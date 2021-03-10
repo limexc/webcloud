@@ -34,6 +34,9 @@ public class MyHandlerTest implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        if (request.getSession()!=null){
+            return true;
+        }
         return false;
     }
 
