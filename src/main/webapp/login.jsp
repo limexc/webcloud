@@ -3,7 +3,7 @@
 <head>
     <title>用户登录</title>
     <link type="text/css" href="${pageContext.request.contextPath}/static/css/login.css">
-    <script type="application/javascript" src="${pageContext.request.contextPath}/static/js/jquery/jquery-3.6.0.js"></script>
+    <script type="application/javascript" src="${pageContext.request.contextPath}/static/js/jquery-3.6.0.js"></script>
     <script type="application/javascript" >
 
     </script>

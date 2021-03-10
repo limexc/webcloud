@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Test</title>
-    <script type="application/javascript" src="${pageContext.request.contextPath}/static/js/jquery/jquery-3.6.0.js"></script>
+    <script type="application/javascript" src="${pageContext.request.contextPath}/static/js/jquery-3.6.0.js"></script>
     <script type="application/javascript">
 
         $(function (){
