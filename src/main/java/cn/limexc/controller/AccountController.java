@@ -2,6 +2,8 @@ package cn.limexc.controller;
 
 import cn.limexc.model.User;
 import cn.limexc.service.UserService;
+import cn.limexc.util.MailUtils;
+import cn.limexc.util.TimeUtils;
 import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +27,10 @@ public class AccountController {
         String username;
         String password;
         ModelAndView mv = new ModelAndView();
+
+        //总是傻了吧唧的，别忘了，暂存。
+        //req.setCharacterEncoding("UTF-8");
+        //resp.setContentType("text/html;charset=UTF-8");
 
         username = request.getParameter("account");
         password = request.getParameter("password");
@@ -53,6 +59,31 @@ public class AccountController {
 
         return mv;
 
+    }
+
+    /**
+     * 还没测试，准备睡觉了功能还没搞，大体就这样发送
+     * 明天再改改，不应该这样写
+     * @param req
+     */
+    @RequestMapping(value = "/sendmail")
+    public void sendMail(HttpServletRequest req){
+        String email = req.getParameter("email");
+
+        System.out.println("获取到用户输入的邮箱： "+email);
+
+        StringBuffer text=new StringBuffer("<h1>来自CloudWeb的验证码</h1>");
+        text.append("<h3>用户："+email+" 您好</h3>");
+        text.append("本次的验证码为");
+
+
+        text.append("<p>如果您没有在注册账号或更改您的账号信息，请忽略此电子邮件。</p></br>");
+        text.append("<p>不要把链接给任何人。</p></br>" +
+                "<p>此邮件由系统自动发送，请勿回复此邮件。</p></br></br>" +
+                "<p>咸闲贤鱼</p></br>" +
+                new TimeUtils().getForMatTime());
+        MailUtils mail = new MailUtils(email,"验证码",text.toString());
+        mail.sendMail();
     }
 
 }

@@ -43,7 +43,7 @@
     display: inline-block;
     left: 100px;
     height: 40px;
-    width: 200px;
+    width: 170px;
     top: -1px;
 }
 
@@ -52,7 +52,7 @@
     display: inline-block;
     left: 100px;
     height: 40px;
-    width: 100px;
+    width: 130px;
     outline-style: none;
     padding: 10px;
     border: 0px;
@@ -61,11 +61,15 @@
     height: 20px;
     width: 20px;
     margin: 5px 0px 5px 0px;
-    display: inline;
+    display: inline-block;
+    vertical-align:middle;
 }
 #ag_text{
     display: inline-block;
-    margin-left: 0px;
+    height: 20px;
+    margin-top: 3px;
+    margin-left: 100px;
+    font: 16px "微软雅黑";
 }
 .reg_tips{
     /** 隐藏元素，但仍然占用空间
