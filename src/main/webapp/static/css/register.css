@@ -1,0 +1,95 @@
+#reg_main {
+    height: 450px;
+    width: 500px;
+    background-color: #3170a7;
+    opacity: 0.8;
+    margin: auto;
+    position: relative;
+    top: 50px;
+    border-radius: 30px;
+}
+#reg_main > h1{
+    position: relative;
+    text-align: center;
+    line-height: 0px;
+    display: inline-block;
+    left: 150px;
+    top: 15px;
+    font: bold 32px "微软雅黑";
+}
+#reg_main > a{
+    position: relative;
+    text-align: left;
+    top: 15px;
+    font: 32px "微软雅黑";
+    color: rebeccapurple;
+}
+#reg_form_div{
+    position: relative;
+    top: 30px;
+}
+
+.reg_input {
+    position: relative;
+    display: block;
+    left: 100px;
+    height: 40px;
+    width: 300px;
+    outline-style: none ;
+    padding: 10px;
+    border: 0px;
+}
+#reg_ve {
+    display: inline-block;
+    left: 100px;
+    height: 40px;
+    width: 200px;
+    top: -1px;
+}
+
+#sub_ve {
+    position: relative;
+    display: inline-block;
+    left: 100px;
+    height: 40px;
+    width: 100px;
+    outline-style: none;
+    padding: 10px;
+    border: 0px;
+}
+#ck_ag{
+    height: 20px;
+    width: 20px;
+    margin: 5px 0px 5px 0px;
+    display: inline;
+}
+#ag_text{
+    display: inline-block;
+    margin-left: 0px;
+}
+.reg_tips{
+    /** 隐藏元素，但仍然占用空间
+    visibility: hidden;
+    visible:显示元素
+    **/
+    /**
+    元素将被隐藏,且不占用位置
+    display:none;
+    **/
+    position: relative;
+    left: 100px;
+    color: red;
+
+}
+
+
+#background_wrap{
+    z-index: -1;
+    position: fixed;
+    top: 0;left: 0;
+    height: 100%;width: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-image:url(https://img.limexc.cn/images/20210310231616.png);
+}
