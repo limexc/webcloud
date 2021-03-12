@@ -25,8 +25,8 @@
         <h1>WEB CLOUD</h1>
 		<div class="login_main">
 			<form name="loginform" method="post" action="${pageContext.request.contextPath}/login">
-                <span class="login_tips">账号</span><br />
-                <input class="login_input_text" name="account" placeholder="请输入邮箱或用户名" id="accountText" type="text"/>
+                <span class="login_tips">邮箱</span><br />
+                <input class="login_input_text" name="account" placeholder="邮箱" id="accountText" type="text"/>
                 <br />
                 <span class="login_tips">密码</span><br />
 				<input class="login_input_text" name="password" placeholder="密码" id="passwordText" type="password"/>

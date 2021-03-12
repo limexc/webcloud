@@ -1,7 +1,10 @@
 package cn.limexc.model;
 
+import org.springframework.stereotype.Component;
+
 import java.sql.Date;
 
+@Component
 public class User {
     private Integer id;
     private Integer gid;
