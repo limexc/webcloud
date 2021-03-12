@@ -14,13 +14,15 @@ window.onload = function() {
 		//单点击后，将当前选中标签属性置为disable
 		console.log("准备置为disable");
 		$(this).attr("disabled", true);
-		//弹出提示框
-		alert("验证码已发送至邮箱，若长时间未收到验证码请查看垃圾邮件");
-		//将响应交给后台servlet
+
 		$.post("http://localhost:8080/CloudWeb/sendmail",{
 			email:InputEmail
 		});
-		console.log("已转发至servlet")
+		console.log("请求已发送")
+		//弹出提示框
+		alert("验证码已发送至邮箱，若长时间未收到验证码请查看垃圾邮件");
+		//将响应交给后台servlet
+		
 		//页面计时
 		console.log("开始倒计时");
 		var timing = setInterval(function() {
