@@ -1,0 +1,51 @@
+#fd_div_main{
+    position: absolute;
+    border-radius: 15px;
+    opacity: 70%;
+    height: 400px;
+    width: 500px;
+    background-color: #1E88C7;
+    margin: auto;
+    top: -100px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+h1{
+    font-size: 36px;
+    font-family: 'Noto Sans SC', sans-serif;
+    text-align: center;
+}
+
+/*美化一下input等输入框*/
+.fd_btn{
+    top: 30px;
+    position: relative;
+    display: block;
+    left: 100px;
+    height: 40px;
+    width: 300px;
+    outline-style: none ;
+    padding: 10px;
+    border: 0px;
+    border-radius: 10px;
+}
+.in_fd{
+    width: 280px;
+}
+
+
+
+
+/*背景*/
+#background_wrap{
+    z-index: -1;
+    position: fixed;
+    top: 0;left: 0;
+    height: 100%;width: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-image:url(https://img.limexc.cn/images/20210310231616.png);
+}

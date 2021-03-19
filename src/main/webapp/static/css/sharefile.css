@@ -1,0 +1,34 @@
+
+.main_style{
+    width: auto;
+    height: 60px;
+    background-color: #f2e7e5;
+}
+
+.ul_menu {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.ul_menu li{
+    /*去除圆点*/
+    text-decoration: none;
+    list-style: none;
+    float: left;
+    border: 1px solid #FFFFFF;
+    background-color: #2b73af;
+}
+
+.ul_menu li a{
+    color: #040404;
+    text-decoration: none;
+    margin: 0px;
+    display: block;
+    padding: 0px 50px;
+    height:60px;
+}
+
+/*鼠标悬停效果*/
+#menu li a:hover{
+    background-color: #FCFCFC;
+}

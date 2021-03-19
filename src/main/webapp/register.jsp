@@ -1,7 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Title</title>
+    <!---->
+    <title>网盘注册</title>
+    <meta charset="utf-8">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/default.css">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/register.css">
     <script type="application/javascript" src="${pageContext.request.contextPath}/static/js/jquery-3.6.0.js"></script>
@@ -9,7 +11,7 @@
 </head>
 <body>
     <div id="reg_main">
-        <a href="${pageContext.request.contextPath}/login.jsp">返回</a>
+        <a href="login.jsp">返回</a>
         <h1>注册</h1>
         <div id="reg_form_div">
             <form action="#" method="post" >

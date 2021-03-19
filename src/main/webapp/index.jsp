@@ -1,52 +1,81 @@
-<!--<%@ page contentType="text/html;charset=UTF-8" language="java" %>-->
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!--网盘的主页，内容界面。当检查到用户未登录时自动转跳到login界面-->
+<!DOCTYPE html>
 <html>
-<head>
-    <title>Test</title>
-    <script type="application/javascript" src="${pageContext.request.contextPath}/static/js/jquery-3.6.0.js"></script>
-    <script type="application/javascript">
+    <head>
+        <!---->
+        <meta charset="utf-8">
+        <title>主页</title>
+        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/default.css" />
+        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/index_main.css">
+        <script type="application/javascript" src="${pageContext.request.contextPath}/static/js/spark-md5.js"></script>
+        <script type="application/javascript" src="${pageContext.request.contextPath}/static/js/jquery-3.6.0.js"></script>
+        <script type="application/javascript" src="${pageContext.request.contextPath}/static/js/upfile.js"></script>
 
-        $(function (){
-            userinfo();
-        })
+        <!--Google字体-->
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300&display=swap" rel="stylesheet">
 
-        function userinfo(){
-            $.ajax({
-                url:"${pageContext.request.contextPath}/user/listUser",
-                //type:"post",
-                dataType:"json",
-                success:function (data){
-                    //清除数据
-                    $("#userbody").html("");
-                    //添加数据
-                    $.each(data,function (i,n){
-                        $("#userbody").append("<tr>")
-                        .append("<td>"+n.id+"</td>")
-                        .append("<td>"+n.username+"</td>")
-                        .append("<td>"+n.email+"</td>")
-                        .append("</tr>")
-                    })
-                }
 
-            })
-        }
-    </script>
-</head>
-<body>
-    <div style="align-content: center">
-        <table>
-            <thead>
-                <tr>
-                    <td>id</td>
-                    <td>姓名</td>
-                    <td>邮件</td>
-                </tr>
-            </thead>
-            <tbody id="userbody">
+    </head>
+    <body>
 
-            </tbody>
-        </table>
-        <input type="button" value="查询" id="btnLoader">
+    <div class="head_menu">
+        <a id="logo_ti">网盘？是的！稳定？不存在的！</a>
     </div>
 
-</body>
+        <div class="menu_left">
+            <div id="photo_div"><img id="photo_img" src="${pageContext.request.contextPath}/static/images/dls.jpeg"></div>
+            <div id="userinfo_div">
+                <span>用户名</span>
+                <span>登录日期</span>
+                <span>容量</span>
+
+            </div>
+        
+        
+        </div>
+
+
+
+        <div class="file_main">
+            <div class="file_tools">
+                <div id="up_file" class="btn_tool_div">
+                    <a href="#" id="a_upload" class="btn_tool">上传文件
+                        <input type="file" onchange="change(this);"/>
+                    </a>
+                </div>
+                <div id="mkdir"  class="btn_tool_div">
+                    <a href="#" id="a_mkdir" class="btn_tool">新建文件夹
+                        <input type="button" onclick="" />
+                    </a>
+                </div>
+
+
+            </div>
+            <div id="file_head">
+                <!--标题等信息-->
+                <span>文件名</span>
+                <samp>文件大小</samp>
+                <span>上传时间</span>
+                <span>操作</span>
+            </div>
+            <div class="file_view">
+                
+                <div class="file_ico">
+                
+                
+                </div>
+                <div class="file_info">
+                
+                </div>
+                <div class="file_down">
+                
+                </div>
+                
+            </div>
+            <div class="page"></div>
+        </div>
+
+    </body>
 </html>
