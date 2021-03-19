@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Upload</title>
+    </head>
+    <body>
+        <input type="file" onchange="change(this);"/>
+    <!-- spark-md5.js 库-->
+    <script type="text/javascript" src="../js/spark-md5.js"></script>
+    <script type="text/javascript">
+        
+        function change(node){
+            md5(node.files[0], 4*1024*1024).then(e => {
+                // 获取到文件的md5
+                console.log("md5=" + e);
+            }).catch(e => {
+                // 处理异常
+                console.error(e);
+            });
+        }
+        
+        /**
+         * 计算文件的MD5 
+         * @param file 文件
+         * @param chunkSize 分片大小
+         * @returns Promise
+         */
+        function md5(file, chunkSize) {
+            return new Promise((resolve, reject) => {
+                let blobSlice = File.prototype.slice || File.prototype.mozSlice || File.prototype.webkitSlice;
+                let chunks = Math.ceil(file.size / chunkSize);
+                let currentChunk = 0;
+                let spark = new SparkMD5.ArrayBuffer();
+                let fileReader = new FileReader();
+            
+                fileReader.onload = function(e) {
+                    spark.append(e.target.result); 
+                    currentChunk++;
+                    if (currentChunk < chunks) {
+                        loadNext();
+                    } else {
+                        let md5 = spark.end();
+                        resolve(md5);
+                    }
+                };
+            
+                fileReader.onerror = function(e) {
+                    reject(e);
+                };
+            
+                function loadNext() {
+                    let start = currentChunk * chunkSize;
+                    let end = start + chunkSize;
+                    if (end > file.size){
+                        end = file.size;
+                    }
+                    fileReader.readAsArrayBuffer(blobSlice.call(file, start, end));
+                }
+                loadNext();
+            });
+        }
+    </script>
+    </body>
+</html>
