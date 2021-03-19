@@ -15,13 +15,15 @@ public class UserServiceImpl implements UserService {
     @Resource
     private UserDao userDao;
 
+    //列出所有用户
     @Override
     public List<User> listUser() {
         return userDao.selectUserList();
     }
 
+    //实现用户登录
     @Override
-    public User login() {
-        return userDao.selectForNameAndPasswd();
+    public User login(String email,String password) {
+        return userDao.selectForEmailAndPasswd(email,password);
     }
 }

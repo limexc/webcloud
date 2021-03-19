@@ -7,8 +7,10 @@
     <select id="selectUserList" resultType="User">
         select id,username,email from users limit 0,100
     </select>
-    <select id="selectForNameAndPasswd" resultType="User">
-        select id,username,email from users where email=#{email} AND `password`=#{password}
+
+
+    <select id="selectForEmailAndPasswd" resultType="User">
+        select id,username,email,password,create_at,delete_at,status,storage,alisa from users where email=#{email} AND password=#{password}
     </select>
 
 </mapper>
