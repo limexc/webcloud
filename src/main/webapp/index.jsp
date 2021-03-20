@@ -17,6 +17,11 @@
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300&display=swap" rel="stylesheet">
 
 
+        <script type="application/javascript">
+
+
+        </script>
+
     </head>
     <body>
 
@@ -62,19 +67,20 @@
             </div>
             <div class="file_view">
                 
-                <div class="file_ico">
-                
-                
+                <div class="file_info">
+                    <span>图标</span>
                 </div>
                 <div class="file_info">
-                
+                    <span>文件名</span>
                 </div>
-                <div class="file_down">
-                
+                <div class="file_info">
+                    <span>文件大小等</span>
                 </div>
                 
             </div>
-            <div class="page"></div>
+
+
+            <div class="pagelimit">这里是分页</div>
         </div>
 
     </body>

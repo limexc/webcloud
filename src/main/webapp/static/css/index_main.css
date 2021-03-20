@@ -54,6 +54,51 @@ html, body{
     display: block;
 }
 
+/*我也很无奈啊，时间有限，先适配成这样了-- 这是适配浏览器大小来改变内容div大小*/
+@media (max-width: 3000px){
+    .file_main{
+        width: 85%;
+    }
+}
+
+@media (max-width: 1700px){
+    .file_main{
+        width: 76%;
+    }
+}
+
+@media (max-width: 900px){
+    .file_main{
+        width: 80%;
+    }
+}
+
+@media (max-width: 800px){
+    .file_main{
+        width: 60%;
+    }
+}
+
+
+/*文件*/
+.file_main{
+    position: absolute;
+    top: 70px;
+    left: 260px;
+    height:90%;
+    background-color: aqua;
+    overflow: hidden;
+
+}
+
+/*头部列表标题*/
+#file_head{
+    height: 30px;
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 20px;
+    background-color: chocolate;
+}
+
 /*上传等工具栏*/
 .file_tools{
     height: 50px;
@@ -96,20 +141,10 @@ html, body{
     text-decoration: none;
 }
 
-/*头部列表标题*/
-#file_head{
-    height: 30px;
-    font-family: 'Noto Sans SC', sans-serif;
-    font-size: 20px;
 
-}
-
-
-/*文件*/
-.file_main{
+/*底部分页*/
+.pagelimit{
     position: absolute;
-    top: 70px;
-    left: 260px;
-    width: 70vw;
-    background-color: aqua;
+    bottom: 30px;
+
 }
