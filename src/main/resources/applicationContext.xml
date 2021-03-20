@@ -34,8 +34,7 @@
 
     <!--事务配置：注解的配置 或 aspectJ的配置-->
     <!--若proxy-target-class="true"则强制使用cglib代理-->
-    <!--<aop:aspectj-autoproxy proxy-target-class="true" />-->
-
+    <aop:aspectj-autoproxy proxy-target-class="true" />
 
 
 </beans>

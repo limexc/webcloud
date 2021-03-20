@@ -65,7 +65,7 @@ public class MailUtils {
             message.setContent(text,"text/html;charset=UTF-8");
             // 发送消息
             Transport.send(message);
-            System.out.println("["+TimeUtils.timeUtils.getForMatTime()+"] 向用户："+toMail+"Sent message successfully....");
+            System.out.println("["+TimeUtils.getUtils().getForMatTime()+"] 向用户："+toMail+"Sent message successfully....");
             return true;
         }catch (MessagingException mex) {
             mex.printStackTrace();

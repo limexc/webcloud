@@ -26,7 +26,7 @@
     <!--拦截器的声明 暂时未定义-->
     <mvc:interceptors>
         <mvc:interceptor>
-            <mvc:mapping path="/test/**"/>
+            <mvc:mapping path="/user/**"/>
             <bean class="cn.limexc.handler.MyHandlerTest" />
         </mvc:interceptor>
     </mvc:interceptors>
