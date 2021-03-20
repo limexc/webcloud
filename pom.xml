@@ -98,6 +98,15 @@
       <version>5.3.4</version>
     </dependency>
 
+    <!--aspectJ依赖-应该spring内置吧？？然而没有？-->
+    <!-- https://mvnrepository.com/artifact/org.aspectj/aspectjweaver -->
+    <dependency>
+      <groupId>org.aspectj</groupId>
+      <artifactId>aspectjweaver</artifactId>
+      <version>1.9.6</version>
+    </dependency>
+
+
     <!--mybatis框架-->
     <!-- https://mvnrepository.com/artifact/org.mybatis/mybatis -->
     <dependency>
