@@ -5,31 +5,32 @@ import java.util.Date;
 
 
 public class TimeUtils {
-    public volatile static TimeUtils timeUtils;
-
-    private TimeUtils(){
-
-    }
-    
     private static SimpleDateFormat FORMATTIME = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
-    /**
-     * 不知道怎么想的了，先这样吧，后期改单例模式会好一些   大概？
-     * @return  返回格式化后的时间
-     */
-    public String getForMatTime(){
+    private volatile  static TimeUtils TIMEUTILS;
+    private static String time;
 
-        if (null == timeUtils){
-            synchronized (TimeUtils.class){
-                if (null== timeUtils){
-                    timeUtils = new TimeUtils();
+    private TimeUtils() {
+        System.out.println("创建了：timeutils实例");
+    }
+
+    public static TimeUtils getUtils() {
+        Date date = new Date();
+        if(null == TIMEUTILS) {
+            synchronized(TimeUtils.class) {
+                if(null == TIMEUTILS) {
+                    TIMEUTILS = new TimeUtils();
                 }
             }
         }
-        String timeStr = FORMATTIME.format(timeUtils);
-        System.out.println(timeStr);
+        time = FORMATTIME.format(date);
 
-        return timeStr;
 
+        return TIMEUTILS;
+    }
+
+
+    public String getForMatTime() {
+        return time;
     }
 
 }
