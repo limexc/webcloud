@@ -10,9 +10,9 @@ public class MailUtils {
     String toMail;
     String subject;
     String text;
-    static String host = "mail.limexc.top";
-    static String sendUser = "test@limexc.top";
-    static String password ="Test000000";
+    static String host = "smtp.mxhichina.com";
+    static String sendUser = "notice@limexc.cn";
+    static String password ="######你的密码#########";
 
     public MailUtils(String toMail, String subject, String text) {
         this.toMail = toMail;
@@ -27,6 +27,12 @@ public class MailUtils {
         // 设置邮件服务器
         sysInfo.setProperty("mail.smtp.host", host);
         sysInfo.put("mail.smtp.auth", "true");
+
+        //sysInfo.put("mail.smtp.socketFactory.class","javax.net.ssl.SSLSocketFactory");
+        //sysInfo.put("mail.smtp.socketFactory.port", "465");
+        //sysInfo.put("mail.smtp.port", "465");
+
+
 //        // 关于QQ邮箱，还要设置SSL加密，加上以下代码即可
 //        MailSSLSocketFactory qq_ssl = null;
 //        try {
@@ -40,6 +46,7 @@ public class MailUtils {
 
 
         // 获取默认session对象
+        // 构建授权信息，用于进行SMTP进行身份验证
         Session session = Session.getDefaultInstance(sysInfo,new Authenticator(){
             public PasswordAuthentication getPasswordAuthentication()
             {//发件人邮件用户名、授权码
