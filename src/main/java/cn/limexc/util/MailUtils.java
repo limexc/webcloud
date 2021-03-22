@@ -3,6 +3,7 @@ package cn.limexc.util;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 
 
@@ -10,9 +11,10 @@ public class MailUtils {
     String toMail;
     String subject;
     String text;
+    String nick;
     static String host = "smtp.mxhichina.com";
     static String sendUser = "notice@limexc.cn";
-    static String password ="######你的密码#########";
+    static String password ="##########你的密码#########";
 
     public MailUtils(String toMail, String subject, String text) {
         this.toMail = toMail;
@@ -60,8 +62,10 @@ public class MailUtils {
         try{
             // 创建默认的 MimeMessage 对象
             MimeMessage message = new MimeMessage(getSysInfo());
+            nick=javax.mail.internet.MimeUtility.encodeText("咸闲贤鱼");
             // Set From: 头部头字段
-            message.setFrom(new InternetAddress(sendUser));
+            //message.setFrom(new InternetAddress(sendUser));
+            message.setFrom(new InternetAddress(nick+" <"+sendUser+">"));
             // Set To: 头部头字段
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(toMail));
             // Set Subject: 头部头字段
@@ -72,9 +76,9 @@ public class MailUtils {
             message.setContent(text,"text/html;charset=UTF-8");
             // 发送消息
             Transport.send(message);
-            System.out.println("["+TimeUtils.getUtils().getForMatTime()+"] 向用户："+toMail+"Sent message successfully....");
+            System.out.println("["+TimeUtils.getUtils().getForMatTime()+"] 向用户："+toMail+" 发送邮件成功");
             return true;
-        }catch (MessagingException mex) {
+        }catch (MessagingException | UnsupportedEncodingException mex) {
             mex.printStackTrace();
             return false;
         }
