@@ -19,8 +19,6 @@ public class VeCodeUtils {
     public String getVeCode(String email){
         String time = TimeUtils.getUtils().getForMatTime();
         time = time.substring(0,15);
-
-        System.out.println(time);
         String args = email+time;
 
         return StrMd5Utils.MD5(args).substring(0,6);

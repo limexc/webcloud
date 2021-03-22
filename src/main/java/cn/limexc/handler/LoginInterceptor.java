@@ -27,7 +27,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         HttpSession session = request.getSession();
         Object obj = session.getAttribute("user");
 
-        //如果session不为空,不拦截
+        //session不为空,不拦截
         if (obj!=null){
             System.out.println("####session不为空,不拦截##### session:"+session);
             return true;
@@ -38,6 +38,20 @@ public class LoginInterceptor implements HandlerInterceptor {
             System.out.println("访问system不拦截");
             return true;
         }
+
+        //注册不拦截
+        if (uri.indexOf("/register")>0){
+            System.out.println("注册不拦截");
+            return true;
+        }
+
+        //静态文件不拦截
+        if (uri.indexOf("/static")>0){
+            System.out.println("静态文件不拦截");
+            return true;
+        }
+
+        System.out.println("用户访问的"+uri);
 
         System.out.println("用户未登录，转跳到登陆页面");
         request.setAttribute("msg", "还没登录，请先登录！");

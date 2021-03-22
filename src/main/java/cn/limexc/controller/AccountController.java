@@ -80,6 +80,12 @@ public class AccountController {
 
     }
 
+    @RequestMapping(value = "/register")
+    public String register(){
+        return "forward:/register.jsp";
+    }
+
+
     @RequestMapping(value = "/system/resetpwd")
     public ModelAndView findPassword(){
         ModelAndView mv = new ModelAndView();

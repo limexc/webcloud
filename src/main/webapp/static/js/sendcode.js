@@ -19,7 +19,7 @@ window.onload = function() {
             $(this).attr("disabled", true);
 
             //将响应交给后台servlet
-            $.post("http://localhost:8080/CloudWeb/sendmail",{
+            $.post("http://localhost:8080/CloudWeb/system/sendmail",{
                 email:InputEmail
             });
             console.log("请求已发送")

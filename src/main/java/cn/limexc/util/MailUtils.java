@@ -11,10 +11,12 @@ public class MailUtils {
     String toMail;
     String subject;
     String text;
-    String nick;
-    static String host = "smtp.mxhichina.com";
-    static String sendUser = "notice@limexc.cn";
-    static String password ="##########你的密码#########";
+
+    static String postname="咸闲贤鱼";
+    static String host="smtp.mxhichina.com";
+    static String sendUser="notice@limexc.cn";
+    static String password="######你的密码######";
+
 
     public MailUtils(String toMail, String subject, String text) {
         this.toMail = toMail;
@@ -23,6 +25,21 @@ public class MailUtils {
     }
 
     private static Session getSysInfo(){
+
+//        InputStream inStream =MailUtils.class.getResourceAsStream("mail.properties");
+//        Properties properties = new Properties();
+//
+//        try {
+//            properties.load(inStream);
+//            host= properties.getProperty("mail.host");
+//            sendUser=properties.getProperty("mail.sendUser");
+//            password= properties.getProperty("mail.password");
+//            postname= properties.getProperty("mail.postname");
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
 
         // 获取系统属性
         Properties sysInfo = System.getProperties();
@@ -60,9 +77,10 @@ public class MailUtils {
 
     public boolean sendMail(){
         try{
+            String nick;
             // 创建默认的 MimeMessage 对象
             MimeMessage message = new MimeMessage(getSysInfo());
-            nick=javax.mail.internet.MimeUtility.encodeText("咸闲贤鱼");
+            nick=javax.mail.internet.MimeUtility.encodeText(postname);
             // Set From: 头部头字段
             //message.setFrom(new InternetAddress(sendUser));
             message.setFrom(new InternetAddress(nick+" <"+sendUser+">"));

@@ -9,9 +9,7 @@ public class TimeUtils {
     private volatile  static TimeUtils TIMEUTILS;
     private static String time;
 
-    private TimeUtils() {
-        System.out.println("创建了：timeutils实例");
-    }
+    private TimeUtils() {}
 
     public static TimeUtils getUtils() {
         Date date = new Date();
