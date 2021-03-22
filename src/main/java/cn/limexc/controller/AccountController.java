@@ -20,6 +20,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Controller
+@RequestMapping(value = "/")
 public class AccountController {
 
     @Resource
@@ -27,8 +28,14 @@ public class AccountController {
 
     private User user = null;
 
-    @RequestMapping(value = "/login")
-    public String userlogin(HttpServletRequest request, Model model, HttpSession httpSession){
+    //处理直接访问的根请求
+    @RequestMapping(value = "")
+    public String index(){
+        return "forward:/login.jsp";
+    }
+
+    @RequestMapping(value = "/system/login")
+    public String userlogin(HttpServletRequest request, Model model, HttpSession session){
         String email;
         String password;
 
@@ -59,7 +66,11 @@ public class AccountController {
                 System.out.println(StrMd5Utils.MD5(user.getPassword()));
                 //mv.setViewName("redirect:/index.jsp");
                 //httpSession.setAttribute("id","");
-                return "forward:/index.jsp";
+
+                //将用户登陆数据保存到session中
+                session.setAttribute("user",user);
+
+                return "redirect:/user/main";
             }
             return "forward:/login.jsp";
         }else {
@@ -69,7 +80,7 @@ public class AccountController {
 
     }
 
-    @RequestMapping(value = "/resetpwd")
+    @RequestMapping(value = "/system/resetpwd")
     public ModelAndView findPassword(){
         ModelAndView mv = new ModelAndView();
 
@@ -83,7 +94,7 @@ public class AccountController {
      * 明天再改改，不应该这样写
      * @param req
      */
-    @RequestMapping(value = "/sendmail",method = RequestMethod.POST)
+    @RequestMapping(value = "/system/sendmail",method = RequestMethod.POST)
     @ResponseBody
     public void sendMail(HttpServletRequest req){
 
@@ -101,6 +112,13 @@ public class AccountController {
         );
         MailUtils mail = new MailUtils(email,"验证码",text.toString());
         mail.sendMail();
+    }
+
+    @RequestMapping(value = "/system/logout")
+    public String logOut(HttpSession session){
+        //清除session
+        session.invalidate();
+        return "redirect:/login.jsp";
     }
 
 }

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.List;
 
@@ -30,4 +31,13 @@ public class UserController {
     public void test(){
         System.out.println(new Date()+"访问到了");
     }
+
+
+    @RequestMapping(value = "/main")
+    public String index(HttpSession session){
+
+
+        return "forward:/index.jsp";
+    }
+
 }

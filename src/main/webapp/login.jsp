@@ -12,11 +12,18 @@
 </head>
 <body>
 
+<%
+    //初步处理一下登陆后还访问登陆页的用户
+    if (session.getAttribute("user")!=null){
+        pageContext.forward("/user/main");
+    }
+%>
+
 	<!--登陆对话框窗体-->
     <div class="login">
         <h1>WEB CLOUD</h1>
 		<div class="login_main">
-			<form name="loginform" method="post" action="${pageContext.request.contextPath}/login">
+			<form name="loginform" method="post" action="${pageContext.request.contextPath}/system/login">
                 <span class="login_tips">邮箱</span><br />
                 <input class="login_input_text" name="account" placeholder="邮箱" id="accountText" type="text"/>
                 <br />
