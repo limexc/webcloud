@@ -19,6 +19,18 @@ import javax.servlet.http.HttpSession;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * 主要要做用户的验证登录注册找回密码等还未登录，以及登录操作【看看以后把登录拿出来】。
+ * 用户退出暂时例外，因为还没弄好。
+ * index      index页面转跳用，我也不知道为什么写的这东西了。
+ * userlogin  用户登录
+ * register   用户注册
+ * findPassword  密码找回
+ * sendMail      邮件发送
+ * logOut        用户退出
+ */
+
+
 @Controller
 @RequestMapping(value = "/")
 public class AccountController {

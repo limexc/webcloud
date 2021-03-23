@@ -8,6 +8,7 @@
     <title>主页</title>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/default.css" />
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/index_main.css">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/index_main_table.css">
     <script type="application/javascript" src="${pageContext.request.contextPath}/static/js/spark-md5.js"></script>
     <script type="application/javascript" src="${pageContext.request.contextPath}/static/js/jquery-3.6.0.js"></script>
     <script type="application/javascript" src="${pageContext.request.contextPath}/static/js/upfile.js"></script>
@@ -21,6 +22,14 @@
 
 
     </script>
+
+    <!--Layui框架 第一次，不会用啊！！！淦！！！-->
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/layui/css/layui.css"  media="all">
+    <script src="${pageContext.request.contextPath}/static/layui/layui.js" charset="utf-8"></script>
+
 
 </head>
 <body>
@@ -40,8 +49,8 @@
 <div class="menu_left">
     <div id="photo_div"><img id="photo_img" src="${pageContext.request.contextPath}/static/images/dls.jpeg"></div>
     <div id="userinfo_div" style="font: 26px 微软雅黑 ">
-        <span>用户名</span>
-        <span>登录日期</span>
+        <span>用户名:${user.username}</span>
+        <span></span>
         <span><a href="${pageContext.request.contextPath}/system/logout">退出</a></span>
         <span>容量</span>
 
@@ -68,24 +77,62 @@
 
 
     </div>
-    <div id="file_head">
-        <!--标题等信息-->
-        <span>文件名</span>
-        <samp>文件大小</samp>
-        <span>上传时间</span>
-        <span>操作</span>
-    </div>
-    <div class="file_view">
 
-        <div class="file_info">
-            <span>图标</span>
-        </div>
-        <div class="file_info">
-            <span>文件名</span>
-        </div>
-        <div class="file_info">
-            <span>文件大小等</span>
-        </div>
+    <div class="file_view">
+        <!--内容table容器-->
+        <table class="layui-hide" id="test" lay-filter="test"></table>
+
+        <!--面板右侧功能按键-->
+        <script type="text/html" id="barDemo">
+            <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+        </script>
+
+
+        <script>
+            layui.use('table', function(){
+                var table = layui.table;
+
+                table.render({
+                    elem: '#test'
+                    ,url:'/test/table/demo1.json'
+                    ,title: '用户数据表'
+                    ,cols: [[
+                        {type: 'checkbox', fixed: 'left'}
+                        ,{field:'ico', title:'类型', width:40, fixed: 'left'}
+                        ,{field:'filename', title:'名称', width:120, edit: 'text',sort: true}
+                        ,{field:'size', title:'大小', width:80, edit: 'text', sort: true}
+                        ,{field:'time', title:'上传时间', width:100,sort: true}
+                        ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:150}
+                    ]]
+                    ,page: true
+                });
+
+
+                //监听行工具事件
+                table.on('tool(test)', function(obj){
+                    var data = obj.data;
+                    //console.log(obj)
+                    if(obj.event === 'del'){
+                        layer.confirm('真的删除行么', function(index){
+                            obj.del();
+                            layer.close(index);
+                        });
+                    } else if(obj.event === 'edit'){
+                        layer.prompt({
+                            formType: 2
+                            ,value: data.email
+                        }, function(value, index){
+                            obj.update({
+                                email: value
+                            });
+                            layer.close(index);
+                        });
+                    }
+                });
+            });
+        </script>
+
 
     </div>
 

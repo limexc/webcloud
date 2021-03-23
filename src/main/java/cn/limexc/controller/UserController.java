@@ -13,6 +13,11 @@ import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * 主要做登录后用户信息的修改查询等操作。
+ *
+ */
+
 @Controller
 @RequestMapping(value = "/user")
 public class UserController {

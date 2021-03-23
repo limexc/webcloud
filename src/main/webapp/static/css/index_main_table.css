@@ -1,0 +1,10 @@
+.file_table th{
+    height: 40px;
+    background-color: rgba(242,242,242,0.9);
+
+}
+.file_table td{
+    height: 30px;
+    background-color: rgba(242,242,242,0.9);
+
+}

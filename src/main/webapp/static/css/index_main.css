@@ -86,18 +86,18 @@ html, body{
     top: 70px;
     left: 260px;
     height:90%;
-    background-color: aqua;
+    background-color: rgba(242,242,242,0.7);
     overflow: hidden;
 
 }
 
-/*头部列表标题*/
-#file_head{
-    height: 30px;
-    font-family: 'Noto Sans SC', sans-serif;
-    font-size: 20px;
-    background-color: chocolate;
-}
+/*!*头部列表标题*!*/
+/*#file_head{*/
+/*    height: 30px;*/
+/*    font-family: 'Noto Sans SC', sans-serif;*/
+/*    font-size: 20px;*/
+/*    background-color: chocolate;*/
+/*}*/
 
 /*上传等工具栏*/
 .file_tools{
