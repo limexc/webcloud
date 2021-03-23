@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.limexc.dao.FileDao">
+
+    <!--我™当时为什么不用注解做这些东西...淦...-->
+
+    <select id="selectAllFileList" resultType="cn.limexc.model.FileModel">
+        SELECT id,filename,md5,create_time,realpath,filesize FROM file;
+    </select>
+
+    <select id="selectFileList" resultType="cn.limexc.model.UserFile">
+        SELECT file.id,file.filename,file.filesize,user_file.vfname,user_file.virtualpath,user_file.up_time FROM users,file,user_file WHERE users.id=user_file.uid AND file.id=user_file.fid AND users.id = #{user.id}
+    </select>
+
+</mapper>
