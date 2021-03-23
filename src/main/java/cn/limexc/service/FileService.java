@@ -31,9 +31,7 @@ public interface FileService {
     FileModel getFileInfoById(@Param("fid") int fid);
 
 
+    List<UserFile> listUserFile(Integer id, String page, String limit);
 
-
-
-
-
+    int UserFileCount(User user);
 }

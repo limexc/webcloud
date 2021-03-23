@@ -5,6 +5,7 @@ import cn.limexc.model.User;
 import cn.limexc.model.UserFile;
 import org.apache.ibatis.annotations.Param;
 
+import javax.jws.soap.SOAPBinding;
 import java.util.List;
 
 public interface FileDao {
@@ -23,6 +24,15 @@ public interface FileDao {
     List<UserFile> selectFileList(User user);
 
     /**
+     * 获取文件列表，用于查询用户的文件列表   ?page=1&limit=30
+     * @param id 用户信息
+     * @return  返回【用户文件】列表
+     *
+     */
+    List<UserFile> selectFileListLimit(@Param("id") Integer id,@Param("page") String page,@Param("limit") String limit);
+
+
+    /**
      * 通过md5查询文件是否存在
      * @param md5 md5值
      * @return    返回文件信息
@@ -35,5 +45,8 @@ public interface FileDao {
      * @param file 文件信息
      */
     void insertFile(FileModel file);
+
+
+    int selectCount(@Param("user") User user);
 
 }

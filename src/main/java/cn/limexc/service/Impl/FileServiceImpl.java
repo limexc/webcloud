@@ -5,10 +5,12 @@ import cn.limexc.model.FileModel;
 import cn.limexc.model.User;
 import cn.limexc.model.UserFile;
 import cn.limexc.service.FileService;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
 
+@Service
 public class FileServiceImpl implements FileService {
 
     @Resource
@@ -42,5 +44,15 @@ public class FileServiceImpl implements FileService {
     @Override
     public FileModel getFileInfoById(int fid) {
         return null;
+    }
+
+    @Override
+    public List<UserFile> listUserFile(Integer id, String page, String limit) {
+        return fileDao.selectFileListLimit(id,page,limit);
+    }
+
+    @Override
+    public int UserFileCount(User user) {
+        return fileDao.selectCount(user);
     }
 }

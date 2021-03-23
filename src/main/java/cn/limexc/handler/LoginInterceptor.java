@@ -29,7 +29,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 
         //session不为空,不拦截
         if (obj!=null){
-            System.out.println("####session不为空,不拦截##### session:"+session);
+            System.out.println("用户已登录不拦截"+uri);
             return true;
         }
 

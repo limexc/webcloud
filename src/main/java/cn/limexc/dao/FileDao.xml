@@ -11,7 +11,23 @@
     </select>
 
     <select id="selectFileList" resultType="cn.limexc.model.UserFile">
-        SELECT file.id,file.filename,file.filesize,user_file.vfname,user_file.virtualpath,user_file.up_time FROM users,file,user_file WHERE users.id=user_file.uid AND file.id=user_file.fid AND users.id = #{user.id}
+        SELECT file.id,file.filename,file.filesize,user_file.vfname,user_file.virtualpath,user_file.up_time,file.filetype FROM users,file,user_file WHERE
+        users.id=user_file.uid AND file.id=user_file.fid AND users.id = #{user.id}
+    </select>
+
+
+    <select id="selectFileListLimit" resultType="cn.limexc.model.UserFile">
+        SELECT file.id as id,file.filename as filename,file.filesize as filesize,
+               user_file.vfname as vfname,user_file.virtualpath as virtualpath,
+               user_file.up_time as up_time,file.filetype as filetype
+        FROM users,file,user_file
+        WHERE users.id=user_file.uid AND file.id=user_file.fid AND users.id = #{id}
+        LIMIT ${page},${limit}
+        <!--LIMIT #{page},#{limit} 看看用分页工具进行分页-->
+    </select>
+
+    <select id="selectCount" resultType="Int">
+        SELECT COUNT(*) FROM users,file,user_file   WHERE users.id=user_file.uid AND file.id=user_file.fid AND users.id =#{user.id};
     </select>
 
 </mapper>

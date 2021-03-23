@@ -82,30 +82,46 @@
         <!--内容table容器-->
         <table class="layui-hide" id="test" lay-filter="test"></table>
 
-        <!--面板右侧功能按键-->
+
         <script type="text/html" id="barDemo">
             <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
             <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
         </script>
 
 
+
         <script>
             layui.use('table', function(){
                 var table = layui.table;
 
+                //执行一个 table 实例
                 table.render({
-                    elem: '#test'
-                    ,url:'/test/table/demo1.json'
-                    ,title: '用户数据表'
+                    //表格table的id属性
+                    elem: '#test',
+                    height: "800",
+                    //请求数据接口
+                    url: '${pageContext.request.contextPath}/info/userfilelist',
+                    //要传向后台的每页显示条数
+                    limit:10,
+                    //,page:true(自带的这个要注掉)
+                    page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
+                        layout: ['count', 'prev', 'page', 'next', 'limit', 'refresh', 'skip']//自定义分页布局
+                        ,limits:[5,10,15]
+                        ,first: false //不显示首页
+                        ,last: false //不显示尾页
+                    },
+
+                    title: false   //表头
+                    ,toolbar: false //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
                     ,cols: [[
                         {type: 'checkbox', fixed: 'left'}
-                        ,{field:'ico', title:'类型', width:40, fixed: 'left'}
-                        ,{field:'filename', title:'名称', width:120, edit: 'text',sort: true}
-                        ,{field:'size', title:'大小', width:80, edit: 'text', sort: true}
-                        ,{field:'time', title:'上传时间', width:100,sort: true}
-                        ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:150}
+                        ,{field: 'fileid', title: 'ID', width:80, align:'center',sort: true}
+                        ,{field: 'filetype', title: '类型', align:'center',width:135}
+                        ,{field: 'filename', title: '文件名', width:350,align:'center', sort : true}
+                        ,{field: 'filesize', title: '大小', width:320,align:'center', sort : true}
+                        ,{field: 'time', title: '上传时间', width: 340,align:'center', sort : true}
+                        ,{fixed: 'right', title: '操作',width: 350, align:'center', toolbar: '#barDemo'}
                     ]]
-                    ,page: true
                 });
 
 
@@ -133,11 +149,8 @@
             });
         </script>
 
-
     </div>
 
-
-    <div class="pagelimit">这里是分页</div>
 </div>
 
 </body>

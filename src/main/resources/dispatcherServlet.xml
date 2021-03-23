@@ -23,7 +23,7 @@
     <!--使spring可以解析访问静态资源文件-->
     <mvc:resources mapping="/static/**" location="/static/" />
 
-    <!--拦截器的声明 暂时未定义-->
+    <!--拦截器的声明-->
     <mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/**" />
@@ -31,5 +31,16 @@
         </mvc:interceptor>
     </mvc:interceptors>
     <mvc:annotation-driven />
+
+
+    <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+        <property name="supportedMediaTypes">
+            <list>
+                <value>text/html;charset=UTF-8</value>
+                <value>application/json;charset=UTF-8</value>
+            </list>
+        </property>
+    </bean>
+
 
 </beans>
