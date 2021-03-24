@@ -1,9 +1,9 @@
 package cn.limexc.model;
 
 import org.springframework.stereotype.Component;
-
 import java.math.BigDecimal;
-import java.sql.Date;
+
+
 @Component
 public class UserFile {
     private Integer id;
@@ -11,19 +11,19 @@ public class UserFile {
     private BigDecimal filesize;
     private String vfname;
     private String virtualpath;
-    private Date up_time;
+    private String uptime;
     private String filetype;
 
     public UserFile() {
     }
 
-    public UserFile(Integer id, String filename, BigDecimal filesize, String vfname, String virtualpath, Date up_time, String filetype) {
+    public UserFile(Integer id, String filename, BigDecimal filesize, String vfname, String virtualpath, String uptime, String filetype) {
         this.id = id;
         this.filename = filename;
         this.filesize = filesize;
         this.vfname = vfname;
         this.virtualpath = virtualpath;
-        this.up_time = up_time;
+        this.uptime = uptime;
         this.filetype = filetype;
     }
 
@@ -67,12 +67,12 @@ public class UserFile {
         this.virtualpath = virtualpath;
     }
 
-    public Date getUp_time() {
-        return up_time;
+    public String getUptime() {
+        return uptime;
     }
 
-    public void setUp_time(Date up_time) {
-        this.up_time = up_time;
+    public void setUptime(String uptime) {
+        this.uptime = uptime;
     }
 
     public String getFiletype() {
@@ -91,7 +91,7 @@ public class UserFile {
                 ", filesize=" + filesize +
                 ", vfname='" + vfname + '\'' +
                 ", virtualpath='" + virtualpath + '\'' +
-                ", up_time=" + up_time +
+                ", uptime=" + uptime +
                 ", filetype='" + filetype + '\'' +
                 '}';
     }

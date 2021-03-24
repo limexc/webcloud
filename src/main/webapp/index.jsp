@@ -98,11 +98,16 @@
                 table.render({
                     //表格table的id属性
                     elem: '#test',
-                    height: "800",
+                    height: 'full-200',
                     //请求数据接口
                     url: '${pageContext.request.contextPath}/info/userfilelist',
                     //要传向后台的每页显示条数
                     limit:10,
+                    //设置table的宽度
+                    done: function (res, curr, count) {
+                        $("table").css("width", "100%");
+                    },
+
                     //,page:true(自带的这个要注掉)
                     page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
                         layout: ['count', 'prev', 'page', 'next', 'limit', 'refresh', 'skip']//自定义分页布局
@@ -111,17 +116,20 @@
                         ,last: false //不显示尾页
                     },
 
-                    title: false   //表头
-                    ,toolbar: false //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
+                    title: true   //表头
+                    ,toolbar: true //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
                     ,cols: [[
-                        {type: 'checkbox', fixed: 'left'}
-                        ,{field: 'fileid', title: 'ID', width:80, align:'center',sort: true}
-                        ,{field: 'filetype', title: '类型', align:'center',width:135}
-                        ,{field: 'filename', title: '文件名', width:350,align:'center', sort : true}
-                        ,{field: 'filesize', title: '大小', width:320,align:'center', sort : true}
-                        ,{field: 'time', title: '上传时间', width: 340,align:'center', sort : true}
-                        ,{fixed: 'right', title: '操作',width: 350, align:'center', toolbar: '#barDemo'}
+                        {type: 'checkbox', fixed: 'check'},
+                        //{field: 'fileid', title: 'ID', width:80, align:'center',sort: true},
+                        {field: 'filetype', title: '类型', align:'center'}
+                        ,{field: 'filename', title: '文件名',align:'center', sort : true}
+                        ,{field: 'filesize', title: '大小',align:'center', sort : true}
+                        ,{field: 'uptime', title: '上传时间',align:'center', sort : true,templet: '<div>{{ layui.laytpl.toDateString(d.uptime) }}</div>'}
+                        ,{fixed: 'right', title: '操作', align:'center', toolbar: '#barDemo'}
                     ]]
+                    ,page: true
+
+
                 });
 
 
@@ -146,6 +154,45 @@
                         });
                     }
                 });
+
+                //时间戳的处理
+                layui.laytpl.toDateString = function(d, format){
+                    var date = new Date(d)
+                        ,ymd = [
+                        this.digit(date.getFullYear(), 4)
+                        ,this.digit(date.getMonth() + 1)
+                        ,this.digit(date.getDate())
+                    ]
+                        ,hms = [
+                        this.digit(date.getHours())
+                        ,this.digit(date.getMinutes())
+                        ,this.digit(date.getSeconds())
+                    ];
+
+                    format = format || 'yyyy-MM-dd HH:mm:ss';
+
+                    return format.replace(/yyyy/g, ymd[0])
+                        .replace(/MM/g, ymd[1])
+                        .replace(/dd/g, ymd[2])
+                        .replace(/HH/g, hms[0])
+                        .replace(/mm/g, hms[1])
+                        .replace(/ss/g, hms[2]);
+                };
+
+                //数字前置补零
+                layui.laytpl.digit = function(num, length, end){
+                    var str = '';
+                    num = String(num);
+                    length = length || 2;
+                    for(var i = num.length; i < length; i++){
+                        str += '0';
+                    }
+                    return num < Math.pow(10, length) ? str + (num|0) : num;
+                };
+
+
+
+
             });
         </script>
 

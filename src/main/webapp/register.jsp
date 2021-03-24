@@ -10,6 +10,15 @@
     <script type="application/javascript" src="${pageContext.request.contextPath}/static/js/sendcode.js"></script>
 </head>
 <body>
+
+<%
+    //初步处理一下登陆后还想要注册的用户
+    if (session.getAttribute("user")!=null){
+        pageContext.forward("/user/main");
+    }
+%>
+
+
     <div id="reg_main">
         <a href="login.jsp">返回</a>
         <h1>注册</h1>
