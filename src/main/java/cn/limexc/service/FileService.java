@@ -16,13 +16,13 @@ public interface FileService {
     List<UserFile> listUserFile(User user);
 
     //修改虚拟文件名
-
+    int reName(UserFile userFile);
 
     //添加未上传过的文件
-    int addFile(FileModel file,UserFile userFile,User user);
+    int addFile(FileModel file,UserFile userFile);
 
     //添加已经有用户上传过的文件
-    int addFile(UserFile userFile,User user);
+    int addFile(UserFile userFile);
 
     //通过MD5获取文件信息
     FileModel getFileInfoByMd5(String md5);

@@ -10,11 +10,14 @@
        http://www.springframework.org/schema/mvc
        https://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
-    <!---->
+    <!--引入系统配置文件，自己写的，不引入应该也没啥-->
+    <context:property-placeholder location="classpath:system.properties"/>
+
+
     <!--声明组件扫描器 扫描@Controller-->
     <context:component-scan base-package="cn.limexc.controller"/>
 
-    <!--声明视图解析器，帮助处理视图  暂时未用到-->
+    <!--声明视图解析器，帮助处理视图-->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/WEB-INF/view/"/>
         <property name="suffix" value=".jsp" />
@@ -32,7 +35,19 @@
     </mvc:interceptors>
     <mvc:annotation-driven />
 
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!--是请求的编码格式，默认为iso-8859-1-->
+        <property name="defaultEncoding" value="UTF-8"/>
+        <!--最大上传大小‘-1’表示不限制-->
+        <property name="maxUploadSize" value="-1"/>
+        <!---->
+        <!--上传临时存储路径：这个属性只能将上传目录指向tomcat
+        <property name="uploadTempDir" value="${file.path.temp}"/>
+        -->
+    </bean>
 
+
+    <!--json相关配置-->
     <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
         <property name="supportedMediaTypes">
             <list>

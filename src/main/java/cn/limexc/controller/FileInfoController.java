@@ -1,12 +1,15 @@
 package cn.limexc.controller;
 
+import cn.limexc.model.FileModel;
 import cn.limexc.model.User;
 import cn.limexc.model.UserFile;
 import cn.limexc.service.FileService;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
@@ -32,6 +35,7 @@ public class FileInfoController {
 
     private User user;
     private List<UserFile> userFile;
+    private FileModel file;
 
     @RequestMapping(value = "/userfile*")
     @ResponseBody
@@ -67,4 +71,28 @@ public class FileInfoController {
 
 
     }
+    //判断文件是否存在，若存在数据写入数据库
+
+    @RequestMapping(value = "/getmd5",method= RequestMethod.POST)
+    @ResponseBody
+    public FileModel getMd5(HttpSession session, HttpServletRequest req, @RequestBody Map<String, String> map){
+        //HttpRequest req, HttpResponse rep, HttpSession session
+        user = (User) session.getAttribute("user");
+        System.out.println("用户："+user.getId()+"当前http请求方式为:"+req.getMethod());
+        String filesize =map.get("filesize");
+        String filemd5 = map.get("md5value");
+        System.out.println(filemd5+"  "+filesize);
+
+        //查询数据库，并将结果放入file
+        file = fileService.getFileInfoByMd5(filemd5);
+
+        if (file!=null){
+            //数据存在
+        }
+
+        return file;
+
+
+    }
+
 }

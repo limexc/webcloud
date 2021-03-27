@@ -27,18 +27,23 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public int addFile(FileModel file, UserFile userFile, User user) {
+    public int reName(UserFile userFile) {
         return 0;
     }
 
     @Override
-    public int addFile(UserFile userFile, User user) {
+    public int addFile(FileModel file, UserFile userFile) {
+        return 0;
+    }
+
+    @Override
+    public int addFile(UserFile userFile) {
         return 0;
     }
 
     @Override
     public FileModel getFileInfoByMd5(String md5) {
-        return null;
+        return fileDao.selectFileMd5(md5);
     }
 
     @Override

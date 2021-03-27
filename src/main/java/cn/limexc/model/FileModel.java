@@ -3,7 +3,7 @@ package cn.limexc.model;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.util.Date;
 
 @Component
 public class FileModel {
@@ -11,18 +11,28 @@ public class FileModel {
     private String filename;
     private String md5;
     private Date create_time;
-    private BigDecimal filesize;
+    private String filesize;
     private String filetype;
+    private String realpath;
 
-    public FileModel() {}
-
-    public FileModel(Integer id, String filename, String md5, Date create_time, BigDecimal filesize, String filetype) {
+    public FileModel(Integer id, String filename, String md5, Date create_time, String filesize, String filetype, String realpath) {
         this.id = id;
         this.filename = filename;
         this.md5 = md5;
         this.create_time = create_time;
         this.filesize = filesize;
         this.filetype = filetype;
+        this.realpath = realpath;
+    }
+
+    public FileModel() {}
+
+    public String getRealpath() {
+        return realpath;
+    }
+
+    public void setRealpath(String realpath) {
+        this.realpath = realpath;
     }
 
     public Integer getId() {
@@ -57,11 +67,11 @@ public class FileModel {
         this.create_time = create_time;
     }
 
-    public BigDecimal getFilesize() {
+    public String getFilesize() {
         return filesize;
     }
 
-    public void setFilesize(BigDecimal filesize) {
+    public void setFilesize(String filesize) {
         this.filesize = filesize;
     }
 
@@ -80,8 +90,9 @@ public class FileModel {
                 ", filename='" + filename + '\'' +
                 ", md5='" + md5 + '\'' +
                 ", create_time=" + create_time +
-                ", filesize=" + filesize +
+                ", filesize='" + filesize + '\'' +
                 ", filetype='" + filetype + '\'' +
+                ", realpath='" + realpath + '\'' +
                 '}';
     }
 }

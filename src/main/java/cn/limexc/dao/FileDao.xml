@@ -11,8 +11,9 @@
     </select>
 
     <select id="selectFileList" resultType="cn.limexc.model.UserFile">
-        SELECT file.id,file.filename,file.filesize,user_file.vfname,user_file.virtualpath,user_file.uptime,file.filetype FROM users,file,user_file WHERE
-        users.id=user_file.uid AND file.id=user_file.fid AND users.id = #{user.id}
+        SELECT file.id,file.filename,file.filesize,user_file.vfname,user_file.virtualpath,user_file.uptime,file.filetype
+        FROM users,file,user_file
+        WHERE users.id=user_file.uid AND file.id=user_file.fid AND users.id = #{user.id}
     </select>
 
 
@@ -29,5 +30,21 @@
     <select id="selectCount" resultType="Int">
         SELECT COUNT(*) FROM users,file,user_file   WHERE users.id=user_file.uid AND file.id=user_file.fid AND users.id =#{user.id};
     </select>
+
+    <select id="selectFileMd5" resultType="cn.limexc.model.FileModel">
+        SELECT id,filename,create_time,realpath,filesize,filetype FROM file WHERE md5=#{md5}
+    </select>
+
+    <!--因为id字段在数据库中并不是自增，故需要一定方法进行获取或计算-->
+    <insert id="insertFile" parameterType="Int"  >
+        INSERT INTO file (id,filename,create_time,realpath,filesize,filetype)
+        VALUE (#{file.id},filename,#{file.create_time},#{file.realpath},#{file.filesize},#{file.filetype})
+    </insert>
+
+    <!--userfile表中的id字段为自增的-->
+    <insert id="insertUserFile" parameterType="Int">
+        INSERT INTO user_file (uid,virtualpath,fid,vfname,uptime)
+        VALUE (#{userFile.uid},#{userFile.virtualpath},#{userFile.fid},#{userFile.vfname},#{userFile.uptime})
+    </insert>
 
 </mapper>

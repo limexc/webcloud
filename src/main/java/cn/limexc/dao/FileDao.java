@@ -41,12 +41,25 @@ public interface FileDao {
 
 
     /**
-     * 文件信息插入数据库
+     * 新文件信息插入数据库
      * @param file 文件信息
+     * @return 影响行数
      */
-    void insertFile(FileModel file);
+    int insertFile(FileModel file);
+
+    /**
+     * 将文件信息写入userfile表
+     * @param userFile userfile信息
+     * @return 影响行数
+     */
+    int insertUserFile(UserFile userFile);
 
 
+    /**
+     * 获取当前用户文件的总数，用于分页。
+     * @param user 用户信息
+     * @return 文件个数
+     */
     int selectCount(@Param("user") User user);
 
 }
