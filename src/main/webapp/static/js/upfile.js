@@ -1,9 +1,11 @@
 var filesize;
+var filename;
 
 function change(node) {
 
     //可以在这里加一些文件简单的判断
     getfilesize(node);
+    getfileName(node);
     
     
     //一个分片设置为100M，刚好为机械硬盘读取上限（大概），cpu和内存也够用
@@ -15,7 +17,8 @@ function change(node) {
 
         var jsondata = {
             "filesize":filesize,
-            "md5value":e
+            "md5value":e,
+            "filename":filename
         };
 
 
@@ -72,6 +75,10 @@ function change(node) {
 function getfilesize(file){
     filesize= file.files[0].size;
     console.log("文件大小byte:"+filesize);
+}
+
+function getfileName(file){
+    filename=file.files[0].name;
 }
 
 

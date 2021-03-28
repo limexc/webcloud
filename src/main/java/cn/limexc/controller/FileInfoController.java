@@ -4,6 +4,8 @@ import cn.limexc.model.FileModel;
 import cn.limexc.model.User;
 import cn.limexc.model.UserFile;
 import cn.limexc.service.FileService;
+import cn.limexc.util.ByteUnitConversion;
+import cn.limexc.util.TimeUtils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.stereotype.Controller;
@@ -16,6 +18,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,15 +82,29 @@ public class FileInfoController {
         //HttpRequest req, HttpResponse rep, HttpSession session
         user = (User) session.getAttribute("user");
         System.out.println("用户："+user.getId()+"当前http请求方式为:"+req.getMethod());
-        String filesize =map.get("filesize");
+        //获取并转换单位
+        String filesize = new ByteUnitConversion().readableFileSize(Long.parseLong(map.get("filesize")));
         String filemd5 = map.get("md5value");
-        System.out.println(filemd5+"  "+filesize);
+        String filename = map.get("filename");
+        System.out.println(filemd5+"  "+filesize+" "+filename);
 
         //查询数据库，并将结果放入file
         file = fileService.getFileInfoByMd5(filemd5);
+        //
+        System.out.println("----------"+file.toString());
+
 
         if (file!=null){
             //数据存在
+            UserFile uf=new UserFile();
+            uf.setFid(file.getId());
+            uf.setVfname(filename);
+            uf.setUid(user.getId());
+            uf.setUptime(TimeUtils.getUtils().getForMatTime());
+            uf.setFilesize(filesize);
+            uf.setVpath("//还没想好目录怎么做");
+            System.out.println("------> "+uf.toString());
+            fileService.addVFile(uf);
         }
 
         return file;

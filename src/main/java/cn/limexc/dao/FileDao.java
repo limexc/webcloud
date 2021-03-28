@@ -52,7 +52,7 @@ public interface FileDao {
      * @param userFile userfile信息
      * @return 影响行数
      */
-    int insertUserFile(UserFile userFile);
+    int insertUserFile(@Param("userFile")UserFile userFile);
 
 
     /**
@@ -61,5 +61,24 @@ public interface FileDao {
      * @return 文件个数
      */
     int selectCount(@Param("user") User user);
+
+    /**
+     * 用户删除文件
+     * @param userFile 用户文件信息
+     * @return  影响的行数
+     */
+    int deleteUserFile(@Param("userFile")UserFile userFile);
+
+    /**
+     * 更新、修改文件或目录名称【虚拟】
+     * @param userFile 用户文件啊
+     * @return
+     */
+    int updateVname(@Param("userFile")UserFile userFile);
+
+    int updateVpath(@Param("userFile")UserFile userFile);
+
+    UserFile selectUserFileById(@Param("userFile")UserFile userFile);
+
 
 }

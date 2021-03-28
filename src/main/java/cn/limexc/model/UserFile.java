@@ -2,29 +2,30 @@ package cn.limexc.model;
 
 import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
+import java.util.Date;
 
 
 @Component
 public class UserFile {
     private Integer id;
-    private String filename;
-    private BigDecimal filesize;
+    private String filesize;
     private String vfname;
-    private String virtualpath;
-    private String uptime;
-    private String filetype;
+    private String vpath;
+    private String  uptime;
+    private Integer uid;
+    private Integer fid;
 
     public UserFile() {
     }
 
-    public UserFile(Integer id, String filename, BigDecimal filesize, String vfname, String virtualpath, String uptime, String filetype) {
+    public UserFile(Integer id, String filesize, String vfname, String vpath, String uptime, Integer uid, Integer fid) {
         this.id = id;
-        this.filename = filename;
         this.filesize = filesize;
         this.vfname = vfname;
-        this.virtualpath = virtualpath;
+        this.vpath = vpath;
         this.uptime = uptime;
-        this.filetype = filetype;
+        this.uid = uid;
+        this.fid = fid;
     }
 
     public Integer getId() {
@@ -35,19 +36,11 @@ public class UserFile {
         this.id = id;
     }
 
-    public String getFilename() {
-        return filename;
-    }
-
-    public void setFilename(String filename) {
-        this.filename = filename;
-    }
-
-    public BigDecimal getFilesize() {
+    public String getFilesize() {
         return filesize;
     }
 
-    public void setFilesize(BigDecimal filesize) {
+    public void setFilesize(String filesize) {
         this.filesize = filesize;
     }
 
@@ -59,12 +52,12 @@ public class UserFile {
         this.vfname = vfname;
     }
 
-    public String getVirtualpath() {
-        return virtualpath;
+    public String getVpath() {
+        return vpath;
     }
 
-    public void setVirtualpath(String virtualpath) {
-        this.virtualpath = virtualpath;
+    public void setVpath(String vpath) {
+        this.vpath = vpath;
     }
 
     public String getUptime() {
@@ -75,24 +68,33 @@ public class UserFile {
         this.uptime = uptime;
     }
 
-    public String getFiletype() {
-        return filetype;
+
+    public Integer getUid() {
+        return uid;
     }
 
-    public void setFiletype(String filetype) {
-        this.filetype = filetype;
+    public void setUid(Integer uid) {
+        this.uid = uid;
+    }
+
+    public Integer getFid() {
+        return fid;
+    }
+
+    public void setFid(Integer fid) {
+        this.fid = fid;
     }
 
     @Override
     public String toString() {
         return "UserFile{" +
                 "id=" + id +
-                ", filename='" + filename + '\'' +
-                ", filesize=" + filesize +
+                ", filesize='" + filesize + '\'' +
                 ", vfname='" + vfname + '\'' +
-                ", virtualpath='" + virtualpath + '\'' +
-                ", uptime=" + uptime +
-                ", filetype='" + filetype + '\'' +
+                ", vpath='" + vpath + '\'' +
+                ", uptime='" + uptime + '\'' +
+                ", uid=" + uid +
+                ", fid=" + fid +
                 '}';
     }
 }
