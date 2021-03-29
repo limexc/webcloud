@@ -19,7 +19,7 @@
     <!--因为改动过实体类，这个语句要改！！！-->
     <select id="selectFileListLimit" resultType="cn.limexc.model.UserFile">
         SELECT file.filesize as filesize,user_file.vfname as vfname,
-               user_file.vpath as vpath,
+               user_file.vpath as vpath,user_file.id as id,
                user_file.uptime as uptime,file.filetype as filetype
         FROM users,file,user_file
         WHERE users.id=user_file.uid AND file.id=user_file.fid AND users.id = #{id}

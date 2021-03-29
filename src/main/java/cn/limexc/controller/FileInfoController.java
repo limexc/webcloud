@@ -8,6 +8,7 @@ import cn.limexc.util.ByteUnitConversion;
 import cn.limexc.util.TimeUtils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -108,6 +109,13 @@ public class FileInfoController {
         }
 
         return file;
+    }
+
+    @RequestMapping(value = "/deletfile",method = RequestMethod.POST)
+    @ResponseBody
+    public void deluserfile(HttpSession session,HttpServletRequest req,@RequestBody Map<String, String> map){
+        user= (User) session.getAttribute("user");
+        System.out.println(map.get("id"));
 
 
     }

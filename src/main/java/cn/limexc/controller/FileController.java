@@ -25,6 +25,7 @@ import java.util.Map;
 
 /**
  * 主要做文件上传下载吧?
+ * 涉及到真实文件操作的。
  *
  */
 @Controller

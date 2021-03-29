@@ -120,7 +120,7 @@
                     ,toolbar: true //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
                     ,cols: [[
                         {type: 'checkbox', fixed: 'check'},
-                        //{field: 'fileid', title: 'ID', width:80, align:'center',sort: true},
+                        {field: 'id', title: 'ID',  align:'center',sort: true},
                         {field: 'filetype', title: '类型', align:'center'}
                         ,{field: 'vfname', title: '文件名',align:'center', sort : true}
                         ,{field: 'filesize', title: '大小',align:'center', sort : true}
@@ -135,13 +135,31 @@
 
                 //监听行工具事件
                 table.on('tool(test)', function(obj){
+
                     var data = obj.data;
                     //console.log(obj)
                     if(obj.event === 'del'){
                         layer.confirm('真的删除行么', function(index){
+
+                            $.ajax({
+                                url: '${pageContext.request.contextPath}/info/deletfile',
+                                type: "post",
+                                dataType:"json",
+                                contentType: 'application/json;charset=UTF-8',
+                                data:JSON.stringify({
+                                    "id":data.id
+                                }),
+                                success : function(data) {
+                                    console.log("delete传输成功")
+                                }
+
+                            })
+
                             obj.del();
                             layer.close(index);
+
                         });
+
                     } else if(obj.event === 'edit'){
                         layer.prompt({
                             formType: 2
