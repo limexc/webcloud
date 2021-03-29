@@ -34,6 +34,9 @@ public class FileServiceImpl implements FileService {
         //判断传入的userFile是目录还是文件，文件的话都有 fid
         if (userFile.getFid()!=null){
             sum = fileDao.updateVname(userFile);
+
+
+
         }else {
             //获取初始的虚拟路径名
             UserFile uf =fileDao.selectUserFileById(userFile);

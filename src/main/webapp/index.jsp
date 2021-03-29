@@ -122,7 +122,7 @@
                         {type: 'checkbox', fixed: 'check'},
                         //{field: 'fileid', title: 'ID', width:80, align:'center',sort: true},
                         {field: 'filetype', title: '类型', align:'center'}
-                        ,{field: 'filename', title: '文件名',align:'center', sort : true}
+                        ,{field: 'vfname', title: '文件名',align:'center', sort : true}
                         ,{field: 'filesize', title: '大小',align:'center', sort : true}
                         ,{field: 'uptime', title: '上传时间',align:'center', sort : true,templet: '<div>{{ layui.laytpl.toDateString(d.uptime) }}</div>'}
                         ,{fixed: 'right', title: '操作', align:'center', toolbar: '#barDemo'}
