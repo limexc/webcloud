@@ -80,5 +80,6 @@ public interface FileDao {
 
     UserFile selectUserFileById(@Param("userFile")UserFile userFile);
 
+    FileModel getFileInfoByUFid(@Param("ufid")String ufid);
 
 }

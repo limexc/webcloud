@@ -41,7 +41,7 @@ public class FileServiceImpl implements FileService {
             //获取初始的虚拟路径名
             UserFile uf =fileDao.selectUserFileById(userFile);
             String vpath =uf.getVpath();
-            for (int i=0;i<ufs.size();i++){
+        for (int i=0;i<ufs.size();i++){
                 UserFile temp = ufs.get(i);
                 String path = temp.getVpath();
                 if (temp.getVpath().startsWith(vpath)){
@@ -69,9 +69,14 @@ public class FileServiceImpl implements FileService {
         return fileDao.selectFileMd5(md5);
     }
 
+    /**
+     * 通过ufid【userfile表id】查询需要的信息【文件名，路径】
+     * @param ufid userfile表id
+     * @return 文件关键信息
+     */
     @Override
-    public FileModel getFileInfoByFid(int fid) {
-        return null;
+    public FileModel getFileInfoByUFid(String ufid) {
+        return fileDao.getFileInfoByUFid(ufid);
     }
 
     @Override

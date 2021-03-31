@@ -5,6 +5,7 @@ import cn.limexc.model.User;
 import cn.limexc.service.FileService;
 import cn.limexc.service.UserService;
 import cn.limexc.util.ByteUnitConversion;
+import cn.limexc.util.DownLoadFile;
 import com.sun.deploy.net.HttpResponse;
 import com.sun.org.apache.xml.internal.security.keys.storage.implementations.CertsInFilesystemDirectoryResolver;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
@@ -44,8 +46,6 @@ public class FileController {
 
     @Value("${file.path}")
     private String filepath;
-
-
 
     //文件上传，能到这里的肯定是经过md5查找后数据库中没有记录的
 
@@ -100,9 +100,19 @@ public class FileController {
     }
 
 
-    //下载文件
+    //下载文件,get/post请求均可
     @RequestMapping(value = "/download*")
-    public void downFile(){
+    public void downFile(HttpServletRequest req, HttpServletResponse rep){
+        //用userfileid做标识
+        String ufid=req.getParameter("ufid");
+        file=fileService.getFileInfoByUFid(ufid);
+        if (file==null){
+            System.out.println("错误，没有此文件，或用户已将文件删除");
+        }else {
+            System.out.println("即将下载的文件： "+file.getRealpath()+"  文件重命名为："+file.getFilename());
+            File df = new File(file.getRealpath());
+            new DownLoadFile().downloadFile(rep,df,file.getFilename());
+        }
 
     }
 

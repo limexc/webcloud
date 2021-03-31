@@ -74,6 +74,17 @@
                 <input type="button" onclick="" />
             </a>
         </div>
+        <div id="down"  class="btn_tool_div">
+            <a href="#" id="a_down" class="btn_tool">下载文件
+                <input type="button" onclick="" />
+            </a>
+        </div>
+        <div id="uppage"  class="btn_tool_div">
+            <a href="#" id="a_uppage" class="btn_tool">上一页
+                <input type="button" onclick="" />
+            </a>
+        </div>
+
 
 
     </div>
@@ -84,7 +95,7 @@
 
 
         <script type="text/html" id="barDemo">
-            <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+            <a class="layui-btn layui-btn-xs" lay-event="download">下载</a>
             <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
         </script>
 
@@ -119,13 +130,14 @@
                     title: true   //表头
                     ,toolbar: true //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
                     ,cols: [[
-                        {type: 'checkbox', fixed: 'check'},
-                        {field: 'id', title: 'ID',  align:'center',sort: true},
+                        {type:'radio'},
+                        //{type: 'checkbox', fixed: 'check'},
                         {field: 'filetype', title: '类型', align:'center'}
-                        ,{field: 'vfname', title: '文件名',align:'center', sort : true}
+                        ,{field: 'vfname', title: '文件名',edit:'text',align:'center', sort : true}
                         ,{field: 'filesize', title: '大小',align:'center', sort : true}
                         ,{field: 'uptime', title: '上传时间',align:'center', sort : true,templet: '<div>{{ layui.laytpl.toDateString(d.uptime) }}</div>'}
-                        ,{fixed: 'right', title: '操作', align:'center', toolbar: '#barDemo'}
+                        ,{fixed: 'right', title: '操作', align:'center', toolbar: '#barDemo'},
+                        {field: 'id',hide:true}
                     ]]
                     ,page: true
 
@@ -160,15 +172,20 @@
 
                         });
 
-                    } else if(obj.event === 'edit'){
-                        layer.prompt({
-                            formType: 2
-                            ,value: data.email
-                        }, function(value, index){
-                            obj.update({
-                                email: value
-                            });
+                    } else if(obj.event === 'download'){
+                        layer.confirm('下载该文件？', function(index){
+
+                            $.ajax({
+                                url: '${pageContext.request.contextPath}/file/download?ufid='+data.id,
+                                type: "post",
+                                success : function(data) {
+                                    console.log("下载传输成功")
+                                }
+
+                            })
+
                             layer.close(index);
+
                         });
                     }
                 });

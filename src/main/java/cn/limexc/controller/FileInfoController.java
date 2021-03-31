@@ -5,6 +5,7 @@ import cn.limexc.model.User;
 import cn.limexc.model.UserFile;
 import cn.limexc.service.FileService;
 import cn.limexc.util.ByteUnitConversion;
+import cn.limexc.util.ResultData;
 import cn.limexc.util.TimeUtils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -78,11 +79,10 @@ public class FileInfoController {
     //判断文件是否存在，若存在数据写入数据库
 
     @RequestMapping(value = "/getmd5",method= RequestMethod.POST)
-    @ResponseBody
-    public FileModel getMd5(HttpSession session, HttpServletRequest req, @RequestBody Map<String, String> map){
+    public void getMd5(HttpSession session,HttpServletResponse rep, @RequestBody Map<String, String> map){
         //HttpRequest req, HttpResponse rep, HttpSession session
         user = (User) session.getAttribute("user");
-        System.out.println("用户："+user.getId()+"当前http请求方式为:"+req.getMethod());
+        //System.out.println("用户："+user.getId()+"当前http请求方式为:"+req.getMethod());
         //获取并转换单位
         String filesize = new ByteUnitConversion().readableFileSize(Long.parseLong(map.get("filesize")));
         String filemd5 = map.get("md5value");
@@ -91,11 +91,11 @@ public class FileInfoController {
 
         //查询数据库，并将结果放入file
         file = fileService.getFileInfoByMd5(filemd5);
-        //
-        System.out.println("----------"+file.toString());
 
+        ResultData rd = new ResultData();
 
         if (file!=null){
+            System.out.println("----------"+file.toString());
             //数据存在
             UserFile uf=new UserFile();
             uf.setFid(file.getId());
@@ -106,9 +106,16 @@ public class FileInfoController {
             uf.setVpath("//还没想好目录怎么做");
             System.out.println("------> "+uf.toString());
             fileService.addVFile(uf);
+            rd.setData("yes");
+            rd.writeToResponse(rep);
+        } else {
+            System.out.println("数据不存在，准备上传");
+            rd.setData("no");
+            rd.writeToResponse(rep);
         }
 
-        return file;
+
+        //return file;
     }
 
     @RequestMapping(value = "/deletfile",method = RequestMethod.POST)

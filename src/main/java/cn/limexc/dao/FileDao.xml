@@ -68,6 +68,10 @@
         SELECT * FROM user_file WHERE id=#{userFile.id}
     </select>
 
+    <select id="getFileInfoByUFid" resultType="cn.limexc.model.FileModel">
+        SELECT file.realpath AS realpath,user_file.vfname AS filename
+        FROM file,user_file WHERE file.id=user_file.fid AND user_file.id = #{ufid}
+    </select>
 
 
 </mapper>

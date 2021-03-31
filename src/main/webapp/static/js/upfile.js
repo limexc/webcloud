@@ -31,29 +31,34 @@ function change(node) {
             data:JSON.stringify(jsondata),
 
             success: function (data) {
-                alert("文件上传成功"+data.filename)
+                if (data=="yes"){
+                    alert("文件上传成功")
+                }else{
+                    var formatdata = new FormData();
+                    formatdata.append("md5value",e);
+                    formatdata.append("file",node.files[0]);
+
+                    $.ajax({
+                        method:"post",
+                        url: "http://localhost:8080/CloudWeb/file/upload",
+                        enctype: "multipart/form-data",
+                        //不处理数据
+                        contentType:false,
+                        //不设置内容类型
+                        processData: false,
+                        data:formatdata,
+                        success:function (){
+                            alert("上传成功")
+                        },
+                        error:function () {
+                            alert("上传失败")
+                        }
+                    })
+                }
 
             },
-            error: function (data, XMLHttpRequest, textStatus, errorThrown) {
+            error: function (data, XMLHttpRequest) {
                 alert("error"+data+"  "+XMLHttpRequest.status);
-                var formatdata = new FormData();
-                formatdata.append("md5value",e);
-                formatdata.append("file",node.files[0]);
-
-                $.ajax({
-                    method:"post",
-                    url: "http://localhost:8080/CloudWeb/file/upload",
-                    enctype: "multipart/form-data",
-                    //不处理数据
-                    contentType:false,
-                    //不设置内容类型
-                    processData: false,
-                    data:formatdata,
-                    success:function (){
-                        alert("上传成功")
-                    }
-                })
-
 
             }
 
