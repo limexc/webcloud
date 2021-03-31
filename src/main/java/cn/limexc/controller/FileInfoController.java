@@ -123,7 +123,9 @@ public class FileInfoController {
     public void deluserfile(HttpSession session,HttpServletRequest req,@RequestBody Map<String, String> map){
         user= (User) session.getAttribute("user");
         System.out.println(map.get("id"));
-
+        UserFile uf = new UserFile();
+        uf.setId(Integer.parseInt(map.get("id")));
+        fileService.rmDirOrFile(uf,user);
 
     }
 

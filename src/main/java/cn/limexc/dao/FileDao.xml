@@ -41,8 +41,8 @@
         会依赖于执行sql的顺序，先执行的先加一，但是这不一定是真正的日志记录顺序。
     -->
     <insert id="insertFile"  >
-        INSERT INTO file (id,filename,create_time,realpath,filesize,filetype)
-        VALUE ((SELECT MAX(id) FROM file tm),filename,#{file.create_time},#{file.realpath},#{file.filesize},#{file.filetype})
+        INSERT INTO file (id,filename,md5,create_time,realpath,filesize,filetype)
+        VALUE ((SELECT MAX(id)+1 FROM file tm),#{file.filename},#{file.md5},#{file.create_time},#{file.realpath},#{file.filesize},#{file.filetype})
     </insert>
 
     <!--userfile表中的id字段为自增的-->
@@ -65,7 +65,7 @@
     </update>
 
     <select id="selectUserFileById" resultType="cn.limexc.model.UserFile">
-        SELECT * FROM user_file WHERE id=#{userFile.id}
+        SELECT id,uid,fid,vfname,uptime FROM user_file WHERE id=#{id}
     </select>
 
     <select id="getFileInfoByUFid" resultType="cn.limexc.model.FileModel">

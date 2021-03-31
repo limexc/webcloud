@@ -21,7 +21,7 @@ public interface FileDao {
      * @param user 用户信息
      * @return  返回【用户文件】列表
      */
-    List<UserFile> selectFileList(User user);
+    List<UserFile> selectFileList(@Param("user") User user);
 
     /**
      * 获取文件列表，用于查询用户的文件列表   ?page=1&limit=30
@@ -45,7 +45,7 @@ public interface FileDao {
      * @param file 文件信息
      * @return 影响行数
      */
-    int insertFile(FileModel file);
+    int insertFile(@Param("file") FileModel file);
 
     /**
      * 将文件信息写入userfile表
@@ -78,7 +78,7 @@ public interface FileDao {
 
     int updateVpath(@Param("userFile")UserFile userFile);
 
-    UserFile selectUserFileById(@Param("userFile")UserFile userFile);
+    UserFile selectUserFileById(@Param("id")Integer id);
 
     FileModel getFileInfoByUFid(@Param("ufid")String ufid);
 

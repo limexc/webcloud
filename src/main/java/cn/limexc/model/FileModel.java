@@ -10,12 +10,12 @@ public class FileModel {
     private Integer id;
     private String filename;
     private String md5;
-    private Date create_time;
+    private String create_time;
     private String filesize;
     private String filetype;
     private String realpath;
 
-    public FileModel(Integer id, String filename, String md5, Date create_time, String filesize, String filetype, String realpath) {
+    public FileModel(Integer id, String filename, String md5, String create_time, String filesize, String filetype, String realpath) {
         this.id = id;
         this.filename = filename;
         this.md5 = md5;
@@ -59,11 +59,11 @@ public class FileModel {
         this.md5 = md5;
     }
 
-    public Date getCreate_time() {
+    public String getCreate_time() {
         return create_time;
     }
 
-    public void setCreate_time(Date create_time) {
+    public void setCreate_time(String create_time) {
         this.create_time = create_time;
     }
 

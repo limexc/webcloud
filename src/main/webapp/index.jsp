@@ -174,16 +174,7 @@
 
                     } else if(obj.event === 'download'){
                         layer.confirm('下载该文件？', function(index){
-
-                            $.ajax({
-                                url: '${pageContext.request.contextPath}/file/download?ufid='+data.id,
-                                type: "post",
-                                success : function(data) {
-                                    console.log("下载传输成功")
-                                }
-
-                            })
-
+                            window.location.href = '${pageContext.request.contextPath}/file/download?ufid='+data.id;
                             layer.close(index);
 
                         });

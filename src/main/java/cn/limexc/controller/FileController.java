@@ -2,12 +2,16 @@ package cn.limexc.controller;
 
 import cn.limexc.model.FileModel;
 import cn.limexc.model.User;
+import cn.limexc.model.UserFile;
 import cn.limexc.service.FileService;
 import cn.limexc.service.UserService;
 import cn.limexc.util.ByteUnitConversion;
 import cn.limexc.util.DownLoadFile;
+import cn.limexc.util.GetIcon;
+import cn.limexc.util.TimeUtils;
 import com.sun.deploy.net.HttpResponse;
 import com.sun.org.apache.xml.internal.security.keys.storage.implementations.CertsInFilesystemDirectoryResolver;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
@@ -43,15 +47,18 @@ public class FileController {
     private User user;
 
     private FileModel file;
+    private UserFile userFile;
 
     @Value("${file.path}")
     private String filepath;
+
 
     //文件上传，能到这里的肯定是经过md5查找后数据库中没有记录的
 
     @RequestMapping(value = "/upload",method= RequestMethod.POST)
     @ResponseBody
     public FileModel upload(HttpSession session, HttpServletRequest req,@RequestPart("file") MultipartFile multipartFile){
+        user= (User) session.getAttribute("user");
         System.out.println(new Date()+"文件来啦");
 
         if (multipartFile.isEmpty()){
@@ -64,15 +71,17 @@ public class FileController {
         String fileSize = new ByteUnitConversion().readableFileSize(multipartFile.getSize());
         System.out.println("文件大小："+fileSize+" 文件名："+fileName);
 
-        //设置属性
+        //设置属性  等着放到service里面，不是在这里搞的
+        GetIcon getIcon = new GetIcon();
         file = new FileModel();
         file.setFilesize(fileSize);
         file.setFilename(fileName);
         file.setMd5(fileMd5);
-        file.setCreate_time(new Date());
+        file.setCreate_time(TimeUtils.getUtils().getForMatTime());
+        file.setFiletype(getIcon.Icons(fileName));
 
         //为了防止有重名的文件，就用时间戳做唯一目录名
-        file.setRealpath(filepath+file.getCreate_time().getTime()+"/"+fileName);
+        file.setRealpath(filepath+new Date().getTime()+"/"+fileName);
 
 
         //获取文件后缀名
@@ -92,6 +101,23 @@ public class FileController {
         try {
             multipartFile.transferTo(upfile);
             System.out.println("文件写入成功");
+            //向数据库写入文件信息
+            fileService.addFile(file);
+            //查询一下最新的信息
+            file = fileService.getFileInfoByMd5(fileMd5);
+
+            userFile = new UserFile();
+            userFile.setUid(user.getId());
+            userFile.setFid(file.getId());
+            userFile.setFilesize(fileSize);
+            userFile.setUptime(file.getCreate_time());
+            userFile.setVfname(fileName);
+            userFile.setVpath("/");
+
+
+            fileService.addVFile(userFile);
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }

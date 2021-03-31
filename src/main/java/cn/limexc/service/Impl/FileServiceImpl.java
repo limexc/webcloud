@@ -39,7 +39,7 @@ public class FileServiceImpl implements FileService {
 
         }else {
             //获取初始的虚拟路径名
-            UserFile uf =fileDao.selectUserFileById(userFile);
+            UserFile uf =fileDao.selectUserFileById(userFile.getId());
             String vpath =uf.getVpath();
         for (int i=0;i<ufs.size();i++){
                 UserFile temp = ufs.get(i);
@@ -102,14 +102,22 @@ public class FileServiceImpl implements FileService {
     public int rmDirOrFile(UserFile userFile,User user) {
         //受影响的行数
         int sum=0;
-        //先查询该用户的所有文件
+        //判断是文件夹还是文件
+        userFile=fileDao.selectUserFileById(userFile.getId());
+        System.out.println("这里是service"+userFile.toString());
+        if (userFile.getFid()!=null){
+            return sum=fileDao.deleteUserFile(userFile);
+        }
+
+
+        //查询该用户的所有文件
         List<UserFile> ufs = fileDao.selectFileList(user);
         //循环，查找同一文件夹下下的文件，删除 | 让文件的vpath唯一 感觉可以和删除文件方法合并。
         for (int i=0;i<ufs.size();i++){
             UserFile temp = ufs.get(i);
             String path = temp.getVpath();
             if (temp.getVpath().startsWith(userFile.getVpath())){
-                System.out.println("要删除的目录或文件"+path);
+                System.out.println("要删除的目录"+path);
                 sum += fileDao.deleteUserFile(temp);
             }
         }
