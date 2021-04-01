@@ -67,8 +67,8 @@ public class FileController {
         String fileMd5 = req.getParameter("md5value");
         //获取文件名
         String fileName = multipartFile.getOriginalFilename();
-        //获取文件的大小并进行单位的转换计算
-        String fileSize = new ByteUnitConversion().readableFileSize(multipartFile.getSize());
+        //获取文件的大小转换
+        String fileSize = Long.toString(multipartFile.getSize());
         System.out.println("文件大小："+fileSize+" 文件名："+fileName);
 
         //设置属性  等着放到service里面，不是在这里搞的

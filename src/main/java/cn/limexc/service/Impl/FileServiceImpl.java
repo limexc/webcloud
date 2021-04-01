@@ -5,6 +5,7 @@ import cn.limexc.model.FileModel;
 import cn.limexc.model.User;
 import cn.limexc.model.UserFile;
 import cn.limexc.service.FileService;
+import cn.limexc.util.ByteUnitConversion;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -81,9 +82,17 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public List<UserFile> listUserFile(Integer id, String page, String limit) {
-        //获取文件列表时需要判断目录vpath以及用户是否自定义名称vname
+        //获取文件列表时需要判断目录vpath
+        List<UserFile> userFiles = fileDao.selectFileListLimit(id,page,limit);
 
-        return fileDao.selectFileListLimit(id,page,limit);
+        //循环修改filsize的值，数据库中存储原始未转换数据方便对用户空间的控制。
+        for (UserFile uf:userFiles) {
+            String  tmp=null;
+            tmp = new ByteUnitConversion().readableFileSize(Long.parseLong(uf.getFilesize()));
+            uf.setFilesize(tmp);
+        }
+
+        return userFiles;
     }
 
     @Override
