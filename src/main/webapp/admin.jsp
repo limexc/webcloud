@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>管理系统</title>
-    <link rel="stylesheet" href="../src/css/layui.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/layui/css/layui.css">
 </head>
 <body class="layui-layout-body">
 
@@ -21,12 +21,12 @@
 
 <div class="layui-layout layui-layout-admin">
     <div class="layui-header">
-        <div class="layui-logo">layui 管理布局</div>
+        <div class="layui-logo">网盘管理</div>
         <!-- 头部区域（可配合layui已有的水平导航） -->
         <ul class="layui-nav layui-layout-left">
-            <li class="layui-nav-item"><a href="">控制台</a></li>
-            <li class="layui-nav-item"><a href="">商品管理</a></li>
-            <li class="layui-nav-item"><a href="">用户</a></li>
+            <li class="layui-nav-item"><a href="">系统信息</a></li>
+            <li class="layui-nav-item"><a href="">文件管理</a></li>
+            <li class="layui-nav-item"><a href="">用户管理</a></li>
             <li class="layui-nav-item">
                 <a href="javascript:;">其它系统</a>
                 <dl class="layui-nav-child">
@@ -88,7 +88,7 @@
         © 底部固定区域
     </div>
 </div>
-<script src="../src/layui.js"></script>
+<script src="${pageContext.request.contextPath}/static/layui/layui.js"></script>
 <script>
     //JavaScript代码区域
     layui.use('element', function(){

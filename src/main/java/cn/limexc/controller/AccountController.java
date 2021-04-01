@@ -89,6 +89,7 @@ public class AccountController {
             }
             return "forward:/login.jsp";
         }else {
+            //当时为啥要加个model？等后期检查一下
             model.addAttribute("msg","登录失败，请检查用户名密码");
             return "forward:/login.jsp";
         }

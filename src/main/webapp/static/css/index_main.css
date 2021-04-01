@@ -90,6 +90,10 @@ html, body{
     overflow: hidden;
 
 }
+.file_view{
+    top: -10px;
+    margin-top: -10px;
+}
 
 /*!*头部列表标题*!*/
 /*#file_head{*/
@@ -102,7 +106,7 @@ html, body{
 /*上传等工具栏*/
 .file_tools{
     height: 50px;
-    background-color: aquamarine;
+    background-color: #2D93CA;
 }
 
 /*美化一下上传input*/
@@ -139,12 +143,4 @@ html, body{
     border-color: #78C3F3;
     color: #004974;
     text-decoration: none;
-}
-
-
-/*底部分页*/
-.pagelimit{
-    position: absolute;
-    bottom: 30px;
-
 }

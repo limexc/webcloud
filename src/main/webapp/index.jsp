@@ -53,6 +53,16 @@
         <span></span>
         <span><a href="${pageContext.request.contextPath}/system/logout">退出</a></span>
         <span>容量</span>
+        <div class="layui-progress">
+            <!--进度条,用来显示容量，不用自己画真好...但是想自己调调就要去查文档...-->
+            <div class="layui-progress-bar" lay-percent="40%"></div>
+        </div>
+        <script>
+            //注意进度条依赖 element 模块，否则无法进行正常渲染和功能性操作
+            layui.use('element', function(){
+                var element = layui.element;
+            });
+        </script>
 
 
     </div>
@@ -74,11 +84,7 @@
                 <input type="button" onclick="" />
             </a>
         </div>
-        <div id="down"  class="btn_tool_div">
-            <a href="#" id="a_down" class="btn_tool">下载文件
-                <input type="button" onclick="" />
-            </a>
-        </div>
+
         <div id="uppage"  class="btn_tool_div">
             <a href="#" id="a_uppage" class="btn_tool">上一页
                 <input type="button" onclick="" />
@@ -96,6 +102,7 @@
 
         <script type="text/html" id="barDemo">
             <a class="layui-btn layui-btn-xs" lay-event="download">下载</a>
+            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="share">分享</a>
             <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
         </script>
 
@@ -132,8 +139,8 @@
                     ,cols: [[
                         {type:'radio'},
                         //{type: 'checkbox', fixed: 'check'},
-                        {field: 'filetype', title: '类型', align:'center'}
-                        ,{field: 'vfname', title: '文件名',edit:'text',align:'center', sort : true}
+                        //{field: 'filetype', title: '类型', align:'center'},
+                        {field: 'vfname', title: '文件名',edit:'text',align:'center', sort : true}
                         ,{field: 'filesize', title: '大小',align:'center', sort : true}
                         ,{field: 'uptime', title: '上传时间',align:'center', sort : true,templet: '<div>{{ layui.laytpl.toDateString(d.uptime) }}</div>'}
                         ,{fixed: 'right', title: '操作', align:'center', toolbar: '#barDemo'},
@@ -151,8 +158,7 @@
                     var data = obj.data;
                     //console.log(obj)
                     if(obj.event === 'del'){
-                        layer.confirm('真的删除行么', function(index){
-
+                        layer.confirm('您确定要删除吗？', function(index){
                             $.ajax({
                                 url: '${pageContext.request.contextPath}/info/deletfile',
                                 type: "post",
@@ -164,7 +170,6 @@
                                 success : function(data) {
                                     console.log("delete传输成功")
                                 }
-
                             })
 
                             obj.del();
@@ -173,11 +178,25 @@
                         });
 
                     } else if(obj.event === 'download'){
+                        //监听下载按钮
                         layer.confirm('下载该文件？', function(index){
                             window.location.href = '${pageContext.request.contextPath}/file/download?ufid='+data.id;
                             layer.close(index);
 
                         });
+                    }else if (obj.event === "share"){
+                        //文件共享按钮监听
+                        alert("先弹个窗口看");
+                        //Ajax获取
+                        $.post('url', {}, function(str){
+                            layer.open({
+                                title: '分享链接',
+                                type: 1,
+                                content: str //注意，如果str是object，那么需要字符拼接。
+                            });
+                        });
+                        //window.location.href("${pageContext.request.contextPath}");
+
                     }
                 });
 
