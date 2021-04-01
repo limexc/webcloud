@@ -81,6 +81,9 @@ public class AccountController {
 
                 //将用户登陆数据保存到session中
                 session.setAttribute("user",user);
+                session.setAttribute("status",user.getStatus());
+                //存储用户的权限？没有实体类对应啊？
+                //session.setAttribute("power",);
 
                 return "redirect:/user/main";
             }
