@@ -81,6 +81,11 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
+    public UserFile getUFInfoByUFid(Integer ufid) {
+        return fileDao.selectUserFileById(ufid);
+    }
+
+    @Override
     public List<UserFile> listUserFile(Integer id, String page, String limit) {
         //获取文件列表时需要判断目录vpath
         List<UserFile> userFiles = fileDao.selectFileListLimit(id,page,limit);

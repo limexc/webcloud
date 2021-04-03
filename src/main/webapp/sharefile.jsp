@@ -11,13 +11,7 @@
 	<body>
         <div class="main_style">
             <div class="head_menu">
-
-                <ul class="ul_menu">
-                    <li><a href="index.jsp">WEBCLOUD</a></li>
-                    <li><a href=""><img width="50" height="50" src="${pageContext.request.contextPath}/static/images/dls.jpeg"></a></li>
-                    <li><a href="">username</a></li>
-                    <li><a href="">logout</a></li>
-                </ul>
+                <a>这就是共享的文件</a>
             </div>
             <div class="file_main">
 

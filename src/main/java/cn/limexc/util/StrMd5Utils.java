@@ -57,7 +57,7 @@ public class StrMd5Utils {
      * 生成重复概率较小的短码，可以用做分享文件的url，或者再改进一下，查一下数据库再放？
      * 该方法存在碰撞的可能性，解决冲突会比较麻烦。不过该方法生成的短码位数是固定的，也不存在连续生成的短码有序的情况。
      * @param url  传入字符串
-     * @return     6位短码
+     * @return     四组6位短码
      */
 
     public static String[] shortUrl(String url) {
@@ -85,9 +85,9 @@ public class StrMd5Utils {
         String[] resUrl = new String[4];
         //得到4组短链接字符串
         for (int i = 0; i < 4; i++) {
-            // 把加密字符按照 8 位一组 16 进制与 0x3FFFFFFF 进行位与运算
+            //把加密字符按照8位一组16进制与0x3FFFFFFF进行位与运算
             String sTempSubString = sMD5EncryptResult.substring(i * 8, i * 8 + 8);
-            // 这里需要使用 long 型来转换，因为 Inteper.parseInt() 只能处理31位,首位为符号位,如果不用long，则会越界
+            //这里需要使用 long 型来转换，因为 Inteper.parseInt() 只能处理31位,首位为符号位,如果不用long，则会越界
             long lHexLong = 0x3FFFFFFF & Long.parseLong(sTempSubString, 16);
             String outChars = "";
             //循环获得每组6位的字符串

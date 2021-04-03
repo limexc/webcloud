@@ -37,7 +37,10 @@ public interface FileService {
     FileModel getFileInfoByMd5(String md5);
 
     //通过文件ufid获取文件路径及虚拟文件名信息
-    FileModel getFileInfoByUFid(@Param("ufid") String ufid);
+    FileModel getFileInfoByUFid(String ufid);
+
+    //通过文件ufid获取userfile信息
+    UserFile getUFInfoByUFid(Integer ufid);
 
     //用户文件分页查询
     List<UserFile> listUserFile(Integer id, String page, String limit);

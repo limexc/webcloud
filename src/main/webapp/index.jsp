@@ -42,6 +42,13 @@
     }
 %>
 
+<%
+    //关于路径问题，初步的解决方法
+    String path = request.getContextPath();
+    String basePath = request.getServerName() + ":" + request.getServerPort() + path + "/";
+    String baseUrlPath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
+%>
+
 <div class="head_menu">
     <a id="logo_ti">网盘？是的！稳定？不存在的！</a>
 </div>
@@ -155,7 +162,7 @@
                 //监听行工具事件
                 table.on('tool(test)', function(obj){
 
-                    var data = obj.data;
+                    var objdata = obj.data;
                     //console.log(obj)
                     if(obj.event === 'del'){
                         layer.confirm('您确定要删除吗？', function(index){
@@ -165,7 +172,7 @@
                                 dataType:"json",
                                 contentType: 'application/json;charset=UTF-8',
                                 data:JSON.stringify({
-                                    "id":data.id
+                                    "id":objdata.id
                                 }),
                                 success : function(data) {
                                     console.log("delete传输成功")
@@ -180,22 +187,30 @@
                     } else if(obj.event === 'download'){
                         //监听下载按钮
                         layer.confirm('下载该文件？', function(index){
-                            window.location.href = '${pageContext.request.contextPath}/file/download?ufid='+data.id;
+                            window.location.href = '${pageContext.request.contextPath}/file/download?ufid='+objdata.id;
                             layer.close(index);
 
                         });
                     }else if (obj.event === "share"){
                         //文件共享按钮监听
                         alert("先弹个窗口看");
-                        //Ajax获取
-                        $.post('url', {}, function(str){
-                            layer.open({
-                                title: '分享链接',
-                                type: 1,
-                                content: str //注意，如果str是object，那么需要字符拼接。
-                            });
-                        });
-                        //window.location.href("${pageContext.request.contextPath}");
+                        //Ajax发送信息
+                        $.ajax({
+                            url:'${pageContext.request.contextPath}/share/getshareurl?ufid='+objdata.id,
+                            type:"post",
+                            //不知道怎么写对不对，先试试
+                            success : function (data){
+                                if (data.url!='null'){
+                                    let baseurlpath = '<%= baseUrlPath%>'
+                                    layer.alert(
+                                        "您的分享地址为：<br />"+baseurlpath+'share/file/'+data.url);
+                                }else {
+                                    layer.alert("警告！<br />您输入的信息有误！");
+                                }
+
+                            }
+                        })
+
 
                     }
                 });

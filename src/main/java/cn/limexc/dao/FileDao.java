@@ -78,6 +78,11 @@ public interface FileDao {
 
     int updateVpath(@Param("userFile")UserFile userFile);
 
+    /**
+     * 通过userfile表的id进行查找
+     * @param id
+     * @return
+     */
     UserFile selectUserFileById(@Param("id")Integer id);
 
     FileModel getFileInfoByUFid(@Param("ufid")String ufid);
