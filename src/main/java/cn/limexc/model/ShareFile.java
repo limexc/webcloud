@@ -5,7 +5,7 @@ public class ShareFile {
     private Integer fid;
     //uid好像貌似与fuid功能差不多，要啥uid？搞数据库的时候脑子进水了。
     private Integer uid;
-    private Integer fuid;
+    private Integer ufid;
     private String url;
     //忘了当时搞这个index是干啥的了，可能是存什么的路径？忘了，实在想不起来后期就删了。
     private String index;
@@ -14,11 +14,11 @@ public class ShareFile {
     public ShareFile() {
     }
 
-    public ShareFile(Integer id, Integer fid, Integer uid, Integer fuid, String url, String index, String other) {
+    public ShareFile(Integer id, Integer fid, Integer uid, Integer ufid, String url, String index, String other) {
         this.id = id;
         this.fid = fid;
         this.uid = uid;
-        this.fuid = fuid;
+        this.ufid = ufid;
         this.url = url;
         this.index = index;
         this.other = other;
@@ -48,12 +48,12 @@ public class ShareFile {
         this.uid = uid;
     }
 
-    public Integer getFuid() {
-        return fuid;
+    public Integer getUfid() {
+        return ufid;
     }
 
-    public void setFuid(Integer fuid) {
-        this.fuid = fuid;
+    public void setUfid(Integer fuid) {
+        this.ufid = fuid;
     }
 
     public String getUrl() {
@@ -86,7 +86,7 @@ public class ShareFile {
                 "id=" + id +
                 ", fid=" + fid +
                 ", uid=" + uid +
-                ", fuid=" + fuid +
+                ", ufid=" + ufid +
                 ", url='" + url + '\'' +
                 ", index='" + index + '\'' +
                 ", other='" + other + '\'' +

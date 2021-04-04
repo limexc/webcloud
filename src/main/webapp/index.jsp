@@ -200,12 +200,16 @@
                             type:"post",
                             //不知道怎么写对不对，先试试
                             success : function (data){
-                                if (data.url!='null'){
+                                if (data.url=='err1') {
+                                    layer.open({title:"警告！",content:"您输入的信息有误！"});
+                                }else if (data.url=="err2"){
+                                    layer.open({title:"警告！",content:"系统错误！这个文件已经分享过了！"})
+                                }else if (data.url=="err3"){
+                                    layer.open({title:"错误！",content:"系统错误！请您稍后再次尝试！"})
+                                }else {
                                     let baseurlpath = '<%= baseUrlPath%>'
                                     layer.alert(
                                         "您的分享地址为：<br />"+baseurlpath+'share/file/'+data.url);
-                                }else {
-                                    layer.alert("警告！<br />您输入的信息有误！");
                                 }
 
                             }
