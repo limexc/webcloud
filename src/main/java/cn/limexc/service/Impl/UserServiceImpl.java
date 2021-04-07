@@ -26,4 +26,28 @@ public class UserServiceImpl implements UserService {
     public User login(String email,String password) {
         return userDao.selectForEmailAndPasswd(email,password);
     }
+    //用户基本信息
+    @Override
+    public User userinfo(Integer id) {
+        return userDao.selectUserInfoById(id);
+    }
+
+    @Override
+    public Boolean haveUserByName(String name) {
+        //查找到了就返回false
+        if (userDao.selectUserByUsername(name)!=null){
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public Boolean haveUserByEmail(String email) {
+        if (userDao.selectUserByEmail(email)!=null){
+            return false;
+        }
+        return true;
+
+    }
+
 }

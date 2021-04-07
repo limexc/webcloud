@@ -30,7 +30,7 @@
                 <span class="login_tips">密码</span><br />
 				<input class="login_input_text" name="password" placeholder="密码" id="passwordText" type="password"/>
                 <br />
-                <span class="other_tips"><a id="refind" href="#">忘记密码</a>或<a id="signup" href="register.jsp">注册账号</a></span><br />
+                <span class="other_tips"><a id="refind" href="${pageContext.request.contextPath}/resetpwd/">忘记密码</a>或<a id="signup" href="${pageContext.request.contextPath}/register/">注册账号</a></span><br />
                 <input class="login_btn" type="submit" value="登录" />
 			</form>
 

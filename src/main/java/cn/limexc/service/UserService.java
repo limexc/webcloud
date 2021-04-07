@@ -24,4 +24,18 @@ public interface UserService {
     //用户修改密码
 
 
+    //用ID查找用户，返回基本信息
+    User userinfo(Integer id);
+
+    /**
+     * 通过用户名查找用户，用于注册时验证该用户名是否被注册
+     * @param name 用户名
+     * @return  true表示该用户名可用
+     */
+    Boolean haveUserByName(String name);
+
+
+    Boolean haveUserByEmail(String email);
+
+
 }

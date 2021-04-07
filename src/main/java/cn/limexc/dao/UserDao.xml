@@ -15,7 +15,8 @@
 
 
     <insert id="insertUser" >
-        INSERT INTO users(id,username,email,password,create_at,delete_at,status,storage,alisa) VALUES(#{id},#{username},#{email},#{password},#{create_at},#{delete_at},#{status},#{storage},#{alisa});
+        INSERT INTO users(id,username,email,password,create_at,delete_at,status,storage)
+        VALUES(#{user.id},#{user.username},#{user.email},#{user.password},#{user.create_at},#{user.delete_at},#{user.status},#{user.storage});
     </insert>
 
 </mapper>

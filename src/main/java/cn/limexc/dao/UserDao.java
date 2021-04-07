@@ -27,7 +27,9 @@ public interface UserDao {
      * @param user  用户信息
      * @return      影响的行数【判断插入是否成功】
      */
-    int insertUser(User user);
+    int insertUser(@Param(value = "user") User user);
+
+
 
     /**
      * 查询邮箱数据
@@ -36,4 +38,18 @@ public interface UserDao {
      */
     @Select("SELECT COUNT(*) FROM users WHERE email=#{email}")
     int selectEmail(@Param("email") String email);
+
+    /**
+     * 通过id查找用户，返回基本信息
+     * @param id id
+     * @return   用户user基本信息
+     */
+    @Select("select id,username,email,alisa from users where id=#{id}")
+    User selectUserInfoById(@Param("id") Integer id);
+
+    @Select("select id,username,email from users where username=#{name}")
+    User selectUserByUsername(@Param("name") String name);
+
+    @Select("select id,username,email from users where email=#{email} ")
+    User selectUserByEmail(@Param("email") String email);
 }

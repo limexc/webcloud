@@ -29,7 +29,7 @@ window.onload = function() {
 
             //页面计时
             console.log("开始倒计时");
-            var timing = setInterval(function() {
+            let timing = setInterval(function() {
                 if(time == 0) {
                     $("#sub_ve").removeAttr("disabled");
                     $("#sub_ve").html("重新发送验证码");

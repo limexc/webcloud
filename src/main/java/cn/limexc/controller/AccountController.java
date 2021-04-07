@@ -8,14 +8,18 @@ import cn.limexc.util.TimeUtils;
 import cn.limexc.util.VeCodeUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,7 +42,7 @@ public class AccountController {
     @Resource
     private UserService userService;
 
-    private User user = null;
+
 
     //处理直接访问的根请求
     @RequestMapping(value = "")
@@ -50,7 +54,7 @@ public class AccountController {
     public String userlogin(HttpServletRequest request, Model model, HttpSession session){
         String email;
         String password;
-
+        User user = null;
         //总是傻了吧唧的，别忘了，暂存。
         //req.setCharacterEncoding("UTF-8");
         //resp.setContentType("text/html;charset=UTF-8");
@@ -96,20 +100,90 @@ public class AccountController {
 
     }
 
+    /**
+     * 转跳注册页
+     * @return 注册页地址
+     */
     @RequestMapping(value = "/register")
-    public String register(){
+    public String regPage(){
         return "forward:/register.jsp";
     }
 
+    /**
+     *
+     */
+    @RequestMapping(value = "/system/reg")
+    @ResponseBody
+    public Map<String,Object> register(HttpServletRequest req,@RequestBody Map<String, String> map) {
+        Map<String,Object> reqmap = new HashMap<String,Object>();
+        String username;
+        String email = null;
+        String passwd=null;
+        String revecode;
 
-    @RequestMapping(value = "/system/resetpwd")
-    public ModelAndView findPassword(){
-        ModelAndView mv = new ModelAndView();
+        //正则表达式判断是否为邮箱
+        String mailcheck = "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
+        Pattern pattern = Pattern.compile(mailcheck);
+        Matcher matcher = pattern.matcher(email);
+        boolean rs = matcher.matches();
 
 
-        return mv;
+
+        if (rs && passwd != null && passwd != "") {
+
+            System.out.println("邮箱：" + email + " 密码：" + passwd + " 邮箱格式：" + rs);
+
+
+        }
+
+        return reqmap;
+    }
+
+    @RequestMapping(value = "/system/reg/service")
+    @ResponseBody
+    public void regUsername(HttpServletRequest req,HttpServletResponse rep){
+
+        Enumeration<String> key = req.getParameterNames();
+        while(key.hasMoreElements()) {
+
+            String parameterName = key.nextElement();
+
+            //判断传入的参数是邮箱还是用户名
+            if ("loginName".equals(parameterName)){
+                try {
+                    rep.getWriter().print(userService.haveUserByName(req.getParameter("loginName")));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }else if ("email".equals(parameterName)){
+                try {
+                    rep.getWriter().print(userService.haveUserByEmail(req.getParameter("email")));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+
+
+
+
+
+
 
     }
+
+
+
+
+
+    @RequestMapping(value = "/resetpwd")
+    public ModelAndView findPasswdPage(){
+        ModelAndView mv = new ModelAndView("forward:/findpasswd.jsp");
+        return mv;
+    }
+
+
 
     /**
      * 还没测试，准备睡觉了功能还没搞，大体就这样发送
@@ -136,6 +210,11 @@ public class AccountController {
         mail.sendMail();
     }
 
+    /**
+     * 退出系统，注销登陆
+     * @param session 用户session
+     * @return 转跳登陆界面
+     */
     @RequestMapping(value = "/system/logout")
     public String logOut(HttpSession session){
         //清除session
