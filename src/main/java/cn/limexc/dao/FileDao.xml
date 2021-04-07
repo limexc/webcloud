@@ -65,11 +65,12 @@
     </update>
 
     <select id="selectUserFileById" resultType="cn.limexc.model.UserFile">
-        SELECT id,uid,fid,vfname,uptime FROM user_file WHERE id=#{id}
+        SELECT user_file.id AS id,user_file.uid AS uid,user_file.fid AS  fid,user_file.vfname  AS vfname,user_file.uptime  AS  uptime,file.filesize AS filesize
+        FROM user_file,file WHERE user_file.fid=file.id AND user_file.id=#{id}
     </select>
 
     <select id="getFileInfoByUFid" resultType="cn.limexc.model.FileModel">
-        SELECT file.realpath AS realpath,user_file.vfname AS filename
+        SELECT file.realpath AS realpath,user_file.vfname AS filename ,file.filesize AS filesize
         FROM file,user_file WHERE file.id=user_file.fid AND user_file.id = #{ufid}
     </select>
 

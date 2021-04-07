@@ -7,6 +7,8 @@ import cn.limexc.model.UserFile;
 import cn.limexc.service.FileService;
 import cn.limexc.service.ShareService;
 import cn.limexc.service.UserService;
+import cn.limexc.util.ByteUnitConversion;
+import cn.limexc.util.DownLoadFile;
 import cn.limexc.util.StrMd5Utils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +20,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -84,6 +87,8 @@ public class ShareFileController {
             if (shareService.getUserShareByUFid(userFile.getId())!=null){
                 System.out.println("警告！文件"+ufid+"已经共享过了");
                 map.put("url","err2");
+                //
+                map.put("tips",shareService.getUserShareByUFid(userFile.getId()).getUrl());
                 return map;
             }
 
@@ -120,6 +125,7 @@ public class ShareFileController {
 
     /**
      * 用户获取分享页面,搞简单点，和那个  蓝奏云  的差不多就行，简单
+     * https://img.limexc.cn/images/20210405142005.png
      * 要注意配置Interceptor防止拦截未登录用户访问该URL
      * @return
      */
@@ -142,11 +148,39 @@ public class ShareFileController {
             mv.addAllObjects(map);
             return mv;
         }
-        //获取用户信息添加
-
+        //获取分享的用户信息添加
+        UserFile uf = fileService.getUFInfoByUFid(shareFile.getUfid());
+        User us = new  User();
+        us= userService.userinfo(shareFile.getUid());
+        System.out.println(uf.toString());
+        System.out.println(us.toString());
+        map.put("filename",uf.getVfname());
+        map.put("uptime",uf.getUptime());
+        map.put("username",us.getUsername());
+        map.put("filesize",new ByteUnitConversion().readableFileSize(Long.parseLong(uf.getFilesize())));
+        map.put("filetext",shareFile.getOther());
+        map.put("fileurl",url);
+        mv.addAllObjects(map);
 
         return mv;
     }
 
+    //下载分享的文件
+    @RequestMapping(value = "/file/download/{url}")
+    public void downFile(@PathVariable String url,HttpServletRequest req, HttpServletResponse rep){
+        //通过url来获取文件的信息
+        ShareFile sf = shareService.getUserShareByUrl(url);
+        if (sf!=null){
+            fileModel=fileService.getFileInfoByUFid(String.valueOf(sf.getUfid()));
+        }
+        if (fileModel==null){
+            System.out.println("错误，没有此文件，或用户已将文件删除");
+        }else {
+            System.out.println("即将下载的文件： "+fileModel.getRealpath()+"  文件重命名为："+fileModel.getFilename());
+            File df = new File(fileModel.getRealpath());
+            new DownLoadFile().downloadFile(rep,df,fileModel.getFilename());
+        }
+
+    }
 
 }

@@ -51,6 +51,12 @@ public class LoginInterceptor implements HandlerInterceptor {
             return true;
         }
 
+        //文件分享不拦截
+        if (uri.indexOf("/share/file/")>0){
+            System.out.println("文件分享界面不拦截");
+            return true;
+        }
+
         System.out.println("用户访问的"+uri);
 
         System.out.println("用户未登录，转跳到登陆页面");
