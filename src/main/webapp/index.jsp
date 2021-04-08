@@ -49,11 +49,34 @@
     String baseUrlPath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
 %>
 
-<div class="head_menu">
-    <a id="logo_ti">网盘？是的！稳定？不存在的！</a>
+<div class="head_menu" style="z-index: 999">
+
+
+    <div class="layui-layout layui-layout-admin">
+        <div class="layui-header">
+            <div class="layui-logo">网盘</div>
+            <!-- 头部区域（可配合layui已有的水平导航） -->
+
+            <!--头部区域结束-->
+            <ul class="layui-nav layui-layout-right">
+                <li class="layui-nav-item">
+                    <a href="javascript:;">
+                        <img src="${pageContext.request.contextPath}/static/images/dls.jpeg" class="layui-nav-img">
+                        ${user.username}
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="">基本资料</a></dd>
+                        <dd><a href="">安全设置</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item"><a href="${pageContext.request.contextPath}/system/logout">退了</a></li>
+            </ul>
+        </div>
+
 </div>
 
 <div class="menu_left">
+    <!--
     <div id="photo_div"><img id="photo_img" src="${pageContext.request.contextPath}/static/images/dls.jpeg"></div>
     <div id="userinfo_div" style="font: 26px 微软雅黑 ">
         <span>用户名:${user.username}</span>
@@ -61,7 +84,7 @@
         <span><a href="${pageContext.request.contextPath}/system/logout">退出</a></span>
         <span>容量</span>
         <div class="layui-progress">
-            <!--进度条,用来显示容量，不用自己画真好...但是想自己调调就要去查文档...-->
+            进度条,用来显示容量，不用自己画真好...但是想自己调调就要去查文档...
             <div class="layui-progress-bar" lay-percent="40%"></div>
         </div>
         <script>
@@ -70,6 +93,35 @@
                 var element = layui.element;
             });
         </script>
+
+    -->
+
+    <ul class="layui-nav layui-nav-tree layui-nav-side layui-inline" lay-filter="demo" style="margin-top: 60px;">
+        <li class="layui-nav-item layui-nav-itemed">
+            <a href="javascript:;">我的文件</a>
+            <dl class="layui-nav-child">
+                <dd><a href="javascript:;">文档</a></dd>
+                <dd><a href="javascript:;">图片</a></dd>
+                <dd><a href="javascript:;">视频</a></dd>
+                <dd><a href="javascript:;">音乐</a></dd>
+                <dd><a href="javascript:;">其他</a></dd>
+                <!--<dd><a href="">跳转项</a></dd>-->
+            </dl>
+        </li>
+        <li class="layui-nav-item"><a href="javascript:;">我的分享</a></li>
+        <li class="layui-nav-item"><a href="">容量配额</a></li>
+
+            <div class="layui-progress">
+                <div class="layui-progress-bar" lay-percent="40%"></div>
+            </div>
+
+        </li>
+    </ul>
+
+
+
+
+
 
 
     </div>
@@ -256,6 +308,14 @@
 
 
 
+            });
+        </script>
+
+
+        <script>
+            //注意进度条依赖 element 模块，否则无法进行正常渲染和功能性操作
+            layui.use('element', function(){
+                var element = layui.element;
             });
         </script>
 
