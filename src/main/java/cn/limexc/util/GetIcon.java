@@ -35,6 +35,7 @@ public class GetIcon {
 		case "doc":
 			icon="file_word_office";
 			break;
+		case "pptx":
 		case "ppt":
 			icon="file_ppt_office";
 			break;

@@ -19,7 +19,7 @@ window.onload = function() {
             $(this).attr("disabled", true);
 
             //将响应交给后台servlet
-            $.post("http://localhost:8080/CloudWeb/system/sendmail",{
+            $.post("http://localhost:8080/webcloud/system/sendmail",{
                 email:InputEmail
             });
             console.log("请求已发送")
@@ -38,8 +38,8 @@ window.onload = function() {
                     $("#sub_ve").html(time + str);
                     time--;
                 }
-                //设置减时时间间隔为1秒
-            }, 1000);
+                //设置减时时间间隔为60秒
+            }, 60000);
         }else {
             alert("请输入正确的邮箱！")
         }

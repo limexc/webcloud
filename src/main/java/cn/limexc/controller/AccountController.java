@@ -1,6 +1,7 @@
 package cn.limexc.controller;
 
 import cn.limexc.model.User;
+import cn.limexc.service.GroupService;
 import cn.limexc.service.UserService;
 import cn.limexc.util.MailUtils;
 import cn.limexc.util.StrMd5Utils;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import javax.jws.soap.SOAPBinding;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -110,44 +112,59 @@ public class AccountController {
     }
 
     /**
+     * 这个方法写的有问题，在regUEPR中校验过，通过校验后在此方法内没有再一次校验
+     * 所以如果通过一次校验后，长时间没有提交（没有再一次触发相关Ajax），导致验证码过期也是可以通过校验。
+     * ---在点击 提交 按钮时通过js再全部判断一次。虽然前端传来的数据都是不可信的，但先这样吧。有时间再进行修改。
      *
+     * @param req 请求
+     * @param rep 响应
      */
-    @RequestMapping(value = "/system/reg")
+    @RequestMapping(value = "/system/reg/updata")
     @ResponseBody
-    public Map<String,Object> register(HttpServletRequest req,@RequestBody Map<String, String> map) {
-        Map<String,Object> reqmap = new HashMap<String,Object>();
-        String username;
-        String email = null;
-        String passwd=null;
-        String revecode;
+    public void register(HttpServletRequest req,HttpServletResponse rep) {
+        String username = req.getParameter("username");
+        String email = req.getParameter("email");
+        String passwd=req.getParameter("passwd");
 
-        //正则表达式判断是否为邮箱
-        String mailcheck = "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
-        Pattern pattern = Pattern.compile(mailcheck);
-        Matcher matcher = pattern.matcher(email);
-        boolean rs = matcher.matches();
+        System.out.println("邮箱：" + email + " 密码：" + passwd);
+        User user = new User();
+        user.setEmail(email);
+        user.setPassword(passwd);
+        user.setUsername(username);
 
+        Integer regnum = userService.regUser(user);
+        try {
+            if (regnum == 1) {
 
+                rep.getWriter().print("true");
 
-        if (rs && passwd != null && passwd != "") {
+            } else {
 
-            System.out.println("邮箱：" + email + " 密码：" + passwd + " 邮箱格式：" + rs);
+                rep.getWriter().print("false");
 
-
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        return reqmap;
+
     }
+
+    /**
+     * 用于校验用户在填写表单时的数据
+     * @param req 传入的数据
+     * @param rep 响应的数据
+     */
 
     @RequestMapping(value = "/system/reg/service")
     @ResponseBody
-    public void regUsername(HttpServletRequest req,HttpServletResponse rep){
+    public void regUEPR(HttpServletRequest req,HttpServletResponse rep){
 
         Enumeration<String> key = req.getParameterNames();
         while(key.hasMoreElements()) {
 
             String parameterName = key.nextElement();
-
+            System.out.println(parameterName);
             //判断传入的参数是邮箱还是用户名
             if ("loginName".equals(parameterName)){
                 try {
@@ -161,13 +178,23 @@ public class AccountController {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+            }else if ("regcode".equals(parameterName)){
+                String regcode_sys = new VeCodeUtils().getVeCode(req.getParameter("email"));
+                String regcode_user = req.getParameter("regcode");
+                System.out.println(regcode_sys+"  "+regcode_user);
+                try {
+                    if (regcode_user.equals(regcode_sys)){
+                        rep.getWriter().print("true");
+                    }else {
+                        rep.getWriter().print("false");
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
+            break;
 
         }
-
-
-
-
 
 
 

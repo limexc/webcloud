@@ -29,7 +29,11 @@ public interface UserDao {
      */
     int insertUser(@Param(value = "user") User user);
 
-
+    /**
+     * 查询表内最大的ID
+     * @return id
+     */
+    int selectMaxId();
 
     /**
      * 查询邮箱数据

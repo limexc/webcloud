@@ -13,7 +13,7 @@ public interface UserService {
     User login(String email,String password);
 
     //用户注册
-
+    Integer regUser(User user);
 
     //插入用户头像
 
