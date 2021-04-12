@@ -12,23 +12,25 @@
 
     <select id="selectFileList" resultType="cn.limexc.model.UserFile">
         SELECT user_file.id,file.filename,file.filesize,user_file.vfname,user_file.vpath,user_file.uptime,file.filetype,user_file.fid,user_file.uid
-        FROM users,file,user_file
-        WHERE users.id=user_file.uid AND file.id=user_file.fid AND users.id = #{user.id}
+        FROM  (user_file LEFT JOIN users ON users.id=user_file.uid)LEFT JOIN file ON file.id=user_file.fid
+        WHERE users.id = #{user.id}
     </select>
 
     <!--因为改动过实体类，这个语句要改！！！-->
     <select id="selectFileListLimit" resultType="cn.limexc.model.UserFile">
         SELECT file.filesize as filesize,user_file.vfname as vfname,
-               user_file.vpath as vpath,user_file.id as id,
-               user_file.uptime as uptime,file.filetype as filetype
-        FROM users,file,user_file
-        WHERE users.id=user_file.uid AND file.id=user_file.fid AND users.id = #{id}
-        LIMIT ${page},${limit}
+        user_file.vpath as vpath,user_file.id as id,
+        user_file.uptime as uptime,file.filetype as filetype
+        FROM (user_file LEFT JOIN users ON users.id=user_file.uid)LEFT JOIN file ON file.id=user_file.fid
+        WHERE users.id = #{id};
         <!--LIMIT #{page},#{limit} 看看用分页工具进行分页-->
     </select>
 
     <select id="selectCount" resultType="java.lang.Integer">
-        SELECT COUNT(*) FROM users,file,user_file WHERE users.id=user_file.uid AND file.id=user_file.fid AND users.id =#{user.id};
+        SELECT COUNT(*)
+        FROM (user_file LEFT JOIN users ON users.id=user_file.uid)
+        LEFT JOIN file ON file.id=user_file.fid
+        WHERE users.id =#{user.id};
     </select>
 
     <select id="selectFileMd5" resultType="cn.limexc.model.FileModel">
@@ -56,21 +58,19 @@
         DELETE FROM user_file WHERE id=#{userFile.id}
     </delete>
 
-    <update id="updateVname">
-        UPDATE user_file SET vfname =#{userFile.vfname} WHERE id=#{userFile.id}
+    <update id="updateVnameAndVpath">
+        UPDATE user_file SET vfname =#{userFile.vfname},vpath=#{userFile.vpath}WHERE id=#{userFile.id}
     </update>
 
-    <update id="updateVpath">
-        UPDATE user_file SET vpath =#{userFile.vpath} WHERE id=#{userFile.id}
-    </update>
 
     <select id="selectUserFileById" resultType="cn.limexc.model.UserFile">
-        SELECT user_file.id AS id,user_file.uid AS uid,user_file.fid AS  fid,user_file.vfname  AS vfname,user_file.uptime  AS  uptime,file.filesize AS filesize
-        FROM user_file,file WHERE user_file.fid=file.id AND user_file.id=#{id}
+        SELECT user_file.id AS id,user_file.uid AS uid,user_file.fid AS  fid,user_file.vfname  AS vfname,
+               user_file.uptime  AS  uptime,file.filesize AS filesize,user_file.vpath AS vpath
+        FROM (user_file LEFT JOIN users ON users.id=user_file.uid)LEFT JOIN file ON file.id=user_file.fid WHERE user_file.id=#{id}
     </select>
 
     <select id="getFileInfoByUFid" resultType="cn.limexc.model.FileModel">
-        SELECT file.realpath AS realpath,user_file.vfname AS filename ,file.filesize AS filesize
+        SELECT file.realpath AS realpath,user_file.vfname AS filename ,file.filesize AS filesize,user_file.vpath AS vpath
         FROM file,user_file WHERE file.id=user_file.fid AND user_file.id = #{ufid}
     </select>
 

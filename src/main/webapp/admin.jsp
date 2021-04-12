@@ -24,8 +24,8 @@
         <div class="layui-logo">网盘管理</div>
         <!-- 头部区域（可配合layui已有的水平导航） -->
         <ul class="layui-nav layui-layout-left">
-            <li class="layui-nav-item"><a href="">系统信息</a></li>
-            <li class="layui-nav-item"><a href="">文件管理</a></li>
+            <li class="layui-nav-item"><a href="http://www.w3school.com.cn" target="info_body">系统信息</a></li>
+            <li class="layui-nav-item"><a href="http://www.baidu.com" target="info_body">文件管理</a></li>
             <li class="layui-nav-item"><a href="">用户管理</a></li>
             <li class="layui-nav-item">
                 <a href="javascript:;">其它系统</a>
@@ -39,15 +39,15 @@
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item">
                 <a href="javascript:;">
-                    <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
-                    贤心
+                    <img src="${pageContext.request.contextPath}/static/images/dls.jpeg" class="layui-nav-img">
+                    ${user.username}
                 </a>
                 <dl class="layui-nav-child">
-                    <dd><a href="">基本资料</a></dd>
+                    <dd><a href="${pageContext.request.contextPath}/user/setting">基本资料</a></dd>
                     <dd><a href="">安全设置</a></dd>
                 </dl>
             </li>
-            <li class="layui-nav-item"><a href="">退了</a></li>
+            <li class="layui-nav-item"><a href="${pageContext.request.contextPath}/system/logout">退了</a></li>
         </ul>
     </div>
 
@@ -56,7 +56,7 @@
             <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
             <ul class="layui-nav layui-nav-tree"  lay-filter="test">
                 <li class="layui-nav-item layui-nav-itemed">
-                    <a class="" href="javascript:;">所有商品</a>
+                    <a class="" href="javascript:;">系统信息</a>
                     <dl class="layui-nav-child">
                         <dd><a href="javascript:;">列表一</a></dd>
                         <dd><a href="javascript:;">列表二</a></dd>
@@ -65,22 +65,30 @@
                     </dl>
                 </li>
                 <li class="layui-nav-item">
-                    <a href="javascript:;">解决方案</a>
+                    <a href="javascript:;">文件管理</a>
                     <dl class="layui-nav-child">
                         <dd><a href="javascript:;">列表一</a></dd>
                         <dd><a href="javascript:;">列表二</a></dd>
                         <dd><a href="">超链接</a></dd>
                     </dl>
                 </li>
-                <li class="layui-nav-item"><a href="">云市场</a></li>
-                <li class="layui-nav-item"><a href="">发布商品</a></li>
+                <li class="layui-nav-item"><a href="">用户管理</a></li>
+                <li class="layui-nav-item"><a href="">其他管理</a></li>
             </ul>
         </div>
     </div>
 
     <div class="layui-body">
         <!-- 内容主体区域 -->
-        <div style="padding: 15px;">内容主体区域</div>
+        <div style="padding: 15px; overflow: auto; width: 100%; height: 100%;background-color: cornflowerblue">
+            <iframe name="info_body" frameborder="0" height="100%" width="100%" src="admin/welcome.html"></iframe>
+
+
+
+
+
+
+        </div>
     </div>
 
     <div class="layui-footer">

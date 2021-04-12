@@ -5,7 +5,6 @@ import cn.limexc.model.User;
 import cn.limexc.model.UserFile;
 import org.apache.ibatis.annotations.Param;
 
-import javax.jws.soap.SOAPBinding;
 import java.util.List;
 
 public interface FileDao {
@@ -74,9 +73,8 @@ public interface FileDao {
      * @param userFile 用户文件啊
      * @return
      */
-    int updateVname(@Param("userFile")UserFile userFile);
+    int updateVnameAndVpath(@Param("userFile")UserFile userFile);
 
-    int updateVpath(@Param("userFile")UserFile userFile);
 
     /**
      * 通过userfile表的id进行查找

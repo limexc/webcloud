@@ -2,8 +2,6 @@ package cn.limexc.model;
 
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-
 
 @Component
 public class User {
@@ -17,6 +15,7 @@ public class User {
     private String create_at;
     private String delete_at;
     private String alisa;
+    private String  profile;
 
     public User() {
     }
@@ -111,9 +110,10 @@ public class User {
                 ", email='" + email + '\'' +
                 ", status=" + status +
                 ", storage=" + storage +
-                ", create_at=" + create_at +
-                ", delete_at=" + delete_at +
+                ", create_at='" + create_at + '\'' +
+                ", delete_at='" + delete_at + '\'' +
                 ", alisa='" + alisa + '\'' +
+                ", profile='" + profile + '\'' +
                 '}';
     }
 }

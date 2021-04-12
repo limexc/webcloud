@@ -145,44 +145,61 @@
         </div>
 
         <div id="uppage"  class="btn_tool_div">
-            <a href="#" id="a_uppage" class="btn_tool">上一页
+            <a href="#" id="a_uppage" class="btn_tool">上一层
                 <input type="button" onclick="" />
             </a>
         </div>
-
 
 
     </div>
 
     <div class="file_view">
         <!--内容table容器-->
-        <table class="layui-hide" id="test" lay-filter="test"></table>
+        <table class="layui-hide" id="FileListTable" lay-filter="FileListTable"></table>
 
 
         <script type="text/html" id="barDemo">
             <a class="layui-btn layui-btn-xs" lay-event="download">下载</a>
+            <a class="layui-btn layui-btn-xs" lay-event="rename">重命名</a>
             <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="share">分享</a>
             <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
         </script>
 
+        <script src="${pageContext.request.contextPath}/static/js/iconfont.js"></script>
 
 
         <script>
+            var Catalogue = 0;
+            var currentpath = "/";
+            var data;
+            var vfname;
+
+
             layui.use('table', function(){
                 var table = layui.table;
 
                 //执行一个 table 实例
                 table.render({
+                    id:"fileListTable",
                     //表格table的id属性
-                    elem: '#test',
+                    elem: '#FileListTable',
                     height: 'full-200',
                     //请求数据接口
-                    url: '${pageContext.request.contextPath}/info/userfilelist',
+                    url: '${pageContext.request.contextPath}/info/userfile?method=index',
                     //要传向后台的每页显示条数
                     limit:10,
-                    //设置table的宽度
+
                     done: function (res, curr, count) {
-                        $("table").css("width", "100%");
+                        //设置table的宽度
+                        $("table").css("width", "100%")
+
+                        Catalogue = res.msg["Catalogue"]
+                        currentpath = res.msg["currentpath"]
+                        data = res.data
+                        console.log("Catalogue:"+ Catalogue)
+                        console.log("currentpath:"+ currentpath)
+                        this.where = {};
+
                     },
 
                     //,page:true(自带的这个要注掉)
@@ -199,7 +216,18 @@
                         {type:'radio'},
                         //{type: 'checkbox', fixed: 'check'},
                         //{field: 'filetype', title: '类型', align:'center'},
-                        {field: 'vfname', title: '文件名',edit:'text',align:'center', sort : true}
+                        {field: 'vfname', title: '文件名',align:'center', sort : true,event :'fileclick',
+                            templet : function(d) {
+                                if (d.filesize==="-"){
+                                    alert(d.vfname)
+                                }
+                                return "<svg class='icon' aria-hidden='true'><use xlink:href='" + "#icon-folder" + "'></use></svg>&nbsp;"
+                                    + "</span class='filenamecolor'>"
+                                    + d.vfname
+                                    + "</span>";
+                            }
+
+                        }
                         ,{field: 'filesize', title: '大小',align:'center', sort : true}
                         ,{field: 'uptime', title: '上传时间',align:'center', sort : true,templet: '<div>{{ layui.laytpl.toDateString(d.uptime) }}</div>'}
                         ,{fixed: 'right', title: '操作', align:'center', toolbar: '#barDemo'},
@@ -212,7 +240,7 @@
 
 
                 //监听行工具事件
-                table.on('tool(test)', function(obj){
+                table.on('tool(FileListTable)', function(obj){
 
                     var objdata = obj.data;
                     //console.log(obj)
@@ -226,8 +254,14 @@
                                 data:JSON.stringify({
                                     "id":objdata.id
                                 }),
-                                success : function(data) {
-                                    console.log("delete传输成功")
+                                success : function(data,xhr) {
+                                    if(xhr.status === 200) {
+                                        layer.msg('删除成功', {
+                                            icon: 1,//状态图标
+                                            Time: 4000//展示时间为4s
+                                        });//这里用于检测上传状态是否成功
+                                        parent.layui.table.reload('fileListTable');
+                                    }
                                 }
                             })
 
@@ -265,10 +299,114 @@
 
                             }
                         })
+                    }else if (obj.event === "rename"){
 
+                        //prompt层
+                        layer.prompt({title: '重命名', formType: 0,value:objdata.vfname}, function(text, index){
+                            $.ajax({
+                                url:"${pageContext.request.contextPath}/info/rename",
+                                type: "post",
+                                contentType: 'application/json;charset=UTF-8',
+                                data:JSON.stringify({
+                                    "id":objdata.id,
+                                    "rename":text,
+                                    "Catalogue" : Catalogue,
+                                    "currentpath" : currentpath
+                                }),
+                                success : function(data,textStatus,xhr) {
+                                    if(xhr.status === 200) {
+                                        layer.msg('重命名成功', {
+                                            icon: 1,//状态图标
+                                            Time: 4000//展示时间为4s
+                                        });//这里用于检测上传状态是否成功
+                                        parent.layui.table.reload('fileListTable',{
+                                            url: "${pageContext.request.contextPath}/info/userfile?method=index",
+
+                                            where: { //设定异步数据接口的额外参数，任意设
+                                                "Catalogue": Catalogue,
+                                                "currentpath": currentpath,
+                                            }
+                                        });
+                                    }
+
+                                },
+                                error: function(e) {
+                                    console.log("error")
+                                }
+                            })
+                            layer.close(index);
+
+                        });
+
+
+                    }else if (obj.event === "fileclick") {
+                        alert("你点击了："+objdata.vfname)
+                        console.log(obj.data)
+                        if (objdata.filesize === "-") {
+                            alert(objdata.filesize)
+                            alert(Catalogue+" "+currentpath+" "+objdata.vfname)
+                            parent.layui.table.reload('fileListTable',
+                                {
+                                url: "${pageContext.request.contextPath}/info/userfile?method=getSub",
+                                where: { //设定异步数据接口的额外参数，任意设
+                                    "Catalogue": Catalogue,
+                                    "currentpath": currentpath,
+                                    "filename": objdata.vfname
+                                }
+                            });
+                        }
 
                     }
+
                 });
+
+                $("#a_mkdir").click(function (){
+
+                    //prompt层
+                    layer.prompt({title: '新建文件夹', formType: 0,value:""}, function(text, index){
+                        $.ajax({
+                            url:"${pageContext.request.contextPath}/info/userfile?method=getNewFloder",
+                            type: "post",
+                            contentType: 'application/json;charset=UTF-8',
+                            data:JSON.stringify({
+                                "id":objdata.id,
+                                "name":text,
+                                "Catalogue" : Catalogue,
+                                "currentpath" : currentpath
+                            }),
+                            success : function(data,textStatus,xhr) {
+                                if(xhr.status === 200) {
+                                    layer.msg('文件夹创建成功', {
+                                        icon: 1,//状态图标
+                                        Time: 4000//展示时间为4s
+                                    });//这里用于检测上传状态是否成功
+                                    parent.layui.table.reload('fileListTable');
+                                }
+
+                            },
+                            error: function(e) {
+                                console.log("error")
+                            }
+                        })
+                        layer.close(index);
+
+                    });
+
+                })
+
+                //返回上一层
+                $("#a_uppage").click(function(){
+                    if (Catalogue != 0) {
+                        parent.layui.table.reload('fileListTable',{
+                            url : "${pageContext.request.contextPath}/info/userfile?method=getSuperior",
+                            where : {
+                                "Catalogue" : Catalogue,
+                                "currentpath" : currentpath,
+                            }
+                        });
+                    }
+                    layer.msg('上一级');
+                })
 
                 //时间戳的处理
                 layui.laytpl.toDateString = function(d, format){
@@ -309,8 +447,8 @@
 
 
             });
-        </script>
 
+        </script>
 
         <script>
             //注意进度条依赖 element 模块，否则无法进行正常渲染和功能性操作

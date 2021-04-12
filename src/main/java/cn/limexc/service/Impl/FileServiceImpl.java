@@ -5,11 +5,15 @@ import cn.limexc.model.FileModel;
 import cn.limexc.model.User;
 import cn.limexc.model.UserFile;
 import cn.limexc.service.FileService;
-import cn.limexc.util.ByteUnitConversion;
+import cn.limexc.util.*;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -25,29 +29,49 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public List<UserFile> listUserFile(User user) {
-        return fileDao.selectFileList(user);
+
+        List<UserFile> userFiles = fileDao.selectFileList(user);
+        //循环修改filsize的值，数据库中存储原始未转换数据方便对用户空间的控制。
+        String  tmp=null;
+        for (UserFile uf:userFiles) {
+            if (uf.getFilesize()!=null){
+                tmp = new ByteUnitConversion().readableFileSize(Long.parseLong(uf.getFilesize()));
+                uf.setFilesize(tmp);
+            }else {
+                uf.setFilesize("-");
+            }
+        }
+
+        return userFiles;
     }
 
     @Override
-    public int reName(UserFile userFile,User user) {
+    public int reName(UserFile uf,User user) {
         int sum=0;
         List<UserFile> ufs = fileDao.selectFileList(user);
+        UserFile userFile = fileDao.selectUserFileById(uf.getId());
+        String vpath = userFile.getVpath();
         //判断传入的userFile是目录还是文件，文件的话都有 fid
         if (userFile.getFid()!=null){
-            sum = fileDao.updateVname(userFile);
+            //文件的话直接改名，同时也要将路径最后的文件名进行修改
+            String[] temps = vpath.split("/");
+            temps[temps.length-1]= uf.getVfname();
+            String tmpath = StringUtils.join(temps, "/");
+            uf.setVpath(tmpath);
 
+            System.out.println(uf.toString());
+            sum = fileDao.updateVnameAndVpath(uf);
 
-
-        }else {
+        }else if (userFile!=null&&userFile.getFid()==null){
             //获取初始的虚拟路径名
-            UserFile uf =fileDao.selectUserFileById(userFile.getId());
-            String vpath =uf.getVpath();
+
         for (int i=0;i<ufs.size();i++){
                 UserFile temp = ufs.get(i);
                 String path = temp.getVpath();
+
                 if (temp.getVpath().startsWith(vpath)){
                     System.out.println("要改名的目录或文件"+path+"--->"+userFile.getVpath());
-                    sum += fileDao.updateVpath(userFile);
+                    sum += fileDao.updateVnameAndVpath(userFile);
                 }
             }
         }
@@ -91,10 +115,14 @@ public class FileServiceImpl implements FileService {
         List<UserFile> userFiles = fileDao.selectFileListLimit(id,page,limit);
 
         //循环修改filsize的值，数据库中存储原始未转换数据方便对用户空间的控制。
+        String  tmp=null;
         for (UserFile uf:userFiles) {
-            String  tmp=null;
-            tmp = new ByteUnitConversion().readableFileSize(Long.parseLong(uf.getFilesize()));
-            uf.setFilesize(tmp);
+            if (uf.getFilesize()!=null){
+                tmp = new ByteUnitConversion().readableFileSize(Long.parseLong(uf.getFilesize()));
+                uf.setFilesize(tmp);
+            }else {
+                uf.setFilesize("-");
+            }
         }
 
         return userFiles;
@@ -105,12 +133,67 @@ public class FileServiceImpl implements FileService {
         return fileDao.selectCount(user);
     }
 
-
-
+    /**
+     * 当创建新文件时（文件上传或者是创建文件夹）
+     * @param newpath 路径
+     * @param name    名称
+     * @param page    页
+     * @return  前端格式化返回数据
+     */
     @Override
-    public int mkDir(UserFile userFile) {
-        return 0;
+    public ResultData mkDir(String newpath, String name, int page, User user) {
+        ResultData rd =new ResultData();
+        GetIcon getIcon = new GetIcon();
+
+
+        //获取用户的全部文件列表
+        List<UserFile> ufs=fileDao.selectFileList(user);
+        //获得？ 列表  将文件列表  路径 页数值传入
+        PathAnalysis pa= new PathAnalysis();
+        List<UserFile> fms=pa.getNewFloder(ufs, newpath, page);
+
+        UserFile newfileim = new UserFile();
+        newfileim.setVfname(name);
+
+        newfileim.setIconsign("#icon-folder");
+        newfileim.setFilesize("-");
+
+        SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String format = date.format(new Date());
+        newfileim.setUptime(format);
+
+
+        VoToBean voToBean = new VoToBean();
+        addVFile(voToBean.fileimToUserFile(newfileim, user.getId(), newpath));
+
+
+        JSONObject message = new JSONObject();
+        JSONArray data =new JSONArray();
+        for(int i=0;i<fms.size();i++) {
+            UserFile temp = fms.get(i);
+            JSONObject tempj = new JSONObject();
+            tempj.put("filesize", temp.getFilesize());
+            tempj.put("vfname", temp.getVfname());
+            tempj.put("uptime", temp.getUptime());
+            tempj.put("iconsign", temp.getIconsign());
+            data.add(tempj);
+        }
+        JSONObject msg = new JSONObject();
+        msg.put("Catalogue", page);
+        msg.put("currentpath", newpath);
+        message.put("code", 0);
+        message.put("msg", msg);
+        message.put("data",data);
+        rd.setData(message);
+        return rd;
     }
+
+
+
+
+
+
+
 
     @Override
     public int rmDirOrFile(UserFile userFile,User user) {

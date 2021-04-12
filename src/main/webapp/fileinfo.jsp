@@ -7,6 +7,6 @@
     <title>文件详情</title>
 </head>
 <body>
-    
+
 </body>
 </html>

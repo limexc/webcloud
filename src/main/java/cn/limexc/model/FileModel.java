@@ -2,9 +2,6 @@ package cn.limexc.model;
 
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
 @Component
 public class FileModel {
     private Integer id;
@@ -14,8 +11,9 @@ public class FileModel {
     private String filesize;
     private String filetype;
     private String realpath;
+    private String iconsign;
 
-    public FileModel(Integer id, String filename, String md5, String create_time, String filesize, String filetype, String realpath) {
+    public FileModel(Integer id, String filename, String md5, String create_time, String filesize, String filetype, String realpath, String iconsign) {
         this.id = id;
         this.filename = filename;
         this.md5 = md5;
@@ -23,6 +21,7 @@ public class FileModel {
         this.filesize = filesize;
         this.filetype = filetype;
         this.realpath = realpath;
+        this.iconsign = iconsign;
     }
 
     public FileModel() {}
@@ -83,16 +82,25 @@ public class FileModel {
         this.filetype = filetype;
     }
 
+    public String getIconsign() {
+        return iconsign;
+    }
+
+    public void setIconsign(String iconSign) {
+        this.iconsign = iconSign;
+    }
+
     @Override
     public String toString() {
         return "FileModel{" +
                 "id=" + id +
                 ", filename='" + filename + '\'' +
                 ", md5='" + md5 + '\'' +
-                ", create_time=" + create_time +
+                ", create_time='" + create_time + '\'' +
                 ", filesize='" + filesize + '\'' +
                 ", filetype='" + filetype + '\'' +
                 ", realpath='" + realpath + '\'' +
+                ", iconSign='" + iconsign + '\'' +
                 '}';
     }
 }

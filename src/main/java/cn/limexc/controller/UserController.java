@@ -5,7 +5,6 @@ import cn.limexc.model.User;
 import cn.limexc.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
@@ -32,9 +31,10 @@ public class UserController {
         return users;
     }
 
-    @RequestMapping(value = "/test",method = RequestMethod.GET)
-    public void test(){
+    @RequestMapping(value = "/setting")
+    public String userset(){
         System.out.println(new Date()+"访问到了");
+        return "setting";
     }
 
 

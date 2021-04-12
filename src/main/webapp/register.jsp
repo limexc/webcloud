@@ -107,7 +107,7 @@
             if (isOkReg_Email+isOkReg_Name+isOkReg_passwd+isOkReg_regcode===4){
 
                 $.ajax({
-                    url:"http://localhost:8080/webcloud/system/reg/updata",
+                    url:"http://localhost:8080/CloudWeb/system/reg/updata",
                     type:"post",
                     async:true,
                     cache:false,
@@ -123,7 +123,7 @@
 
                             setTimeout(reurl,1000*3);
                             function reurl(){
-                                window.location.replace("http://localhost:8080/webcloud/");
+                                window.location.replace("http://localhost:8080/CloudWeb/");
                             }
 
                         }else if (data==="false"){
@@ -152,7 +152,7 @@
             $("#veco_tips").html("验证码有误");
         }else{
             $.ajax({
-                url:"http://localhost:8080/webcloud/system/reg/service",
+                url:"http://localhost:8080/CloudWeb/system/reg/service",
                 type:"post",
                 async:true,
                 cache:false,
@@ -228,7 +228,7 @@
         }else {
             alert("发送ajax校验username")
             $.ajax({
-                url:"http://localhost:8080/webcloud/system/reg/service",
+                url:"http://localhost:8080/CloudWeb/system/reg/service",
                 data:{loginName:username},
                 async:true,
                 cache:false,
@@ -262,7 +262,7 @@
         }else {
             alert("发送ajax校验Email")
             $.ajax({
-                url:"http://localhost:8080/webcloud/system/reg/service",
+                url:"http://localhost:8080/CloudWeb/system/reg/service",
                 data:{email:value},
                 async:true,
                 cache:false,

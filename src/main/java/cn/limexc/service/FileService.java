@@ -3,7 +3,7 @@ package cn.limexc.service;
 import cn.limexc.model.FileModel;
 import cn.limexc.model.User;
 import cn.limexc.model.UserFile;
-import org.apache.ibatis.annotations.Param;
+import cn.limexc.util.ResultData;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ public interface FileService {
 
 
     //创建虚拟文件夹
-    int mkDir(UserFile userFile);
+    ResultData mkDir(String newpath, String name, int page, User user);
 
     //删除虚拟文件夹，涉及删除文件夹下的文件
     int rmDirOrFile(UserFile userFile,User user);

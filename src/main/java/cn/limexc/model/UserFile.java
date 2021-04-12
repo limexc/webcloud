@@ -1,8 +1,6 @@
 package cn.limexc.model;
 
 import org.springframework.stereotype.Component;
-import java.math.BigDecimal;
-import java.util.Date;
 
 
 @Component
@@ -14,11 +12,12 @@ public class UserFile {
     private String  uptime;
     private Integer uid;
     private Integer fid;
+    private String iconsign;
 
     public UserFile() {
     }
 
-    public UserFile(Integer id, String filesize, String vfname, String vpath, String uptime, Integer uid, Integer fid) {
+    public UserFile(Integer id, String filesize, String vfname, String vpath, String uptime, Integer uid, Integer fid, String iconsign) {
         this.id = id;
         this.filesize = filesize;
         this.vfname = vfname;
@@ -26,7 +25,10 @@ public class UserFile {
         this.uptime = uptime;
         this.uid = uid;
         this.fid = fid;
+        this.iconsign = iconsign;
     }
+
+
 
     public Integer getId() {
         return id;
@@ -85,6 +87,14 @@ public class UserFile {
         this.fid = fid;
     }
 
+    public String getIconsign() {
+        return iconsign;
+    }
+
+    public void setIconsign(String iconsign) {
+        this.iconsign = iconsign;
+    }
+
     @Override
     public String toString() {
         return "UserFile{" +
@@ -95,6 +105,7 @@ public class UserFile {
                 ", uptime='" + uptime + '\'' +
                 ", uid=" + uid +
                 ", fid=" + fid +
+                ", iconsign='" + iconsign + '\'' +
                 '}';
     }
 }

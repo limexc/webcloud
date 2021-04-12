@@ -19,7 +19,22 @@ html, body{
     top: 25%;
     font:  20px "微软雅黑";
 }
-
+/*图标*/
+.icon {
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.15em;
+    fill: currentColor;
+    overflow: hidden;
+}
+.icon2{
+    margin:0;
+    border:0;
+    height:50px;
+    float:left;
+    width:170px;
+    background-color:rgb(255, 255, 255);
+}
 
 /*侧边栏*/
 .menu_left {
