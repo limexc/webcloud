@@ -7,7 +7,15 @@ import java.util.*;
 
 @Component
 public class PathAnalysis {
-	
+
+	/**
+	 * 有问题，因为是前匹配，所以前面相等的都会被涉及到
+	 * 如 /文件夹A
+	 *    /文件夹B
+	 *    /文件夹
+	 * 当删除 文件夹 时这 三个都会被删除！！！
+	 */
+
 	public List<UserFile> getNewFloder(List<UserFile> ufs, String currentpath, int page){
 		List<UserFile> fms = new ArrayList<UserFile>();
 		Map<String, String> m = new Hashtable<String, String>();

@@ -22,7 +22,7 @@
         user_file.vpath as vpath,user_file.id as id,
         user_file.uptime as uptime,file.filetype as filetype
         FROM (user_file LEFT JOIN users ON users.id=user_file.uid)LEFT JOIN file ON file.id=user_file.fid
-        WHERE users.id = #{id};
+        WHERE users.id = #{id}
         <!--LIMIT #{page},#{limit} 看看用分页工具进行分页-->
     </select>
 
@@ -30,7 +30,7 @@
         SELECT COUNT(*)
         FROM (user_file LEFT JOIN users ON users.id=user_file.uid)
         LEFT JOIN file ON file.id=user_file.fid
-        WHERE users.id =#{user.id};
+        WHERE users.id =#{user.id}
     </select>
 
     <select id="selectFileMd5" resultType="cn.limexc.model.FileModel">
@@ -49,8 +49,8 @@
 
     <!--userfile表中的id字段为自增的-->
     <insert id="insertUserFile">
-        INSERT INTO user_file (uid,vpath,fid,vfname,uptime)
-        VALUE (#{userFile.uid},#{userFile.vpath},#{userFile.fid},#{userFile.vfname},#{userFile.uptime})
+        INSERT INTO user_file (uid,vpath,fid,vfname,uptime,iconSign)
+        VALUE (#{userFile.uid},#{userFile.vpath},#{userFile.fid},#{userFile.vfname},#{userFile.uptime},#{userFile.iconsign})
     </insert>
     
     <!--根据id删除某一行记录-->
@@ -74,5 +74,11 @@
         FROM file,user_file WHERE file.id=user_file.fid AND user_file.id = #{ufid}
     </select>
 
+    <select id="selectFilesByKey" resultType="cn.limexc.model.UserFile">
+        SELECT file.filesize as filesize,user_file.vfname as vfname,
+               user_file.vpath as vpath,user_file.id as id,user_file.uptime as uptime,file.filetype as filetype
+        FROM (user_file LEFT JOIN users ON users.id=user_file.uid)LEFT JOIN file ON file.id=user_file.fid
+        WHERE users.id = #{uid}  AND  user_file.vfname LIKE #{key}
+    </select>
 
 </mapper>

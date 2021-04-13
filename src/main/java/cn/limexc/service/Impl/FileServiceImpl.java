@@ -14,7 +14,9 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class FileServiceImpl implements FileService {
@@ -88,7 +90,7 @@ public class FileServiceImpl implements FileService {
                         //将修改后的路径信息添加到文件夹id的文件上
                         userFile.setVpath(tmpath);
                     }
-                    
+
                     temp.setVpath(tmpath);
 
 
@@ -104,6 +106,11 @@ public class FileServiceImpl implements FileService {
         }
 
         return sum;
+    }
+
+    @Override
+    public List<UserFile> selectFiles(Integer id, String key) {
+        return fileDao.selectFilesByKey(id,key);
     }
 
     @Override
@@ -139,10 +146,11 @@ public class FileServiceImpl implements FileService {
     @Override
     public List<UserFile> listUserFile(Integer id, String page, String limit) {
         //获取文件列表时需要判断目录vpath
+        //因为一开始的时候没有考虑文件夹的情况，所以当时分页写的很简单，后来加上文件夹后，分页想搞要改很多东西...
         List<UserFile> userFiles = fileDao.selectFileListLimit(id,page,limit);
 
         //循环修改filsize的值，数据库中存储原始未转换数据方便对用户空间的控制。
-        String  tmp=null;
+        String tmp;
         for (UserFile uf:userFiles) {
             if (uf.getFilesize()!=null){
                 tmp = new ByteUnitConversion().readableFileSize(Long.parseLong(uf.getFilesize()));
@@ -168,33 +176,35 @@ public class FileServiceImpl implements FileService {
      * @return  前端格式化返回数据
      */
     @Override
-    public ResultData mkDir(String newpath, String name, int page, User user) {
-        ResultData rd =new ResultData();
-        GetIcon getIcon = new GetIcon();
-
-
+    public Map<String,Object> mkDir(String newpath, String name, int page, User user) {
+        //ResultData rd =new ResultData();
+        Map<String,Object> map = new HashMap<String ,Object>();
         //获取用户的全部文件列表
         List<UserFile> ufs=fileDao.selectFileList(user);
         //获得？ 列表  将文件列表  路径 页数值传入
         PathAnalysis pa= new PathAnalysis();
         List<UserFile> fms=pa.getNewFloder(ufs, newpath, page);
-
+        //uid,vpath,fid,vfname,uptime
         UserFile newfileim = new UserFile();
         newfileim.setVfname(name);
+        newfileim.setVpath(newpath+name);
 
+        newfileim.setUid(user.getId());
+        newfileim.setFid(null);
         newfileim.setIconsign("#icon-folder");
-        newfileim.setFilesize("-");
+        newfileim.setFilesize("");
 
         SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String format = date.format(new Date());
         newfileim.setUptime(format);
 
+        System.out.println(newfileim.toString());
 
-        VoToBean voToBean = new VoToBean();
-        addVFile(voToBean.fileimToUserFile(newfileim, user.getId(), newpath));
+        //VoToBean voToBean = new VoToBean();
+        //addVFile(voToBean.fileimToUserFile(newfileim, user.getId(), newpath));
+        addVFile(newfileim);
 
-
-        JSONObject message = new JSONObject();
+        //JSONObject message = new JSONObject();
         JSONArray data =new JSONArray();
         for(int i=0;i<fms.size();i++) {
             UserFile temp = fms.get(i);
@@ -208,11 +218,11 @@ public class FileServiceImpl implements FileService {
         JSONObject msg = new JSONObject();
         msg.put("Catalogue", page);
         msg.put("currentpath", newpath);
-        message.put("code", 0);
-        message.put("msg", msg);
-        message.put("data",data);
-        rd.setData(message);
-        return rd;
+        map.put("code", 0);
+        map.put("msg", msg);
+        map.put("data",data);
+
+        return map;
     }
 
 

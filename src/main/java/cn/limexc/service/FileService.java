@@ -3,9 +3,9 @@ package cn.limexc.service;
 import cn.limexc.model.FileModel;
 import cn.limexc.model.User;
 import cn.limexc.model.UserFile;
-import cn.limexc.util.ResultData;
 
 import java.util.List;
+import java.util.Map;
 
 public interface FileService {
 
@@ -18,10 +18,12 @@ public interface FileService {
     //修改虚拟文件名
     int reName(UserFile userFile,User user);
 
+    //通过文件名查询文件或文件夹
+    List<UserFile> selectFiles(Integer id,String key);
 
 
     //创建虚拟文件夹
-    ResultData mkDir(String newpath, String name, int page, User user);
+    Map<String,Object> mkDir(String newpath, String name, int page, User user);
 
     //删除虚拟文件夹，涉及删除文件夹下的文件
     int rmDirOrFile(UserFile userFile,User user);

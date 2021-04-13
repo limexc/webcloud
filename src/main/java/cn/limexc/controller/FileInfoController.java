@@ -45,6 +45,10 @@ public class FileInfoController {
     public Map<String, Object> userFile(HttpSession session, HttpServletRequest request, HttpServletResponse response) {
         String method = request.getParameter("method");
         User user = (User) session.getAttribute("user");
+        //分页参数
+        String pages =request.getParameter("page");
+        String limit =request.getParameter("limit");
+        System.out.println("第"+pages+"页；每页："+limit);
         //返回到前端的数据
         Map<String, Object> tableData = new HashMap<String, Object>();
         tableData.put("code", 0);
@@ -173,10 +177,11 @@ public class FileInfoController {
             String name = request.getParameter("name");
             String newpath = request.getParameter("currentpath");
             String Catalogue = request.getParameter("Catalogue");
-            String isfloder = request.getParameter("file");
+            System.out.println(name+" "+newpath+" "+Catalogue);
             int page = Integer.parseInt(Catalogue);
-            ResultData rd = fileService.mkDir(newpath, name, page, user);
-            rd.writeToResponse(response);
+            tableData= fileService.mkDir(newpath, name, page, user);
+            System.out.println("文件夹："+name+"创建完毕");
+            return tableData;
         }
         //暂时
         return tableData;
@@ -279,5 +284,37 @@ public class FileInfoController {
         fileService.reName(uf,user);
     }
 
+    /**
+     * 用来做iframe
+     * @return
+     */
+    @RequestMapping(value = "/getfilelist")
+    public String listdata(){
+
+        return "userfilelist";
+    }
+
+    @RequestMapping(value = "/selectfile")
+    @ResponseBody
+    public Map<String,Object> selectFile(HttpServletRequest req,HttpSession session){
+        Map<String,Object> map = new HashMap<String,Object>();
+        User user = (User) session.getAttribute("user");
+        String key = req.getParameter("key");
+        System.out.println(user.getUsername()+"要搜索的文件："+key);
+        key="%"+key+"%";
+        List<UserFile> ufs = fileService.selectFiles(user.getId(),key);
+        if (ufs!=null){
+            for (UserFile uf:ufs) {
+                uf.setFilesize(new ByteUnitConversion().readableFileSize(Long.parseLong(uf.getFilesize())));
+                System.out.println(uf.toString());
+            }
+        }
+
+        map.put("code", 0);
+        map.put("msg","");
+        map.put("data",ufs);
+
+        return map;
+    }
 
 }

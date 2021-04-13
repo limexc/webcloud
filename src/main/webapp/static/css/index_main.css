@@ -5,7 +5,8 @@ html, body{
 /*标题*/
 
 .head_menu{
-    position: absolute;
+    position:fixed;
+    /*position: absolute;*/
     width: 100%;
     height:60px ;
     background-color: #FFFFFF;

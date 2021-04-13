@@ -85,4 +85,6 @@ public interface FileDao {
 
     FileModel getFileInfoByUFid(@Param("ufid")String ufid);
 
+
+    List<UserFile> selectFilesByKey(@Param("uid")Integer uid,@Param("key")String key);
 }

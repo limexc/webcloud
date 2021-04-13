@@ -12,6 +12,7 @@ public class VoToBean {
 		uf.setIconsign(fim.getIconsign());
 		uf.setUptime(fim.getUptime());
 		uf.setUid(uid);
+		//uf.setVfname(fim.getVfname());
 		uf.setVpath(currentpath+fim.getVfname());
 		return uf;
 	}
