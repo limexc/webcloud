@@ -1,6 +1,6 @@
 var filesize;
 var filename;
-var totalSize = 0;
+
 
 function change(node) {
 
@@ -41,7 +41,9 @@ function change(node) {
         var jsondata = {
             "filesize":filesize,
             "md5value":e,
-            "filename":filename
+            "filename":filename,
+            "Catalogue" : Catalogue,
+            "currentpath" : currentpath
         };
 
         $.ajax({
@@ -60,6 +62,7 @@ function change(node) {
                 }else{
                     var formatdata = new FormData();
                     formatdata.append("md5value",e);
+                    formatdata.append("currentpath",currentpath);
                     formatdata.append("file",node.files[0]);
 
                     $.ajax({

@@ -213,6 +213,7 @@ public class FileInfoController {
 
     @RequestMapping(value = "/getmd5",method= RequestMethod.POST)
     public void getMd5(HttpSession session,HttpServletResponse rep, @RequestBody Map<String, String> map){
+
         //HttpRequest req, HttpResponse rep, HttpSession session
         User user = (User) session.getAttribute("user");
         //System.out.println("用户："+user.getId()+"当前http请求方式为:"+req.getMethod());
@@ -220,7 +221,9 @@ public class FileInfoController {
         String filesize = new ByteUnitConversion().readableFileSize(Long.parseLong(map.get("filesize")));
         String filemd5 = map.get("md5value");
         String filename = map.get("filename");
-        System.out.println(filemd5+"  "+filesize+" "+filename);
+        String currentpath = map.get("currentpath");
+        String Catalogue = map.get("Catalogue");
+        System.out.println(filemd5+"  "+filesize+" "+filename+" "+currentpath);
 
         //查询数据库，并将结果放入file
         file = fileService.getFileInfoByMd5(filemd5);
@@ -237,7 +240,7 @@ public class FileInfoController {
             uf.setUptime(TimeUtils.getUtils().getForMatTime());
             uf.setFilesize(filesize);
             //还没想好目录怎么做
-            uf.setVpath("/");
+            uf.setVpath(currentpath+uf.getVfname());
 
             System.out.println("------> "+uf.toString());
             fileService.addVFile(uf);

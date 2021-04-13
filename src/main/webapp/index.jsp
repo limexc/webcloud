@@ -219,9 +219,12 @@
                         {field: 'vfname', title: '文件名',align:'center', sort : true,event :'fileclick',
                             templet : function(d) {
                                 if (d.filesize==="-"){
-                                    alert(d.vfname)
+                                    return "<svg class='icon' aria-hidden='true'><use xlink:href='" + "#icon-folder" + "'></use></svg>&nbsp;"
+                                        + "</span class='filenamecolor'>"
+                                        + d.vfname
+                                        + "</span>";
                                 }
-                                return "<svg class='icon' aria-hidden='true'><use xlink:href='" + "#icon-folder" + "'></use></svg>&nbsp;"
+                                return "<svg class='icon' aria-hidden='true'><use xlink:href='" + "" + "'></use></svg>&nbsp;"
                                     + "</span class='filenamecolor'>"
                                     + d.vfname
                                     + "</span>";
@@ -407,6 +410,8 @@
                     }
                     layer.msg('上一级');
                 })
+
+
 
                 //时间戳的处理
                 layui.laytpl.toDateString = function(d, format){

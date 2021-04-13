@@ -63,17 +63,44 @@ public class FileServiceImpl implements FileService {
             sum = fileDao.updateVnameAndVpath(uf);
 
         }else if (userFile!=null&&userFile.getFid()==null){
-            //获取初始的虚拟路径名
-
-        for (int i=0;i<ufs.size();i++){
+            //获取虚拟目录名
+            String vpathname = uf.getVfname();
+            String[] sourcepath = userFile.getVpath().split("/");
+            //更新因为目录名称更改影响到的 路径信息
+            for (int i=0;i<ufs.size();i++){
                 UserFile temp = ufs.get(i);
                 String path = temp.getVpath();
+                //判断列表中是否有要修改的文件路径开始的路径
+                if (path.startsWith(vpath)){
+                    //将匹配的路径分解
+                    String[] temps = path.split("/");
+                    //获取原始路径的长度，从前开始替换
+                    for (int j = 0; j < sourcepath.length; j++) {
+                        if (j== sourcepath.length-1){
+                            temps[j] = vpathname;
+                        }
+                    }
+                    //将修改的数据重新拼接
+                    String tmpath = StringUtils.join(temps, "/");
 
-                if (temp.getVpath().startsWith(vpath)){
-                    System.out.println("要改名的目录或文件"+path+"--->"+userFile.getVpath());
-                    sum += fileDao.updateVnameAndVpath(userFile);
+                    //如果原始路径与当前循环的路径相同
+                    if (vpath.equals(temp.getVpath())){
+                        //将修改后的路径信息添加到文件夹id的文件上
+                        userFile.setVpath(tmpath);
+                    }
+                    
+                    temp.setVpath(tmpath);
+
+
+                    System.out.println("需要改名的目录或文件"+path+"--->"+userFile.getVpath()+" --> "+vpathname+" 临时赋值 "+tmpath);
+                    sum += fileDao.updateVnameAndVpath(temp);
                 }
+
             }
+            //最后目录名更新
+            userFile.setVfname(vpathname);
+            sum += fileDao.updateVnameAndVpath(userFile);
+
         }
 
         return sum;

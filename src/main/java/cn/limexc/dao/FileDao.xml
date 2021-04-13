@@ -59,7 +59,7 @@
     </delete>
 
     <update id="updateVnameAndVpath">
-        UPDATE user_file SET vfname =#{userFile.vfname},vpath=#{userFile.vpath}WHERE id=#{userFile.id}
+        UPDATE user_file SET vfname =#{userFile.vfname},vpath=#{userFile.vpath} WHERE id=#{userFile.id}
     </update>
 
 

@@ -5,19 +5,16 @@ import cn.limexc.model.User;
 import cn.limexc.model.UserFile;
 import cn.limexc.service.FileService;
 import cn.limexc.service.UserService;
-import cn.limexc.util.ByteUnitConversion;
 import cn.limexc.util.DownLoadFile;
 import cn.limexc.util.GetIcon;
 import cn.limexc.util.TimeUtils;
-import com.sun.deploy.net.HttpResponse;
-import com.sun.org.apache.xml.internal.security.keys.storage.implementations.CertsInFilesystemDirectoryResolver;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
@@ -27,7 +24,6 @@ import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
-import java.util.Map;
 
 /**
  * 主要做文件上传下载吧?
@@ -65,6 +61,7 @@ public class FileController {
             System.out.println("文件为空");
         }
         String fileMd5 = req.getParameter("md5value");
+        String currentpath = req.getParameter("currentpath");
         //获取文件名
         String fileName = multipartFile.getOriginalFilename();
         //获取文件的大小转换
@@ -112,7 +109,7 @@ public class FileController {
             userFile.setFilesize(fileSize);
             userFile.setUptime(file.getCreate_time());
             userFile.setVfname(fileName);
-            userFile.setVpath("/");
+            userFile.setVpath(currentpath+fileName);
 
 
             fileService.addVFile(userFile);
