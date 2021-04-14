@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>管理系统</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/layui/css/layui.css">
+    <script type="application/javascript" src="${pageContext.request.contextPath}/static/js/jquery-3.6.0.js"></script>
 </head>
 <body class="layui-layout-body">
 
@@ -42,9 +43,7 @@
                     <img src="${pageContext.request.contextPath}/static/images/dls.jpeg" class="layui-nav-img">
                     ${user.username}
                 </a>
-                <dl class="layui-nav-child">
-                    <dd><a href="${pageContext.request.contextPath}/user/setting">基本资料</a></dd>
-                    <dd><a href="">安全设置</a></dd>
+                <dl class="layui-nav-child" id="menu_user_setting">
                 </dl>
             </li>
             <li class="layui-nav-item"><a href="${pageContext.request.contextPath}/system/logout">退了</a></li>
@@ -80,8 +79,8 @@
 
     <div class="layui-body">
         <!-- 内容主体区域 -->
-        <div style="padding: 15px; overflow: auto; width: 100%; height: 100%;background-color: cornflowerblue">
-            <iframe name="info_body" frameborder="0" height="100%" width="100%" src="admin/welcome.html"></iframe>
+        <div style="padding: 60px; overflow: auto; width: 98%; height: 85%;background-color: cornflowerblue">
+            <iframe name="info_body" frameborder="0" height="96%" width="96%" src="admin/welcome.html"></iframe>
 
 
 
@@ -103,6 +102,29 @@
         var element = layui.element;
 
     });
+</script>
+
+<script>
+    load_menu_setting();
+
+    function load_menu_setting() {
+        alert("加载菜单")
+        $.ajax({
+            url:"${pageContext.request.contextPath}/user/menu_setting",
+            type : "post",
+            success:function(data) {
+                alert("成功了\n"+data)
+                $("#menu_user_setting").html(data);
+
+            },
+            error:function (){
+                alert("加载失败")
+            }
+
+        })
+    }
+
+
 </script>
 </body>
 </html>

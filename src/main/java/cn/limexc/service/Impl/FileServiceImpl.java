@@ -64,7 +64,7 @@ public class FileServiceImpl implements FileService {
             System.out.println(uf.toString());
             sum = fileDao.updateVnameAndVpath(uf);
 
-        }else if (userFile!=null&&userFile.getFid()==null){
+        }else if (userFile!=null && userFile.getFid()==null){
             //获取虚拟目录名
             String vpathname = uf.getVfname();
             String[] sourcepath = userFile.getVpath().split("/");
@@ -230,7 +230,18 @@ public class FileServiceImpl implements FileService {
 
 
 
-
+    /**
+     * 有问题，因为是前字符串匹配，所以前面相等的都会被涉及到
+     * 	 * 如 /文件夹A
+     * 	 *    /文件夹B
+     * 	 *    /文件夹
+     * 	 * 当删除 文件夹 时这 三个都会被删除！！！
+     * 初步的修改想法：
+     * 		1.通过拆分后的字符串数组进行匹配
+     * 		2.通过前匹配后验证后面是否是“/”或后面为空
+     * 	*   3.判断后面是否是"/"或 内容是否一致
+     *
+     */
 
     @Override
     public int rmDirOrFile(UserFile userFile,User user) {
@@ -250,9 +261,18 @@ public class FileServiceImpl implements FileService {
         for (int i=0;i<ufs.size();i++){
             UserFile temp = ufs.get(i);
             String path = temp.getVpath();
-            if (temp.getVpath().startsWith(userFile.getVpath())){
-                System.out.println("要删除的目录"+path);
-                sum += fileDao.deleteUserFile(temp);
+
+            char[] cpath = path.toCharArray();
+            //有问题，后面的不一定是/
+            int l = userFile.getVpath().length();
+
+            if (path.startsWith(userFile.getVpath())){
+                if (path.equals(userFile.getVpath())||cpath[l]=='/'){
+                    System.out.println("要删除的目录"+path);
+                    sum += fileDao.deleteUserFile(temp);
+                }
+
+
             }
         }
         return sum;

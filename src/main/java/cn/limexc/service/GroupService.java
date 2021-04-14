@@ -1,5 +1,7 @@
 package cn.limexc.service;
 
+import cn.limexc.model.Group;
+
 /**
  * @author zhiyuanxzy@gmail.com
  * @Description
@@ -15,4 +17,11 @@ public interface GroupService {
      * @return 插入是否成功
      */
     Boolean addUserInGroup(Integer uid,Integer gid);
+
+    /**
+     * 获取用户所在的组信息
+     * @param uid uid
+     * @return group信息
+     */
+    Group getUserGroup(Integer uid);
 }

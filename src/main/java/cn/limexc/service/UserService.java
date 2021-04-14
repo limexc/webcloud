@@ -27,6 +27,9 @@ public interface UserService {
     //用ID查找用户，返回基本信息
     User userinfo(Integer id);
 
+    //用ID查找用户，返回除密码外所有信息
+    User userallinfo(Integer id);
+
     /**
      * 通过用户名查找用户，用于注册时验证该用户名是否被注册
      * @param name 用户名

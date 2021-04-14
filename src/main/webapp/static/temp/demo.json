@@ -1,0 +1,37 @@
+{
+  "code": 0,
+  "msg": "",
+  "count": 1000,
+  "data": [
+    {
+      "id": 11,
+      "filename": "测试数据1",
+      "filesize": "20M",
+      "uptime": "2021-04-14"
+    },
+    {
+      "id": 12,
+      "filename": "测试数据2",
+      "filesize": "10M",
+      "uptime": "2021-04-12"
+    },
+    {
+      "id": 13,
+      "filename": "测试数据3",
+      "filesize": "1KB",
+      "uptime": "2021-04-1"
+    },
+    {
+      "id": 14,
+      "filename": "测试数据4",
+      "filesize": "10G",
+      "uptime": "2021-03-14"
+    },
+    {
+      "id": 15,
+      "filename": "测试数据5",
+      "filesize": "1M",
+      "uptime": "2021-04-14"
+    }
+  ]
+}

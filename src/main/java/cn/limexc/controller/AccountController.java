@@ -1,5 +1,6 @@
 package cn.limexc.controller;
 
+import cn.limexc.model.Group;
 import cn.limexc.model.User;
 import cn.limexc.service.GroupService;
 import cn.limexc.service.UserService;
@@ -9,19 +10,17 @@ import cn.limexc.util.TimeUtils;
 import cn.limexc.util.VeCodeUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
-import javax.jws.soap.SOAPBinding;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -43,6 +42,8 @@ public class AccountController {
 
     @Resource
     private UserService userService;
+    @Resource
+    private GroupService groupService;
 
 
 
@@ -79,17 +80,21 @@ public class AccountController {
             System.out.println("邮箱："+email+" 密码："+password+" 邮箱格式："+rs);
             //将查询到的数据放到user中
             user = userService.login(email,password);
+            //获取用户组的信息
+            Group group = groupService.getUserGroup(user.getId());
+
             if (user!=null){
-                System.out.println("用户详细信息："+user.toString());
+                System.out.println("用户信息："+user.toString());
                 System.out.println(StrMd5Utils.MD5(user.getPassword()));
                 //mv.setViewName("redirect:/index.jsp");
                 //httpSession.setAttribute("id","");
 
                 //将用户登陆数据保存到session中
                 session.setAttribute("user",user);
-                session.setAttribute("status",user.getStatus());
+                session.setAttribute("group",group);
+                //session.setAttribute("status",user.getStatus());
                 //存储用户的权限？没有实体类对应啊？
-                //session.setAttribute("power",);
+                session.setAttribute("power",group.getPower());
 
                 return "redirect:/user/main";
             }

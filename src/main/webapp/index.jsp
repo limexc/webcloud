@@ -64,9 +64,9 @@
                         <img src="${pageContext.request.contextPath}/static/images/dls.jpeg" class="layui-nav-img">
                         ${user.username}
                     </a>
-                    <dl class="layui-nav-child">
-                        <dd><a href="">基本资料</a></dd>
-                        <dd><a href="">安全设置</a></dd>
+                    <!--这块使用ajax进行加载-->
+                    <dl class="layui-nav-child" id="menu_user_setting">
+
                     </dl>
                 </li>
                 <li class="layui-nav-item"><a href="${pageContext.request.contextPath}/system/logout">退了</a></li>
@@ -81,11 +81,11 @@
         <li class="layui-nav-item layui-nav-itemed">
             <a href="javascript:;">我的文件</a>
             <dl class="layui-nav-child">
-                <dd><a href="https://www.baidu.com" target="file_info_body">文档</a></dd>
-                <dd><a href="javascript:;">图片</a></dd>
-                <dd><a href="javascript:;">视频</a></dd>
-                <dd><a href="javascript:;">音乐</a></dd>
-                <dd><a href="javascript:;">其他</a></dd>
+                <dd><a href="${pageContext.request.contextPath}/info/getfilelist?method=word" target="file_info_body">文档</a></dd>
+                <dd><a href="${pageContext.request.contextPath}/info/getfilelist?method=pic" target="file_info_body">图片</a></dd>
+                <dd><a href="${pageContext.request.contextPath}/info/getfilelist?method=video" target="file_info_body">视频</a></dd>
+                <dd><a href="${pageContext.request.contextPath}/info/getfilelist?method=music" target="file_info_body">音乐</a></dd>
+                <dd><a href="${pageContext.request.contextPath}/info/getfilelist?method=other" target="file_info_body">其他</a></dd>
                 <!--<dd><a href="">跳转项</a></dd>-->
             </dl>
         </li>
@@ -117,6 +117,29 @@
     layui.use('element', function(){
         var element = layui.element;
     });
+</script>
+
+<script>
+    load_menu_setting();
+
+    function load_menu_setting() {
+        alert("加载菜单")
+        $.ajax({
+            url:"${pageContext.request.contextPath}/user/menu_setting",
+            type : "post",
+            success:function(data) {
+                alert("成功了\n"+data)
+                $("#menu_user_setting").html(data);
+
+            },
+            error:function (){
+                alert("加载失败")
+            }
+
+        })
+    }
+
+
 </script>
 
 </body>

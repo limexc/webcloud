@@ -1,9 +1,17 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <%
     //关于路径问题，初步的解决方法
     String path = request.getContextPath();
     String basePath = request.getServerName() + ":" + request.getServerPort() + path + "/";
     String baseUrlPath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
+%>
+
+<%
+    //初步处理一下未登录就访问的用户
+    if (session.getAttribute("user")==null){
+        pageContext.forward("/login.jsp");
+    }
 %>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/default.css" />
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/index_main.css">
@@ -43,7 +51,6 @@
 
 
     <div style="position: absolute;display: inline-block; top:7px;float:right;right: 30px">
-        <span>搜索：</span>
         <div class="layui-inline">
             <input class="layui-input" name="selectFile" id="selectFile" autocomplete="off">
         </div>
@@ -107,21 +114,21 @@
                     this.where = {};
 
                 },
-
+                /*
                 page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
                   layout: ['count', 'prev', 'page', 'next', 'limit', 'refresh', 'skip']//自定义分页布局
                     ,limits:[5,10,15]
                     ,first: false //不显示首页
                     ,last: false //不显示尾页
                 },
-
+                */
                 title: true   //表头
                 ,toolbar: true //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
                 ,cols: [[
                     //{type:'radio'},
                     //{type: 'checkbox', fixed: 'check'},
                     //{field: 'filetype', title: '类型', align:'center'},
-                    {field: 'vfname', title: '文件名',align:'center', sort : true,event :'fileclick',
+                    {field: 'vfname', title: '文件名', sort : true,event :'fileclick',
                         templet : function(d) {
                             if (d.filesize==="-"){
                                 return "<svg class='icon' aria-hidden='true'><use xlink:href='" + "#icon-folder" + "'></use></svg>&nbsp;"
@@ -141,7 +148,7 @@
                     ,{fixed: 'right', title: '操作', align:'center', toolbar: '#barDemo'},
                     {field: 'id',hide:true}
                 ]]
-                ,page: true
+                //,page: true
 
 
             });
@@ -219,12 +226,36 @@
                             if (data.url=='err1') {
                                 layer.open({title:"警告！",content:"您输入的信息有误！"});
                             }else if (data.url=="err2"){
-                                layer.open({title:"提示！",content:"这个文件已经分享过了！<br />分享地址为：<br />"+baseurlpath+'share/file/'+data.tips})
+                                layer.open(
+                                    {
+                                        title:"提示！"
+                                        ,btn:["复制到粘贴板"]
+                                        ,btnAlign: 'c'
+                                        ,content:"这个文件已经分享过了！<br />分享地址为：<br />"+
+                                        "<textarea name='s_url' rows=2  style='resize: none;width: 100%'>"+baseurlpath+'share/file/'+data.tips+"</textarea>"
+                                        ,yes : function (index, layero){
+                                            //let shareurl = $(".s_url").text();
+                                            //alert(shareurl)
+                                            copyUrl();
+                                            layer.close(index);
+                                        }
+                                    })
                             }else if (data.url=="err3"){
                                 layer.open({title:"错误！",content:"系统错误！请您稍后再次尝试！"})
                             }else {
-                                layer.alert(
-                                    "您的分享地址为：<br />"+baseurlpath+'share/file/'+data.url);
+                                layer.open({
+                                    title:"提示！"
+                                    ,btn:["复制到粘贴板"]
+                                    ,btnAlign: 'c'
+                                    ,content:
+                                        "您的分享地址为：<br />"+
+                                        "<textarea name='s_url' rows=2  style='resize: none;width: 100%'>"+baseurlpath+'share/file/'+data.tips+"</textarea>"
+                                    ,yes : function (index, layero){
+                                        copyUrl();
+                                        layer.close(index);
+                                    }
+                                })
+
                             }
 
                         }
@@ -307,6 +338,7 @@
                                     Time: 4000//展示时间为4s
                                 });//这里用于检测上传状态是否成功
                                 table.reload('fileListTable', {
+                                    //这里重载的地址并不正确
                                     url : "${pageContext.request.contextPath}/info/userfile?method=getSuperior",
                                     where: {
                                         "Catalogue": Catalogue-1,
@@ -384,5 +416,14 @@
 
     </script>
 
+    <script>
+        function copyUrl() {
+            let S_Url =  document.getElementsByName("s_url");
+            S_Url[0].select(); // 选择对象
+            document.execCommand("Copy"); // 执行浏览器复制命令
+            layer.msg("复制成功");
+            //alert("已复制好，可贴粘。");
+        }
+    </script>
 
 </div>

@@ -43,13 +43,13 @@
         会依赖于执行sql的顺序，先执行的先加一，但是这不一定是真正的日志记录顺序。
     -->
     <insert id="insertFile"  >
-        INSERT INTO file (id,filename,md5,create_time,realpath,filesize,filetype)
-        VALUE ((SELECT MAX(id)+1 FROM file tm),#{file.filename},#{file.md5},#{file.create_time},#{file.realpath},#{file.filesize},#{file.filetype})
+        INSERT INTO file (id,filename,md5,create_time,realpath,filesize,filetype,iconsign)
+        VALUE ((SELECT MAX(id)+1 FROM file tm),#{file.filename},#{file.md5},#{file.create_time},#{file.realpath},#{file.filesize},#{file.filetype},#{file.iconsign})
     </insert>
 
     <!--userfile表中的id字段为自增的-->
     <insert id="insertUserFile">
-        INSERT INTO user_file (uid,vpath,fid,vfname,uptime,iconSign)
+        INSERT INTO user_file (uid,vpath,fid,vfname,uptime,iconsign)
         VALUE (#{userFile.uid},#{userFile.vpath},#{userFile.fid},#{userFile.vfname},#{userFile.uptime},#{userFile.iconsign})
     </insert>
     

@@ -1,12 +1,12 @@
 package cn.limexc.dao;
 
 import cn.limexc.model.User;
-import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
+@Repository
 public interface UserDao {
     /**
      * 查询用户列表
@@ -56,4 +56,11 @@ public interface UserDao {
 
     @Select("select id,username,email from users where email=#{email} ")
     User selectUserByEmail(@Param("email") String email);
+
+    //查询用户的所有信息
+    @Select("select users.id AS id,users.username AS username,users.email AS email,users.alisa AS alisa," +
+            "users.storage AS storage,users.status AS status,users.create_at AS create_at,users.delete_at AS delete_at," +
+            "users.profile AS profile,user_group.gid AS gid " +
+            "from (users LEFT JOIN user_group ON users.id=user_group.uid ) where users.id=#{id}")
+    User selectUserAllInfoById(@Param("id") Integer id);
 }

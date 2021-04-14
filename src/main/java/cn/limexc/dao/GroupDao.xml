@@ -3,8 +3,5 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.limexc.dao.GroupDao">
-    <select id="selectGroupByUid" resultType="cn.limexc.model.Group">
-        SELECT id,name,power FROM `group`,user_group
-        WHERE user_group.gid=`group`.id AND user_group.uid=#{uid}
-    </select>
+
 </mapper>

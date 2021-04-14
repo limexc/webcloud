@@ -6,6 +6,7 @@ import cn.limexc.model.UserFile;
 import cn.limexc.service.FileService;
 import cn.limexc.service.UserService;
 import cn.limexc.util.DownLoadFile;
+import cn.limexc.util.GetFileType;
 import cn.limexc.util.GetIcon;
 import cn.limexc.util.TimeUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -70,12 +71,15 @@ public class FileController {
 
         //设置属性  等着放到service里面，不是在这里搞的
         GetIcon getIcon = new GetIcon();
+        GetFileType fType = new GetFileType();
         file = new FileModel();
         file.setFilesize(fileSize);
         file.setFilename(fileName);
         file.setMd5(fileMd5);
         file.setCreate_time(TimeUtils.getUtils().getForMatTime());
-        file.setFiletype(getIcon.Icons(fileName));
+        //设置文件类型
+        file.setFiletype(fType.fileType(fileName));
+        file.setIconsign(getIcon.Icons(fileName));
 
         //为了防止有重名的文件，就用时间戳做唯一目录名
         file.setRealpath(filepath+new Date().getTime()+"/"+fileName);
@@ -109,6 +113,7 @@ public class FileController {
             userFile.setFilesize(fileSize);
             userFile.setUptime(file.getCreate_time());
             userFile.setVfname(fileName);
+            userFile.setIconsign(new GetIcon().Icons(fileName));
             userFile.setVpath(currentpath+fileName);
 
 

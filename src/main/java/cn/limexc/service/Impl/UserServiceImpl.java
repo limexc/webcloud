@@ -5,14 +5,9 @@ import cn.limexc.model.User;
 import cn.limexc.service.GroupService;
 import cn.limexc.service.UserService;
 import cn.limexc.util.TimeUtils;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -40,6 +35,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public User userinfo(Integer id) {
         return userDao.selectUserInfoById(id);
+    }
+
+    //除密码外所有信息
+    @Override
+    public User userallinfo(Integer id) {
+        return userDao.selectUserAllInfoById(id);
     }
 
     @Override

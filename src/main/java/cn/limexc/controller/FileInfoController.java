@@ -4,10 +4,7 @@ import cn.limexc.model.FileModel;
 import cn.limexc.model.User;
 import cn.limexc.model.UserFile;
 import cn.limexc.service.FileService;
-import cn.limexc.util.ByteUnitConversion;
-import cn.limexc.util.PathAnalysis;
-import cn.limexc.util.ResultData;
-import cn.limexc.util.TimeUtils;
+import cn.limexc.util.*;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.stereotype.Controller;
@@ -244,7 +241,8 @@ public class FileInfoController {
             uf.setUid(user.getId());
             uf.setUptime(TimeUtils.getUtils().getForMatTime());
             uf.setFilesize(filesize);
-            //还没想好目录怎么做
+            uf.setIconsign(new GetIcon().Icons(filename));
+            //设置目录
             uf.setVpath(currentpath+uf.getVfname());
 
             System.out.println("------> "+uf.toString());
@@ -289,9 +287,21 @@ public class FileInfoController {
      * @return
      */
     @RequestMapping(value = "/getfilelist")
-    public String listdata(){
+    public String listdata(HttpSession session,HttpServletRequest req,HttpServletResponse rep){
+        User user = (User) session.getAttribute("user");
+        String method =req.getParameter("method");
+        //先看看返回的啥
+        System.out.println(method);
+        if (method!=null){
+            System.out.println("去分类页");
+            rep.setCharacterEncoding("UTF-8");
+            req.setAttribute("method", method);
+            return "uflistbytype";
+        }else {
+            System.out.println("去主页");
+            return "userfilelist";
+        }
 
-        return "userfilelist";
     }
 
     @RequestMapping(value = "/selectfile")

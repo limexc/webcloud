@@ -1,6 +1,7 @@
 package cn.limexc.service.Impl;
 
 import cn.limexc.dao.GroupDao;
+import cn.limexc.model.Group;
 import cn.limexc.service.GroupService;
 import org.springframework.stereotype.Service;
 
@@ -23,5 +24,11 @@ public class GroupServiceImpl implements GroupService {
             return true;
         }
         return false;
+    }
+
+
+    @Override
+    public Group getUserGroup(Integer uid) {
+        return groupDao.selectGroupByUid(uid);
     }
 }
