@@ -4,6 +4,7 @@ import cn.limexc.model.FileModel;
 import cn.limexc.model.User;
 import cn.limexc.model.UserFile;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
@@ -49,4 +50,10 @@ public interface FileService {
 
     //返回用户文件的个数
     int UserFileCount(User user);
+
+    //返回用户文件的总大小
+    BigInteger sumUserFileSize(User user);
+
+    //返回用户空间的一些信息，暂定使用map
+    Map<String,Object> userStorage(User user);
 }

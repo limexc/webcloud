@@ -1,17 +1,20 @@
 package cn.limexc.service.Impl;
 
 import cn.limexc.dao.FileDao;
+import cn.limexc.dao.UserDao;
 import cn.limexc.model.FileModel;
 import cn.limexc.model.User;
 import cn.limexc.model.UserFile;
 import cn.limexc.service.FileService;
-import cn.limexc.util.*;
+import cn.limexc.util.ByteUnitConversion;
+import cn.limexc.util.PathAnalysis;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -23,6 +26,8 @@ public class FileServiceImpl implements FileService {
 
     @Resource
     private FileDao fileDao;
+    @Resource
+    private UserDao userDao;
 
     @Override
     public List<FileModel> listAllFile() {
@@ -278,8 +283,63 @@ public class FileServiceImpl implements FileService {
         return sum;
     }
 
+    @Override
+    public BigInteger sumUserFileSize(User user) {
+        //去除BigInterg的小数点
+        String temp = fileDao.sumUserFileSize(user.getId());
+        if (temp!=null){
+            temp = temp.substring(0,temp.indexOf("."));
+        }
+        if (temp==null||"".equals(temp)){
+            return new BigInteger(String.valueOf(0));
+        }
+        return new BigInteger(temp);
+    }
+
+    /**
+     * 使用map保存相关存储空间的信息，包括：
+     *      当前用户使用的存储空间--nowStorage
+     *      当前用户被分配的存储空间--storage
+     *      当前存储空间的占比--percentage
+     *      ----以及----
+     *      用来判断storage是否为空的--isNull
+     *      用来判断是否超过存储空间的--isOut
+     * 可以使用一个对象来保存这些信息。
+     * @param user  带有id属性的user
+     * @return      map
+     */
+    @Override
+    public Map<String, Object> userStorage(User user) {
+        Map<String,Object>  map = new HashMap<String,Object>();
+        map.put("nowStorage",sumUserFileSize(user));
+        User temuser = userDao.selectUserAllInfoById(user.getId());
+        BigInteger storage= BigInteger.valueOf(temuser.getStorage());
+        map.put("storage",storage);
+        if (map.get("storage").equals(new BigInteger(String.valueOf(0)))){
+            map.put("isNull",true);
+        }else {
+            map.put("isNull",false);
+        }
+        //compareTo方法来比较，小于则返回-1，等于则返回0，大于则返回1
+        if (storage.compareTo((BigInteger) map.get("nowStorage"))<=0){
+            map.put("isOut",true);
+            map.put("percentage","100%");
+        }else {
+            map.put("isOut",false);
+        }
+
+        //先进行判断，如果storage不为零那么就可以进计算，如果为零，那么置为0% 若超过或相等都存入100%
+        int u = storage.compareTo(new BigInteger("0"));
+        if (u>0){
+            BigInteger[] resBigIntegers = ((BigInteger) map.get("nowStorage")).divideAndRemainder(storage);
+            System.out.println("两数相除，整除结果为：" + resBigIntegers[0]  +",余数为：" + resBigIntegers[1]);
+            String temp = String.valueOf(resBigIntegers[1]).substring(0,2);
+            map.put("percentage",temp+"%");
+        }else {
+            map.put("percentage", "100%");
+        }
 
 
-
-
+        return map;
+    }
 }

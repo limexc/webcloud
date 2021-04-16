@@ -90,10 +90,10 @@
             </dl>
         </li>
         <li class="layui-nav-item"><a href="javascript:;">我的分享</a></li>
-        <li class="layui-nav-item"><a href="">容量配额</a></li>
+        <li class="layui-nav-item"><a href="javascript:;">容量配额:已使用${sessionScope.get("percentage")}</a></li>
 
             <div class="layui-progress">
-                <div class="layui-progress-bar" lay-percent="40%"></div>
+                <div class="layui-progress-bar" lay-percent="${sessionScope.get("percentage")}"></div>
             </div>
 
         </li>

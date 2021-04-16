@@ -4,6 +4,7 @@ import cn.limexc.model.FileModel;
 import cn.limexc.model.User;
 import cn.limexc.model.UserFile;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -88,4 +89,10 @@ public interface FileDao {
 
 
     List<UserFile> selectFilesByKey(@Param("uid")Integer uid,@Param("key")String key);
+
+    //用户文件大小和，用来做容量的控制
+    @Select("SELECT SUM(file.filesize) AS size " +
+            "FROM  (user_file LEFT JOIN users ON users.id=user_file.uid)LEFT JOIN file ON file.id=user_file.fid " +
+            "WHERE users.id = #{id}")
+    String sumUserFileSize(@Param("id") Integer id);
 }

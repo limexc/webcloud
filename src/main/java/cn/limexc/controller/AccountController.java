@@ -2,6 +2,7 @@ package cn.limexc.controller;
 
 import cn.limexc.model.Group;
 import cn.limexc.model.User;
+import cn.limexc.service.FileService;
 import cn.limexc.service.GroupService;
 import cn.limexc.service.UserService;
 import cn.limexc.util.MailUtils;
@@ -21,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -44,6 +46,8 @@ public class AccountController {
     private UserService userService;
     @Resource
     private GroupService groupService;
+    @Resource
+    private FileService fileService;
 
 
 
@@ -95,6 +99,32 @@ public class AccountController {
                 //session.setAttribute("status",user.getStatus());
                 //存储用户的权限？没有实体类对应啊？
                 session.setAttribute("power",group.getPower());
+
+                //获取用户的容量信息
+                /**
+                 * 使用map保存相关存储空间的信息，包括：
+                 *      当前用户使用的存储空间--nowStorage
+                 *      当前用户被分配的存储空间--storage
+                 *      当前存储空间的占比--percentage
+                 *      ----以及----
+                 *      用来判断storage是否为空的--isNull
+                 *      用来判断是否超过存储空间的--isOut
+                 */
+                Map<String,Object> storageInfoMap = fileService.userStorage(user);
+                session.setAttribute("percentage",storageInfoMap.get("percentage"));
+                session.setAttribute("isout",storageInfoMap.get("isOut"));
+                //在前端判断isout如果超出的禁用上传功能，在后端--用户登陆系统的时候需要判断，并禁止上传。
+
+                for (Map.Entry<String, Object> map : storageInfoMap.entrySet()) {
+
+                    System.out.println("Key = " + map.getKey() + ", Value = " + map.getValue());
+
+                }
+                //END  存储空间
+
+
+
+
 
                 return "redirect:/user/main";
             }

@@ -3,6 +3,7 @@ package cn.limexc.controller;
 
 import cn.limexc.model.Group;
 import cn.limexc.model.User;
+import cn.limexc.service.FileService;
 import cn.limexc.service.GroupService;
 import cn.limexc.service.UserService;
 import org.springframework.stereotype.Controller;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 主要做登录后用户信息的修改查询等操作。
@@ -30,6 +32,8 @@ public class UserController {
     private UserService userService;
     @Resource
     private GroupService groupService;
+    @Resource
+    private FileService fileService;
 
     @RequestMapping(value = "/listUser")
     @ResponseBody
@@ -71,7 +75,6 @@ public class UserController {
          * power 0 为管理员组
          *
          */
-
         try {
             response.setCharacterEncoding("UTF-8");
             response.setHeader("contentType", "text/html; charset=utf-8");
@@ -100,6 +103,35 @@ public class UserController {
         }else {
             return "forward:/user/main";
         }
+
+    }
+
+    //好像ke'y
+    @RequestMapping(value = "/storage")
+    public void getinfo(HttpSession session){
+        User user = (User) session.getAttribute("uesr");
+
+        //获取用户的容量信息
+        /**
+         * 使用map保存相关存储空间的信息，包括：
+         *      当前用户使用的存储空间--nowStorage
+         *      当前用户被分配的存储空间--storage
+         *      当前存储空间的占比--percentage
+         *      ----以及----
+         *      用来判断storage是否为空的--isNull
+         *      用来判断是否超过存储空间的--isOut
+         */
+        Map<String,Object> storageInfoMap = fileService.userStorage(user);
+        session.setAttribute("percentage",storageInfoMap.get("percentage"));
+        session.setAttribute("isout",storageInfoMap.get("isOut"));
+        //在前端判断isout如果超出的禁用上传功能，在后端--用户登陆系统的时候需要判断，并禁止上传。
+
+        for (Map.Entry<String, Object> map : storageInfoMap.entrySet()) {
+
+            System.out.println("Key = " + map.getKey() + ", Value = " + map.getValue());
+
+        }
+
 
     }
 
