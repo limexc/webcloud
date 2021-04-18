@@ -32,6 +32,17 @@ public interface FileDao {
      */
     List<UserFile> selectFileListLimit(@Param("id") Integer id,@Param("page") String page,@Param("limit") String limit);
 
+    /**
+     * 通过文件类型查询文件列表
+     * @param user 用户信息
+     * @param type 文件类型（file.filetype的前半部分）
+     * @return 返回【用户文件】列表
+     */
+    @Select("SELECT file.filesize AS filesize, user_file.vfname AS vfname, user_file.vpath AS vpath," +
+            "user_file.id AS id, user_file.uptime AS uptime, file.filetype AS filetype " +
+            "FROM ( user_file LEFT JOIN users ON users.id = user_file.uid ) LEFT JOIN file ON file.id = user_file.fid  " +
+            "WHERE users.id = #{user.id} AND file.filetype LIKE #{type}")
+    List<UserFile> selectFileByType(@Param("user") User user,@Param("type")String type);
 
     /**
      * 通过md5查询文件是否存在

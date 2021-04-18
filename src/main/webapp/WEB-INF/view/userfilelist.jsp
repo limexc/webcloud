@@ -128,6 +128,7 @@
                     //{type:'radio'},
                     //{type: 'checkbox', fixed: 'check'},
                     //{field: 'filetype', title: '类型', align:'center'},
+                    {title: "ID",width:'5%',type:"numbers"},
                     {field: 'vfname', title: '文件名', sort : true,event :'fileclick',
                         templet : function(d) {
                             if (d.filesize==="-"){

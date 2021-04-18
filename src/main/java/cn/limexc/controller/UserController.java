@@ -69,6 +69,11 @@ public class UserController {
         html.append("<dd><a href=\"/CloudWeb/user/setting\">基本资料</a></dd>\n" +
                     "<dd><a href=\"\">安全设置</a></dd>\n");
         System.out.println("来加载菜单等信息了");
+        //更新一下存储空间信息
+        Map<String,Object> storageInfoMap = fileService.userStorage(user);
+        session.setAttribute("percentage",storageInfoMap.get("percentage"));
+        session.setAttribute("isout",storageInfoMap.get("isOut"));
+
         /**
          * 想法：
          * 通过用户查询数据库获得用户所属的用户组，通过组ID获取组权限，判断组的权限来回传相对应的信息。
@@ -103,35 +108,6 @@ public class UserController {
         }else {
             return "forward:/user/main";
         }
-
-    }
-
-    //好像ke'y
-    @RequestMapping(value = "/storage")
-    public void getinfo(HttpSession session){
-        User user = (User) session.getAttribute("uesr");
-
-        //获取用户的容量信息
-        /**
-         * 使用map保存相关存储空间的信息，包括：
-         *      当前用户使用的存储空间--nowStorage
-         *      当前用户被分配的存储空间--storage
-         *      当前存储空间的占比--percentage
-         *      ----以及----
-         *      用来判断storage是否为空的--isNull
-         *      用来判断是否超过存储空间的--isOut
-         */
-        Map<String,Object> storageInfoMap = fileService.userStorage(user);
-        session.setAttribute("percentage",storageInfoMap.get("percentage"));
-        session.setAttribute("isout",storageInfoMap.get("isOut"));
-        //在前端判断isout如果超出的禁用上传功能，在后端--用户登陆系统的时候需要判断，并禁止上传。
-
-        for (Map.Entry<String, Object> map : storageInfoMap.entrySet()) {
-
-            System.out.println("Key = " + map.getKey() + ", Value = " + map.getValue());
-
-        }
-
 
     }
 

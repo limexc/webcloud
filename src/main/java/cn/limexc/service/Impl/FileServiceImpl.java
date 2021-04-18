@@ -14,6 +14,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -50,6 +51,11 @@ public class FileServiceImpl implements FileService {
         }
 
         return userFiles;
+    }
+
+    @Override
+    public List<UserFile> listUserFileByType(User user, String type) {
+        return fileDao.selectFileByType(user,type);
     }
 
     @Override
@@ -285,15 +291,10 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public BigInteger sumUserFileSize(User user) {
-        //去除BigInterg的小数点
-        String temp = fileDao.sumUserFileSize(user.getId());
-        if (temp!=null){
-            temp = temp.substring(0,temp.indexOf("."));
-        }
-        if (temp==null||"".equals(temp)){
-            return new BigInteger(String.valueOf(0));
-        }
-        return new BigInteger(temp);
+        //因为BigInteger使用科学计数法，所有使用new BigDecimal 进行转换
+        BigDecimal temp = new BigDecimal(fileDao.sumUserFileSize(user.getId()));
+
+        return new BigInteger(String.valueOf(temp));
     }
 
     /**
@@ -311,34 +312,29 @@ public class FileServiceImpl implements FileService {
     @Override
     public Map<String, Object> userStorage(User user) {
         Map<String,Object>  map = new HashMap<String,Object>();
-        map.put("nowStorage",sumUserFileSize(user));
+        BigDecimal nowStorage = new BigDecimal(sumUserFileSize(user));
+        map.put("nowStorage",nowStorage);
         User temuser = userDao.selectUserAllInfoById(user.getId());
-        BigInteger storage= BigInteger.valueOf(temuser.getStorage());
+        BigDecimal storage= new BigDecimal(temuser.getStorage());
         map.put("storage",storage);
-        if (map.get("storage").equals(new BigInteger(String.valueOf(0)))){
+        if (storage.equals(new BigDecimal(0))){
             map.put("isNull",true);
         }else {
             map.put("isNull",false);
         }
         //compareTo方法来比较，小于则返回-1，等于则返回0，大于则返回1
-        if (storage.compareTo((BigInteger) map.get("nowStorage"))<=0){
+        if (storage.compareTo(nowStorage)<=0){
             map.put("isOut",true);
             map.put("percentage","100%");
         }else {
             map.put("isOut",false);
-        }
+            //使用BigDecimal进行计算并保留2位小数  以及舍入模式
+            BigDecimal resBigIntegers = (nowStorage.divide(storage,2,BigDecimal.ROUND_HALF_UP));
 
-        //先进行判断，如果storage不为零那么就可以进计算，如果为零，那么置为0% 若超过或相等都存入100%
-        int u = storage.compareTo(new BigInteger("0"));
-        if (u>0){
-            BigInteger[] resBigIntegers = ((BigInteger) map.get("nowStorage")).divideAndRemainder(storage);
-            System.out.println("两数相除，整除结果为：" + resBigIntegers[0]  +",余数为：" + resBigIntegers[1]);
-            String temp = String.valueOf(resBigIntegers[1]).substring(0,2);
+            System.out.println("计算的百分比为：" + resBigIntegers+" 原始的数据为："+nowStorage+"  "+storage);
+            String temp = String.valueOf(resBigIntegers).substring(2,4);
             map.put("percentage",temp+"%");
-        }else {
-            map.put("percentage", "100%");
         }
-
 
         return map;
     }

@@ -62,6 +62,7 @@ public class AccountController {
         String email;
         String password;
         User user = null;
+        Group group =null;
         //总是傻了吧唧的，别忘了，暂存。
         //req.setCharacterEncoding("UTF-8");
         //resp.setContentType("text/html;charset=UTF-8");
@@ -84,10 +85,13 @@ public class AccountController {
             System.out.println("邮箱："+email+" 密码："+password+" 邮箱格式："+rs);
             //将查询到的数据放到user中
             user = userService.login(email,password);
-            //获取用户组的信息
-            Group group = groupService.getUserGroup(user.getId());
+
 
             if (user!=null){
+                //获取用户组的信息
+                group = groupService.getUserGroup(user.getId());
+                
+
                 System.out.println("用户信息："+user.toString());
                 System.out.println(StrMd5Utils.MD5(user.getPassword()));
                 //mv.setViewName("redirect:/index.jsp");
@@ -100,7 +104,7 @@ public class AccountController {
                 //存储用户的权限？没有实体类对应啊？
                 session.setAttribute("power",group.getPower());
 
-                //获取用户的容量信息
+                //获取用户的容量信息   应该每次请求都重新获取用户空间容量的相关信息
                 /**
                  * 使用map保存相关存储空间的信息，包括：
                  *      当前用户使用的存储空间--nowStorage
@@ -113,7 +117,7 @@ public class AccountController {
                 Map<String,Object> storageInfoMap = fileService.userStorage(user);
                 session.setAttribute("percentage",storageInfoMap.get("percentage"));
                 session.setAttribute("isout",storageInfoMap.get("isOut"));
-                //在前端判断isout如果超出的禁用上传功能，在后端--用户登陆系统的时候需要判断，并禁止上传。
+                //在前端判断isout如果超出的，禁用上传功能，在后端--用户登陆系统的时候需要判断，并禁止上传。
 
                 for (Map.Entry<String, Object> map : storageInfoMap.entrySet()) {
 
@@ -121,7 +125,6 @@ public class AccountController {
 
                 }
                 //END  存储空间
-
 
 
 

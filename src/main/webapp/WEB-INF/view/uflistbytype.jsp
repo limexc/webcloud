@@ -23,7 +23,7 @@
 
 <!--body  start-->
 
-<a style="font-size: 35px" id="a_msg_method">当前的文件类型：${requestScope.get("method")}</a><br>
+<a style="font-size: 35px" id="a_msg_method">当前的文件类型：${requestScope.get("filetype")}</a><br>
 
 
 <div class="layui-inline">
@@ -49,14 +49,14 @@
         table.render({
             elem: '#file_table'
             //模拟数据
-            ,url:'${pageContext.request.contextPath}/static/temp/demo.json'
+            ,url:'${pageContext.request.contextPath}/info/filelistbytype?filetype=${requestScope.get("filetype")}'
             //,url:'/demo/table/user/'
             ,title: '监测任务列表信息'
             ,page:false
             ,cols: [[
                 //可以设置点击文件名弹出详细信息
                 {title: "ID",width:'5%',type:"numbers"}
-                ,{field:'filename', width:'35%', title: '文件名', sort: true, event :'filename_click',unresize:true}
+                ,{field:'vfname', width:'35%', title: '文件名', sort: true, event :'filename_click',unresize:true}
                 ,{field:'filesize', width:'30%', title: '文件大小', sort: true,unresize:true}
                 ,{field:'uptime', width:'30%', title: '修改日期', sort: true,unresize:true}
                 //,{field:'tools', title: '操作', width: '25%',unresize:true,align:'center', toolbar: '#barDemo'} //minWidth：局部定义当前单元格的最小宽度，layui 2.2.1 新增
@@ -70,12 +70,12 @@
 
             layer.alert(
                 "<img height='200' width='200' style='display:block;margin:0 auto;' src='${pageContext.request.contextPath}/static/images/dls.jpeg'></img><br>"+
-                "<span>文件名："+data.filename+"</span><br>"+
+                "<span>文件名："+data.vfname+"</span><br>"+
                 "<span>文件大小："+data.filesize+"</span><br>"+
                 "<span>修改时间："+data.uptime+"</span><br>",
                 //JSON.stringify(data),
                 {
-                    title: "文件信息："+data.filename,
+                    title: "文件信息："+data.vfname,
                     btnAlign: 'c',
                     btn:["下载","查看","分享","删除"],
                     //下载
@@ -145,7 +145,7 @@
 
     function del_file(obj,index,layero,data){
         layer.alert(
-            "你确定要删除文件：'"+data.filename+"' 吗？",
+            "你确定要删除文件：'"+data.vfname+"' 吗？",
             {
                 title:"警告！",
                 btn:["删除","取消"],

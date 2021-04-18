@@ -8,6 +8,7 @@ import cn.limexc.util.TimeUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.math.BigInteger;
 import java.util.List;
 
 @Service
@@ -78,7 +79,7 @@ public class UserServiceImpl implements UserService {
         user.setGid(2);
         user.setCreate_at(TimeUtils.getUtils().getForMatTime());
         //默认注册时分配空间为0
-        user.setStorage(0);
+        user.setStorage(BigInteger.valueOf(0));
         user.setAlisa("null");
         System.out.printf(TimeUtils.getUtils().getForMatTime());
         Integer s =userDao.insertUser(user);

@@ -81,11 +81,11 @@
         <li class="layui-nav-item layui-nav-itemed">
             <a href="javascript:;">我的文件</a>
             <dl class="layui-nav-child">
-                <dd><a href="${pageContext.request.contextPath}/info/getfilelist?method=word" target="file_info_body">文档</a></dd>
-                <dd><a href="${pageContext.request.contextPath}/info/getfilelist?method=pic" target="file_info_body">图片</a></dd>
-                <dd><a href="${pageContext.request.contextPath}/info/getfilelist?method=video" target="file_info_body">视频</a></dd>
-                <dd><a href="${pageContext.request.contextPath}/info/getfilelist?method=music" target="file_info_body">音乐</a></dd>
-                <dd><a href="${pageContext.request.contextPath}/info/getfilelist?method=other" target="file_info_body">其他</a></dd>
+                <dd><a href="${pageContext.request.contextPath}/info/getfilelist?filetype=dtd" target="file_info_body">文档</a></dd>
+                <dd><a href="${pageContext.request.contextPath}/info/getfilelist?filetype=pic" target="file_info_body">图片</a></dd>
+                <dd><a href="${pageContext.request.contextPath}/info/getfilelist?filetype=video" target="file_info_body">视频</a></dd>
+                <dd><a href="${pageContext.request.contextPath}/info/getfilelist?filetype=music" target="file_info_body">音乐</a></dd>
+                <dd><a href="${pageContext.request.contextPath}/info/getfilelist?filetype=other" target="file_info_body">其他</a></dd>
                 <!--<dd><a href="">跳转项</a></dd>-->
             </dl>
         </li>
@@ -123,12 +123,12 @@
     load_menu_setting();
 
     function load_menu_setting() {
-        alert("加载菜单")
+        //alert("加载菜单")
         $.ajax({
             url:"${pageContext.request.contextPath}/user/menu_setting",
             type : "post",
             success:function(data) {
-                alert("成功了\n"+data)
+                //alert("成功了\n"+data)
                 $("#menu_user_setting").html(data);
 
             },
