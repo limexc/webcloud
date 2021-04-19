@@ -22,9 +22,9 @@
 
 
 <!--body  start-->
-
+<!--
 <a style="font-size: 35px" id="a_msg_method">当前的文件类型：${requestScope.get("filetype")}</a><br>
-
+-->
 
 <div class="layui-inline">
     <input class="layui-input" name="selectFile" id="selectFile" autocomplete="off">
@@ -137,6 +137,23 @@
         //监听行工具事件 END
         */
 
+        //搜索文件
+        var $ = layui.$, active = {
+            reload: function(){
+                var selectFile = $('#selectFile');
+                alert("start:"+selectFile.val())
+
+                //执行重载
+                table.reload('file_table', {
+                    url:"${pageContext.request.contextPath}/info/selectfile?key="+selectFile.val()+"&type=${requestScope.get("filetype")}"
+                });
+            }
+        };
+
+        $('#select_btn').click(function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
 
     });
 </script>

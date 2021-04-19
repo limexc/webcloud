@@ -22,6 +22,14 @@ public class User {
     public User() {
     }
 
+    public String getProfile() {
+        return profile;
+    }
+
+    public void setProfile(String profile) {
+        this.profile = profile;
+    }
+
     public Integer getId() {
         return id;
     }

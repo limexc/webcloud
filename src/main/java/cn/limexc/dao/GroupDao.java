@@ -14,7 +14,7 @@ public interface GroupDao {
 
     //通过uid查询某一用户的组
     @Select("SELECT group.id AS id,group.name AS name,group.power AS power " +
-            "FROM `group`,user_group,users WHERE group.id=user_group.uid " +
+            "FROM `group`,user_group,users WHERE group.id=user_group.gid " +
             "AND user_group.uid=users.id AND  users.id=#{uid}")
     Group selectGroupByUid(@Param("uid")Integer uid);
 

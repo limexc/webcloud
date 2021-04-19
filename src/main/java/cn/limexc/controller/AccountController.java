@@ -88,7 +88,10 @@ public class AccountController {
 
 
             if (user!=null){
-                //获取用户组的信息
+                //将完整的用户信息重新存入
+                user=userService.userallinfo(user.getId());
+
+                //通过uid获取用户组的信息
                 group = groupService.getUserGroup(user.getId());
                 
 
@@ -100,6 +103,7 @@ public class AccountController {
                 //将用户登陆数据保存到session中
                 session.setAttribute("user",user);
                 session.setAttribute("group",group);
+                session.setAttribute("profile",user.getProfile());
                 //session.setAttribute("status",user.getStatus());
                 //存储用户的权限？没有实体类对应啊？
                 session.setAttribute("power",group.getPower());
@@ -242,10 +246,22 @@ public class AccountController {
 
 
 
-    @RequestMapping(value = "/resetpwd")
+    @RequestMapping(value = "/resetpwdpage")
     public ModelAndView findPasswdPage(){
         ModelAndView mv = new ModelAndView("forward:/findpasswd.jsp");
         return mv;
+    }
+
+    //找回密码功能
+    @RequestMapping(value = "/system/findpwd",method = RequestMethod.POST)
+    public void findpasswd(HttpServletRequest req,HttpServletResponse rep){
+        //获取前端用户的输入的邮箱验 证码 新密码
+        String email = req.getParameter("email");
+        String vecode = req.getParameter("vecode");
+        String passwd = req.getParameter("passwd");
+        System.out.println(email+"  "+vecode+"  "+passwd);
+
+
     }
 
 

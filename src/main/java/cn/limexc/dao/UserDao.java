@@ -3,6 +3,7 @@ package cn.limexc.dao;
 import cn.limexc.model.User;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -63,4 +64,15 @@ public interface UserDao {
             "users.profile AS profile,user_group.gid AS gid " +
             "from (users LEFT JOIN user_group ON users.id=user_group.uid ) where users.id=#{id}")
     User selectUserAllInfoById(@Param("id") Integer id);
+
+    //id与前端传入的用户密码进行判断是否一致
+    @Select("SELECT CASE   WHEN `password`=#{pwd} THEN 'TRUE' ELSE 'FALSE' END AS isSame " +
+            "FROM users WHERE id=#{id}")
+    Boolean selectPwdById(@Param("id") Integer id,@Param("pwd") String pwd);
+
+
+    //根据UID更新密码
+    @Update("UPDATE users SET `password`=#{pwd} WHERE id=#{id}")
+    Integer updateUserPasswd(@Param("id")Integer id,@Param("pwd")String pwd);
+
 }

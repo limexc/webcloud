@@ -168,7 +168,6 @@
             };
 
             $('#select_btn').click(function(){
-                alert("搜索")
                 var type = $(this).data('type');
                 active[type] ? active[type].call(this) : '';
             });

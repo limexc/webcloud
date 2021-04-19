@@ -10,7 +10,7 @@
 
 
     <select id="selectForEmailAndPasswd" resultType="User">
-        select id,username,email,password,create_at,delete_at,status,storage,alisa from users where email=#{email} AND password=#{password}
+        select id,username,email,password,create_at,delete_at,status,storage,alisa,profile from users where email=#{email} AND password=#{password}
     </select>
 
 

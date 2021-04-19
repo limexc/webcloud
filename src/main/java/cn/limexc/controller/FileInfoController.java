@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -240,7 +241,7 @@ public Map<String, Object> userFileList(HttpSession session, HttpServletRequest 
         UserFile temp = ufs.get(i);
         JSONObject tempj = new JSONObject();
         tempj.put("id", temp.getId());
-        tempj.put("filesize", temp.getFilesize());
+        tempj.put("filesize", new ByteUnitConversion().readableFileSize(Long.parseLong(temp.getFilesize())));
         tempj.put("vfname", temp.getVfname());
         tempj.put("uptime", temp.getUptime());
         tempj.put("iconsign", temp.getIconsign());
@@ -359,13 +360,19 @@ public Map<String, Object> userFileList(HttpSession session, HttpServletRequest 
         Map<String,Object> map = new HashMap<String,Object>();
         User user = (User) session.getAttribute("user");
         String key = req.getParameter("key");
+        String type = req.getParameter("type");
         System.out.println(user.getUsername()+"要搜索的文件："+key);
         key="%"+key+"%";
         List<UserFile> ufs = fileService.selectFiles(user.getId(),key);
         if (ufs!=null){
-            for (UserFile uf:ufs) {
-                uf.setFilesize(new ByteUnitConversion().readableFileSize(Long.parseLong(uf.getFilesize())));
-                System.out.println(uf.toString());
+            Iterator<UserFile> it = ufs.iterator();
+            while (it.hasNext()){
+                UserFile uf = it.next();
+                if (type!=null) {
+                    if (!fileService.getFileInfoByUFid(String.valueOf(uf.getId())).getFiletype().startsWith(type)) {
+                        it.remove();
+                    }
+                }
             }
         }
 

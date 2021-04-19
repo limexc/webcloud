@@ -6,12 +6,14 @@ import cn.limexc.model.User;
 import cn.limexc.service.FileService;
 import cn.limexc.service.GroupService;
 import cn.limexc.service.UserService;
+import cn.limexc.util.ResultData;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -51,8 +53,38 @@ public class UserController {
 
     @RequestMapping(value = "/main")
     public String index(HttpSession session){
-
         return "forward:/index.jsp";
+    }
+
+    @RequestMapping(value = "/repwdpage")
+    public String resetpwdpage(){
+        return "resetpwd";
+    }
+
+    @RequestMapping(value = "/repwd",method = RequestMethod.POST)
+    public void resetpwd(HttpSession session, HttpServletRequest req,HttpServletResponse rep){
+        User user = (User) session.getAttribute("user");
+        String old_passwd = req.getParameter("old_pass");
+        String pass1 = req.getParameter("pass1");
+        String pass2 = req.getParameter("pass2");
+        System.out.println("获取到的密码信息："+old_passwd+" "+pass1);
+        ResultData rd = new ResultData();
+        Integer isOk = 0;
+        //先判断两次新密码是否一致
+        if (pass1.equals(pass2)){
+            //通过uid查询密码与前端传来的数据比较一致进行下一步或返回错误信息
+            isOk = userService.resetpasswd(user.getId(), old_passwd,pass1);
+        }
+        //不等于0表示密码修改成功
+        if (isOk==1){
+            //向前端回传一下
+            rd.setData("yes");
+            rd.writeToResponse(rep);
+        }else {
+            //回传错误消息
+            rd.setData("no");
+            rd.writeToResponse(rep);
+        }
     }
 
     //判定用户类别进行页面的设置
@@ -66,13 +98,14 @@ public class UserController {
         //更新一下user的信息
         session.setAttribute("user",user);
         StringBuffer html=new StringBuffer();
-        html.append("<dd><a href=\"/CloudWeb/user/setting\">基本资料</a></dd>\n" +
-                    "<dd><a href=\"\">安全设置</a></dd>\n");
+        html.append("<dd><a href=\"/CloudWeb/user/setting\" target=\"file_info_body\">基本资料</a></dd>");
+        html.append("<dd><a href=\"/CloudWeb/user/repwdpage\" target=\"file_info_body\">安全设置</a></dd>");
         System.out.println("来加载菜单等信息了");
         //更新一下存储空间信息
         Map<String,Object> storageInfoMap = fileService.userStorage(user);
         session.setAttribute("percentage",storageInfoMap.get("percentage"));
         session.setAttribute("isout",storageInfoMap.get("isOut"));
+        session.setAttribute("ns",storageInfoMap.get("ns"));
 
         /**
          * 想法：
@@ -85,9 +118,7 @@ public class UserController {
             response.setHeader("contentType", "text/html; charset=utf-8");
             if ((group).getPower()==0) {
                 System.out.println("管理员加载的");
-                html.append("<dd><a href=\"" +
-                        "/CloudWeb/user/admin" +
-                        "\">系统设置</a></dd>");
+                html.append("<dd><a href=\"/CloudWeb/user/admin\">系统设置</a></dd>");
                 response.getWriter().write(String.valueOf(html));
             }else {
                 System.out.println("用户加载的");

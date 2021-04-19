@@ -70,7 +70,8 @@
     </select>
 
     <select id="getFileInfoByUFid" resultType="cn.limexc.model.FileModel">
-        SELECT file.realpath AS realpath,user_file.vfname AS filename ,file.filesize AS filesize,user_file.vpath AS vpath
+        SELECT file.realpath AS realpath,user_file.vfname AS filename ,file.filesize AS filesize,user_file.vpath AS vpath,
+               file.filetype AS filetype
         FROM file,user_file WHERE file.id=user_file.fid AND user_file.id = #{ufid}
     </select>
 

@@ -61,7 +61,7 @@
             <ul class="layui-nav layui-layout-right">
                 <li class="layui-nav-item">
                     <a href="javascript:;">
-                        <img src="${pageContext.request.contextPath}/static/images/dls.jpeg" class="layui-nav-img">
+                        <img src="${sessionScope.get("profile")}" class="layui-nav-img">
                         ${user.username}
                     </a>
                     <!--这块使用ajax进行加载-->
@@ -90,10 +90,12 @@
             </dl>
         </li>
         <li class="layui-nav-item"><a href="javascript:;">我的分享</a></li>
-        <li class="layui-nav-item"><a href="javascript:;">容量配额:已使用${sessionScope.get("percentage")}</a></li>
-
+        <li style="height: 20px"></li>
+            <div style="height: 60px;">
+                <a style="font-size: 18px;color: whitesmoke" href="javascript:;">容量:${sessionScope.get("percentage")}<br/>${sessionScope.get("ns")}</a>
+            </div>
             <div class="layui-progress">
-                <div class="layui-progress-bar" lay-percent="${sessionScope.get("percentage")}"></div>
+                <div class="layui-progress-bar"  lay-percent="${sessionScope.get("percentage")}"></div>
             </div>
 
         </li>

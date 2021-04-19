@@ -91,4 +91,19 @@ public class UserServiceImpl implements UserService {
         }
 
     }
+
+    @Override
+    public Integer findpasswd(Integer id, String pwd) {
+        return null;
+    }
+
+    @Override
+    public Integer resetpasswd(Integer id, String old_pwd,String new_pass) {
+        Boolean isSame = userDao.selectPwdById(id,old_pwd);
+        System.out.println("开始修改密码：isSame为:"+isSame);
+        if (isSame){
+            return userDao.updateUserPasswd(id, new_pass);
+        }
+        return 0;
+    }
 }

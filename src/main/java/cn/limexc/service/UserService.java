@@ -21,7 +21,11 @@ public interface UserService {
     //用户信息更新
 
 
-    //用户修改密码
+    //用户修改密码|未登录
+    Integer findpasswd(Integer id,String pwd);
+
+    //用户修改密码|已登陆
+    Integer resetpasswd(Integer id,String old_pwd,String new_pass);
 
 
     //用ID查找用户，返回基本信息

@@ -45,6 +45,12 @@ public class LoginInterceptor implements HandlerInterceptor {
             return true;
         }
 
+        //找回密码不拦截
+        if (uri.indexOf("/resetpwdpage")>0){
+            System.out.println("找回密码不拦截");
+            return true;
+        }
+
         //静态文件不拦截
         if (uri.indexOf("/static")>0){
             System.out.println("静态文件不拦截");

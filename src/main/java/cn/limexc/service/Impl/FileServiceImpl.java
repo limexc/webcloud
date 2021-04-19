@@ -291,10 +291,18 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public BigInteger sumUserFileSize(User user) {
-        //因为BigInteger使用科学计数法，所有使用new BigDecimal 进行转换
-        BigDecimal temp = new BigDecimal(fileDao.sumUserFileSize(user.getId()));
+        //BigDecimal temp;
+        //fileDao.sumUserFileSize(user.getId()) 返回String类型
+        String size = (fileDao.sumUserFileSize(user.getId()));
+        if ("0".equals(size)||size==null) {
+            return new BigInteger(String.valueOf(0));
+        }else {
+            //因为BigInteger使用科学计数法，所有使用new BigDecimal 进行转换
+            //temp= new BigDecimal(size);
+            return new BigInteger(size);
+        }
 
-        return new BigInteger(String.valueOf(temp));
+
     }
 
     /**
@@ -335,6 +343,10 @@ public class FileServiceImpl implements FileService {
             String temp = String.valueOf(resBigIntegers).substring(2,4);
             map.put("percentage",temp+"%");
         }
+        map.put("ns",new ByteUnitConversion().readableFileSize(Long.parseLong(String.valueOf(nowStorage)))
+                +"/"+new ByteUnitConversion().readableFileSize(Long.parseLong(String.valueOf(storage)))
+        );
+        System.out.println(map.get("ns"));
 
         return map;
     }
