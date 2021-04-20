@@ -94,7 +94,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Integer findpasswd(Integer id, String pwd) {
-        return null;
+        return userDao.updateUserPasswd(id, pwd);
     }
 
     @Override
@@ -105,5 +105,10 @@ public class UserServiceImpl implements UserService {
             return userDao.updateUserPasswd(id, new_pass);
         }
         return 0;
+    }
+
+    @Override
+    public User getUserByEmail(String email) {
+        return userDao.selectUserByEmail(email);
     }
 }

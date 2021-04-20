@@ -5,10 +5,7 @@ import cn.limexc.model.User;
 import cn.limexc.service.FileService;
 import cn.limexc.service.GroupService;
 import cn.limexc.service.UserService;
-import cn.limexc.util.MailUtils;
-import cn.limexc.util.StrMd5Utils;
-import cn.limexc.util.TimeUtils;
-import cn.limexc.util.VeCodeUtils;
+import cn.limexc.util.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -259,7 +256,31 @@ public class AccountController {
         String email = req.getParameter("email");
         String vecode = req.getParameter("vecode");
         String passwd = req.getParameter("passwd");
-        System.out.println(email+"  "+vecode+"  "+passwd);
+        String code_sys = new VeCodeUtils().getVeCode(email);
+        System.out.println("找回密码提交的数据："+email+"  "+vecode+"  "+passwd+"正确的验证码："+code_sys);
+        ResultData rd = new ResultData();
+        Integer reCode = 0;
+        //从数据库查找该邮箱是否注册
+        User user = userService.getUserByEmail(email);
+        if (user==null){
+            rd.setData("nothisemail");
+            rd.writeToResponse(rep);
+        }else if (!code_sys.equals(vecode)){
+            //计算验证码并进行比较
+            rd.setData("errorcode");
+            rd.writeToResponse(rep);
+        }else {
+            //验证码比较通过且邮箱已经注册过则将新的密码写入数据库
+            reCode = userService.findpasswd(user.getId(), passwd);
+
+            if (reCode==1){
+                rd.setData("ok");
+                rd.writeToResponse(rep);
+            }else {
+                rd.setData("err");
+                rd.writeToResponse(rep);
+            }
+        }
 
 
     }

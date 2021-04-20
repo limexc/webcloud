@@ -84,7 +84,6 @@
                 $.ajax({
                     //几个参数需要注意一下
                     type: "POST",//方法类型
-                    dataType: "json",//预期服务器返回的数据类型
                     url: "${pageContext.request.contextPath}/user/repwd",//url
                     data: $('#setpwd_form').serialize(),
                     success: function (result) {

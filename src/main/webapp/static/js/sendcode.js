@@ -38,8 +38,8 @@ window.onload = function() {
                     $("#sub_ve").html(time + str);
                     time--;
                 }
-                //设置减时时间间隔为60秒
-            }, 60000);
+                //设置减时时间间隔为1秒
+            }, 1000);
         }else {
             alert("请输入正确的邮箱！")
         }

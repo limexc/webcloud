@@ -24,6 +24,9 @@ public interface UserService {
     //用户修改密码|未登录
     Integer findpasswd(Integer id,String pwd);
 
+    //通过邮箱查找用户
+    User getUserByEmail(String email);
+
     //用户修改密码|已登陆
     Integer resetpasswd(Integer id,String old_pwd,String new_pass);
 
