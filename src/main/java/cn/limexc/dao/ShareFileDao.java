@@ -1,6 +1,8 @@
 package cn.limexc.dao;
 
 import cn.limexc.model.ShareFile;
+import cn.limexc.model.UserFile;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -53,5 +55,23 @@ public interface ShareFileDao {
      */
     @Select("SELECT max(id) FROM sharefile")
     Integer selectMaxId();
+
+
+    /**
+     * 用来查询用户共享的文件列表
+     */
+    @Select("SELECT file.filesize AS filesize, user_file.vfname AS vfname, user_file.vpath AS vpath,user_file.id AS id, user_file.uptime AS uptime, file.filetype AS filetype \n" +
+            "FROM ( user_file LEFT JOIN users ON users.id = user_file.uid ) LEFT JOIN file ON file.id = user_file.fid,sharefile\n" +
+            "WHERE users.id = #{id} AND sharefile.fid=user_file.fid")
+    List<UserFile> selestsharelist(@Param("id") Integer id);
+
+    /**
+     * 根据uid和ufid来删除共享文件 （仅适用于一个ufid生成一个共享链接）
+     * @param uid  其实也用不到uid
+     * @param ufid 用户文件id
+     * @return 影响的行数
+     */
+    @Delete("DELETE FROM sharefile WHERE sharefile.uid=#{uid} AND sharefile.ufid=#{ufid}")
+    Integer deleteShareFile(@Param("uid")Integer uid,@Param("ufid") Integer ufid);
 
 }

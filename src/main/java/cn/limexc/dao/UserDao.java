@@ -75,4 +75,8 @@ public interface UserDao {
     @Update("UPDATE users SET `password`=#{pwd} WHERE id=#{id}")
     Integer updateUserPasswd(@Param("id")Integer id,@Param("pwd")String pwd);
 
+    //根据uid更新头像
+    @Update("UPDATE users SET `profile`=#{profile} WHERE id = #{uid}")
+    Integer updateProFile(@Param("profile") String profile,@Param("uid") Integer uid);
+
 }

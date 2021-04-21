@@ -52,7 +52,7 @@
         <div class="layui-header">
             <div class="layui-logo">
                 <h1 style="font-size: 46px;">
-                    <a style=" color: lightblue" href="${pageContext.request.contextPath}/info/getfilelist" target="file_info_body">网盘</a>
+                    <a style=" color: lightblue" href="${pageContext.request.contextPath}/info/getfilelist" target="info_body">网盘</a>
                 </h1>
             </div>
             <!-- 头部区域（可配合layui已有的水平导航） -->
@@ -81,17 +81,20 @@
         <li class="layui-nav-item layui-nav-itemed">
             <a href="javascript:;">我的文件</a>
             <dl class="layui-nav-child">
-                <dd><a href="${pageContext.request.contextPath}/info/getfilelist?filetype=dtd" target="file_info_body">文档</a></dd>
-                <dd><a href="${pageContext.request.contextPath}/info/getfilelist?filetype=pic" target="file_info_body">图片</a></dd>
-                <dd><a href="${pageContext.request.contextPath}/info/getfilelist?filetype=video" target="file_info_body">视频</a></dd>
-                <dd><a href="${pageContext.request.contextPath}/info/getfilelist?filetype=music" target="file_info_body">音乐</a></dd>
-                <dd><a href="${pageContext.request.contextPath}/info/getfilelist?filetype=other" target="file_info_body">其他</a></dd>
+                <dd><a href="${pageContext.request.contextPath}/info/getfilelist?filetype=dtd" target="info_body">文档</a></dd>
+                <dd><a href="${pageContext.request.contextPath}/info/getfilelist?filetype=pic" target="info_body">图片</a></dd>
+                <dd><a href="${pageContext.request.contextPath}/info/getfilelist?filetype=video" target="info_body">视频</a></dd>
+                <dd><a href="${pageContext.request.contextPath}/info/getfilelist?filetype=music" target="info_body">音乐</a></dd>
+                <dd><a href="${pageContext.request.contextPath}/info/getfilelist?filetype=other" target="info_body">其他</a></dd>
                 <!--<dd><a href="">跳转项</a></dd>-->
             </dl>
         </li>
-        <li class="layui-nav-item"><a href="javascript:;">我的分享</a></li>
+        <li class="layui-nav-item">
+            <a href="${pageContext.request.contextPath}/share/listpage" target="info_body">我的分享</a>
+        </li>
         <li style="height: 20px"></li>
             <div style="height: 60px;">
+                <hr>
                 <a style="font-size: 18px;color: whitesmoke" href="javascript:;">容量:${sessionScope.get("percentage")}<br/>${sessionScope.get("ns")}</a>
             </div>
             <div class="layui-progress">
@@ -109,7 +112,7 @@
 
 
 <div class="file_main">
-    <iframe name="file_info_body" frameborder="0" height="100%" width="100%" src="${pageContext.request.contextPath}/info/getfilelist">
+    <iframe name="info_body" frameborder="0" height="100%" width="100%" src="${pageContext.request.contextPath}/info/getfilelist">
         <!--表格数据区域-->
     </iframe>
 </div>

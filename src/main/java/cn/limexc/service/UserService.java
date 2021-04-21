@@ -47,5 +47,7 @@ public interface UserService {
 
     Boolean haveUserByEmail(String email);
 
+    Integer updateImage(String profile,Integer uid);
+
 
 }

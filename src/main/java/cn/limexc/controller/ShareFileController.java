@@ -9,6 +9,7 @@ import cn.limexc.service.ShareService;
 import cn.limexc.service.UserService;
 import cn.limexc.util.ByteUnitConversion;
 import cn.limexc.util.DownLoadFile;
+import cn.limexc.util.ResultData;
 import cn.limexc.util.StrMd5Utils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -43,9 +45,7 @@ public class ShareFileController {
     @Resource
     private UserService userService;
 
-    private User user;
-    private FileModel fileModel;
-    private UserFile userFile;
+
 
     /**
      * 用户设置分享页面，可以用Ajax直接在弹框中显示分享连接，就不用再写个页面了。也就没有那么多要搞的参数了。哈哈哈哈
@@ -54,6 +54,8 @@ public class ShareFileController {
     @RequestMapping(value = "/getshareurl")
     @ResponseBody
     public Map<String,Object> shareSet(HttpServletRequest req, HttpSession session){
+        User user;
+        UserFile userFile;
         Map<String,Object> map = new HashMap<String,Object>();
         //关于链接的生成，将uid和ufid拼接【不拼接，仅用ufid也可，设想一个用户ufid只生成一个链接，会更简单】，然后返回短格式信息，并将这个信息写入数据库
         //传入的数据需要先进行验证【通过查询数据库等方式】，然后再进行编码，编码完成后进行数据库查找【防止出现链接指向多个文件】判断是否重复。
@@ -82,7 +84,6 @@ public class ShareFileController {
 
 
 
-
             // 通过shortUrl中的来查找数据库，判断否有相同的url,若不同文件生成了相同的，那么进入下一次比较。
             if (shareService.getUserShareByUFid(userFile.getId())!=null){
                 System.out.println("警告！文件"+ufid+"已经共享过了");
@@ -101,7 +102,8 @@ public class ShareFileController {
                     shareService.createShare(shareFile);
 
 
-                    map.put("url",tmp);
+                    map.put("url","ok");
+                    map.put("tips",tmp);
                     return map;
 
                 }
@@ -168,6 +170,7 @@ public class ShareFileController {
     //下载分享的文件
     @RequestMapping(value = "/file/download/{url}")
     public void downFile(@PathVariable String url,HttpServletRequest req, HttpServletResponse rep){
+        FileModel fileModel = null;
         //通过url来获取文件的信息
         ShareFile sf = shareService.getUserShareByUrl(url);
         if (sf!=null){
@@ -181,6 +184,51 @@ public class ShareFileController {
             new DownLoadFile().downloadFile(rep,df,fileModel.getFilename());
         }
 
+    }
+
+    /**
+     *  用作请求页面的返回
+     * @return  共享文件列表页面
+     */
+    @RequestMapping(value = "/listpage")
+    public String sharelistpage(){
+        return "sharelist";
+    }
+
+    @RequestMapping(value = "/list")
+    @ResponseBody
+    public Map<String,Object> shareList(HttpSession session){
+        Map<String,Object> map = new HashMap<String,Object>();
+        User user  = (User) session.getAttribute("user");
+        List<UserFile> ufs = shareService.getShareUFList(user.getId());
+        for (UserFile uf:ufs) {
+            uf.setFilesize(new ByteUnitConversion().readableFileSize(Long.parseLong(uf.getFilesize())));
+        }
+        map.put("code", 0);
+        map.put("msg","");
+        map.put("data",ufs);
+        return map;
+    }
+
+    /**
+     * 取消删除分享
+     */
+    @RequestMapping(value = "/delShare")
+    public void delShare(HttpSession session,HttpServletRequest req,HttpServletResponse rep){
+        User user = (User) session.getAttribute("user");
+        String str_ufid = req.getParameter("ufid");
+        //通过uid和ufid找到该分享的文件 ？ 一个文件多次分享咋搞？
+        Integer uid = user.getId();
+        Integer ufid = Integer.parseInt(str_ufid);
+        Integer col = 0;
+        col = shareService.deleteSF(uid,ufid);
+        ResultData rd= new ResultData();
+        if (col!=0){
+            rd.setData("ok");
+        }else {
+            rd.setData("no");
+        }
+        rd.writeToResponse(rep);
     }
 
 }

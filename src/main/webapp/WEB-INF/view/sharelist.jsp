@@ -31,7 +31,7 @@
 
 <!--body  start-->
 <!--
-<a style="font-size: 35px" id="a_msg_method">当前的文件类型：<%--${requestScope.get("filetype")}--%></a><br>
+<a style="font-size: 35px" id="a_msg_method">当前的文件类型：${requestScope.get("filetype")}</a><br>
 -->
 
 <div class="layui-inline">
@@ -44,20 +44,21 @@
 
 <!--
 <script type="text/html" id="barDemo">
-    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="download">下载</a>
-    <a class="layui-btn layui-btn-xs" lay-event="edit">重命名</a>
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="download">下载</a>
+<a class="layui-btn layui-btn-xs" lay-event="edit">重命名</a>
+<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </script>
 -->
 
 <script>
+    let baseurlpath = '<%= baseUrlPath%>'
     layui.use('table', function(){
         var table = layui.table;
 
         table.render({
             elem: '#file_table'
             //模拟数据
-            ,url:'${pageContext.request.contextPath}/info/filelistbytype?filetype=${requestScope.get("filetype")}'
+            ,url:'${pageContext.request.contextPath}/share/list'
             //,url:'/demo/table/user/'
             ,page:false
             ,cols: [[
@@ -73,101 +74,30 @@
 
         //监听行单击事件（双击事件为：rowDouble  单击事件：row）  START
         table.on('row(file_table)', function(obj){
-            let objdata = obj.data;
+            let data = obj.data;
 
             layer.alert(
-                "<img height='200' width='200' style='display:block;margin:0 auto;' src='${pageContext.request.contextPath}/static/images/dls.jpeg'></img><br>"+
-                "<span>文件名："+objdata.vfname+"</span><br>"+
-                "<span>文件大小："+objdata.filesize+"</span><br>"+
-                "<span>修改时间："+objdata.uptime+"</span><br>",
+                "<span>文件名："+data.vfname+"</span><br>"+
+                "<span>文件大小："+data.filesize+"</span><br>"+
+                "<span>修改时间："+data.uptime+"</span><br>",
                 //JSON.stringify(data),
                 {
-                    title: "文件信息："+objdata.vfname,
+                    title: "文件信息："+data.vfname,
                     btnAlign: 'c',
-                    btn:["下载","查看","分享","删除"],
-                    //下载
+                    btn:["查看链接","取消分享"],
+                    //查看链接
                     yes:function(index, layero){
                         //do something
-                        layer.confirm('下载该文件？', function(index){
-                            window.location.href = '${pageContext.request.contextPath}/file/download?ufid='+objdata.id;
-                            layer.close(index);
-
-                        });
-
-
+                        //alert("查看链接")
+                        viewShareUrl(obj,index,layero,data);
                         layer.close(index); //如果设定了yes回调，需进行手工关闭
                     },
-                    //view_file  查看
+
                     btn2:function(index, layero){
                         //do something
-                        alert("查看")
+                        del_share(obj,index,layero,data);
                         layer.close(index); //如果设定了yes回调，需进行手工关闭
-                    },
-                    //分享
-                    btn3:function(index, layero){
-                        //do something
-
-                        //Ajax发送信息
-                        $.ajax({
-                            url:'${pageContext.request.contextPath}/share/getshareurl?ufid='+objdata.id,
-                            type:"post",
-                            //不知道怎么写对不对，先试试
-                            success : function (data){
-                                sharecode =data.tips;
-                                altShare(data);
-                            }
-                        })
-
-                        function altShare(data){
-
-                            let baseurlpath = '<%= baseUrlPath%>'
-                            if (data.url==='err1') {
-                                layui.layer.open({title:"警告！",content:"您输入的信息有误！"});
-                            }else if (data.url==="err2"){
-                                layui.layer.open(
-                                    {
-                                        title:"提示！"
-                                        ,btn:["复制到粘贴板"]
-                                        ,btnAlign: 'c'
-                                        ,content:"这个文件已经分享过了！<br />分享地址为：<br />"+
-                                            "<textarea name='s_url' rows=2  style='resize: none;width: 100%'>"+baseurlpath+'share/file/'+sharecode+"</textarea>"
-                                        ,yes : function (index, layero){
-                                            //let shareurl = $(".s_url").text();
-                                            //alert(shareurl)
-                                            copyUrl();
-                                            layer.close(index);
-                                        }
-                                    })
-                            }else if (data.url==="err3"){
-                                layui.layer.open({title:"错误！",content:"系统错误！请您稍后再次尝试！"})
-                            }else {
-                                layui.layer.open({
-                                    title:"提示！"
-                                    ,btn:["复制到粘贴板"]
-                                    ,btnAlign: 'c'
-                                    ,content:
-                                        "您的分享地址为：<br />"+
-                                        "<textarea name='s_url' rows=2  style='resize: none;width: 100%'>"+baseurlpath+'share/file/'+sharecode+"</textarea>"
-                                    ,yes : function (index, layero){
-                                        copyUrl();
-                                        layui.layer.close(index);
-                                    }
-                                })
-
-                            }
-
-                        }
-
-
-
-                        layui.layer.close(index); //如果设定了yes回调，需进行手工关闭
-                    },
-                    //删除
-                    btn4:function(index, layero){
-                        del_file(obj,index,layero,objdata);
-                        layui.layer.close(index); //如果设定了yes回调，需进行手工关闭
                     }
-
                 }
 
             );
@@ -206,8 +136,6 @@
         var $ = layui.$, active = {
             reload: function(){
                 var selectFile = $('#selectFile');
-                alert("start:"+selectFile.val())
-
                 //执行重载
                 table.reload('file_table', {
                     url:"${pageContext.request.contextPath}/info/selectfile?key="+selectFile.val()+"&type=${requestScope.get("filetype")}"
@@ -225,16 +153,19 @@
 
 <script>
 
-    function del_file(obj,index,layero,objdata){
+    function del_share(obj,index,layero,data){
         layer.alert(
-            "你确定要删除文件：'"+objdata.vfname+"' 吗？",
+            "你确定要取消共享文件：'"+data.vfname+"' 吗？",
             {
                 title:"警告！",
-                btn:["删除","取消"],
+                btn:["是","否"],
                 yes:function (index, layero){
                     $.ajax({
-                        url: "#"
+                        url: "${pageContext.request.contextPath}/share/delShare",
                         //做些事情
+                        type: "post",
+                        data: {"ufid":data.id}
+
                     })
                     obj.del();
                     layer.close(index);
@@ -247,8 +178,33 @@
         )
     }
 
+    function viewShareUrl(obj){
+        let sharecode="000000";
+        $.ajax({
+            url:'${pageContext.request.contextPath}/share/getshareurl?ufid='+obj.data.id,
+            type:"post",
+            success:function (data){
+                sharecode=data.tips;
+                layui.layer.alert(
+                    "您的分享地址为：<br />"+
+                    "<textarea name='s_url' rows=2  style='resize: none;width: 100%'>"+baseurlpath+"share/file/"+sharecode+"</textarea>",
+                    {
+                        title:"链接",
+                        btn:["复制链接"],
+                        yes:function (index, layero){
+                            copyUrl();
+                            layui.layer.close(index);
+                        },
+
+                    })
+            }
+        })
+
+    }
+
 
 </script>
+
 <script>
     function copyUrl() {
         let S_Url =  document.getElementsByName("s_url");

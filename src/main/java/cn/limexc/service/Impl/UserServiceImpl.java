@@ -111,4 +111,9 @@ public class UserServiceImpl implements UserService {
     public User getUserByEmail(String email) {
         return userDao.selectUserByEmail(email);
     }
+
+    @Override
+    public Integer updateImage(String profile, Integer uid) {
+        return userDao.updateProFile(profile, uid);
+    }
 }

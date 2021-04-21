@@ -1,21 +1,19 @@
 package cn.limexc.controller;
 
 import cn.limexc.model.FileModel;
+import cn.limexc.model.ProFile;
 import cn.limexc.model.User;
 import cn.limexc.model.UserFile;
 import cn.limexc.service.FileService;
+import cn.limexc.service.ProFileService;
 import cn.limexc.service.UserService;
-import cn.limexc.util.DownLoadFile;
-import cn.limexc.util.GetFileType;
-import cn.limexc.util.GetIcon;
-import cn.limexc.util.TimeUtils;
+import cn.limexc.util.*;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
@@ -40,6 +38,8 @@ public class FileController {
     private FileService fileService;
     @Resource
     private UserService userService;
+    @Resource
+    private ProFileService proFileService;
 
     private User user;
 
@@ -48,6 +48,8 @@ public class FileController {
 
     @Value("${file.path}")
     private String filepath;
+    @Value("${file.path.image}")
+    private String imageFile;
 
 
     //文件上传，能到这里的肯定是经过md5查找后数据库中没有记录的
@@ -140,6 +142,63 @@ public class FileController {
             System.out.println("即将下载的文件： "+file.getRealpath()+"  文件重命名为："+file.getFilename());
             File df = new File(file.getRealpath());
             new DownLoadFile().downloadFile(rep,df,file.getFilename());
+        }
+
+    }
+
+    //头像上传
+    @ResponseBody
+    @RequestMapping("/uploadImage")
+    public JSON uploadFile(MultipartFile file, HttpServletRequest request) {
+        JSONObject json=new JSONObject();
+
+        String filePath = imageFile;//上传到这个文件夹
+        File file1 = new File(filePath);
+        //判断路径是否存在
+        if (!file1.exists()) {
+            file1.mkdirs();
+        }
+        String filename = file.getOriginalFilename().trim();
+        String finalFilePath = filePath + filename;
+        File desFile = new File(finalFilePath);
+        if (desFile.exists()) {
+            desFile.delete();
+        }
+        //用文件名+时间 生成文件url
+        String[] shortUrl =new StrMd5Utils().shortUrl(new Date().getTime()+filename);
+        //简单一点就第一个了
+        proFileService.upProFile(filename,finalFilePath,shortUrl[1]);
+
+
+        try {
+            file.transferTo(desFile);
+            json.put("code",0);
+            json.put("msg","ok");
+
+            JSONObject data=new JSONObject();
+            data.put("src",shortUrl[1]);
+            data.put("title","");
+            json.put("Data",data);
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            json.put("code",1);
+        }
+        System.out.println(json);
+        return json;
+    }
+
+    //图片展示,get/post请求均可
+    @RequestMapping(value = "/viewimage/{src}")
+    public void viewImage(@PathVariable String src,HttpServletRequest req, HttpServletResponse rep){
+        //用url做标识
+        ProFile proFile = proFileService.getProFile(src);
+        if (proFile==null){
+            System.out.println("错误，没有此文件，或用户已将文件删除");
+        }else {
+            System.out.println("即将下载的文件： "+proFile.getPath());
+            File df = new File(proFile.getPath());
+            new DownLoadFile().downloadFile(rep,df,proFile.getName());
         }
 
     }

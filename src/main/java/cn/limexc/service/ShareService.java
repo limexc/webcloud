@@ -1,7 +1,7 @@
 package cn.limexc.service;
 
 import cn.limexc.model.ShareFile;
-import org.apache.ibatis.annotations.Param;
+import cn.limexc.model.UserFile;
 
 import java.util.List;
 
@@ -49,4 +49,7 @@ public interface ShareService {
      */
     Integer createShare(ShareFile shareFile);
 
+    public List<UserFile> getShareUFList(Integer id);
+
+    public Integer deleteSF(Integer uid,Integer ufid);
 }

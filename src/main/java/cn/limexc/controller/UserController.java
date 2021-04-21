@@ -44,7 +44,7 @@ public class UserController {
         return users;
     }
 
-    @RequestMapping(value = "/setting")
+    @RequestMapping(value = "/set_page")
     public String userset(){
         System.out.println(new Date()+"访问到了");
         return "setting";
@@ -98,8 +98,8 @@ public class UserController {
         //更新一下user的信息
         session.setAttribute("user",user);
         StringBuffer html=new StringBuffer();
-        html.append("<dd><a href=\"/CloudWeb/user/setting\" target=\"file_info_body\">基本资料</a></dd>");
-        html.append("<dd><a href=\"/CloudWeb/user/repwdpage\" target=\"file_info_body\">安全设置</a></dd>");
+        html.append("<dd><a href=\"/CloudWeb/user/set_page\" target=\"info_body\">基本资料</a></dd>");
+        html.append("<dd><a href=\"/CloudWeb/user/repwdpage\" target=\"info_body\">安全设置</a></dd>");
         System.out.println("来加载菜单等信息了");
         //更新一下存储空间信息
         Map<String,Object> storageInfoMap = fileService.userStorage(user);
@@ -140,6 +140,12 @@ public class UserController {
             return "forward:/user/main";
         }
 
+    }
+
+    @RequestMapping(value = "setProFile")
+    public void resetProFile(HttpSession session,HttpServletRequest req){
+        User user = (User) session.getAttribute("user");
+        userService.updateImage(req.getParameter("src"), user.getId());
     }
 
 }

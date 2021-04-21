@@ -291,15 +291,16 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public BigInteger sumUserFileSize(User user) {
-        //BigDecimal temp;
+        BigDecimal temp;
         //fileDao.sumUserFileSize(user.getId()) 返回String类型
         String size = (fileDao.sumUserFileSize(user.getId()));
         if ("0".equals(size)||size==null) {
             return new BigInteger(String.valueOf(0));
         }else {
             //因为BigInteger使用科学计数法，所有使用new BigDecimal 进行转换
-            //temp= new BigDecimal(size);
-            return new BigInteger(size);
+            temp= new BigDecimal(size);
+            //return new BigInteger(size);
+            return new BigInteger(String.valueOf(temp));
         }
 
 

@@ -158,7 +158,7 @@
             var $ = layui.$, active = {
                 reload: function(){
                     var selectFile = $('#selectFile');
-                    alert("start:"+selectFile.val())
+                    //alert("start:"+selectFile.val())
 
                     //执行重载
                     table.reload('fileListTable', {
@@ -175,7 +175,7 @@
 
             //监听行工具事件
             table.on('tool(FileListTable)', function(obj){
-
+                let sharecode="000000";
                 objdata = obj.data;
                 //console.log(obj)
                 if(obj.event === 'del'){
@@ -216,51 +216,62 @@
                     if (objdata.filesize==="-"){
                         layer.alert("文件夹暂不支持共享");
                     }else {
-                    //Ajax发送信息
-                    $.ajax({
-                        url:'${pageContext.request.contextPath}/share/getshareurl?ufid='+objdata.id,
-                        type:"post",
-                        //不知道怎么写对不对，先试试
-                        success : function (data){
-                            let baseurlpath = '<%= baseUrlPath%>'
-                            if (data.url=='err1') {
-                                layer.open({title:"警告！",content:"您输入的信息有误！"});
-                            }else if (data.url=="err2"){
-                                layer.open(
-                                    {
-                                        title:"提示！"
-                                        ,btn:["复制到粘贴板"]
-                                        ,btnAlign: 'c'
-                                        ,content:"这个文件已经分享过了！<br />分享地址为：<br />"+
-                                        "<textarea name='s_url' rows=2  style='resize: none;width: 100%'>"+baseurlpath+'share/file/'+data.tips+"</textarea>"
-                                        ,yes : function (index, layero){
-                                            //let shareurl = $(".s_url").text();
-                                            //alert(shareurl)
-                                            copyUrl();
-                                            layer.close(index);
-                                        }
-                                    })
-                            }else if (data.url=="err3"){
-                                layer.open({title:"错误！",content:"系统错误！请您稍后再次尝试！"})
-                            }else {
-                                layer.open({
+                        //Ajax发送信息
+                        $.ajax({
+                            url:'${pageContext.request.contextPath}/share/getshareurl?ufid='+objdata.id,
+                            type:"post",
+                            //不知道怎么写对不对，先试试
+                            success : function (data){
+                                sharecode =data.tips;
+                                altShare(data);
+                            }
+                        })
+                    }
+
+                    function altShare(data){
+
+                        let baseurlpath = '<%= baseUrlPath%>'
+                        if (data.url==='err1') {
+                            layer.open({title:"警告！",content:"您输入的信息有误！"});
+                        }else if (data.url==="err2"){
+                            layer.open(
+                                {
                                     title:"提示！"
                                     ,btn:["复制到粘贴板"]
                                     ,btnAlign: 'c'
-                                    ,content:
-                                        "您的分享地址为：<br />"+
-                                        "<textarea name='s_url' rows=2  style='resize: none;width: 100%'>"+baseurlpath+'share/file/'+data.tips+"</textarea>"
+                                    ,content:"这个文件已经分享过了！<br />分享地址为：<br />"+
+                                        "<textarea name='s_url' rows=2  style='resize: none;width: 100%'>"+baseurlpath+'share/file/'+sharecode+"</textarea>"
                                     ,yes : function (index, layero){
+                                        //let shareurl = $(".s_url").text();
+                                        //alert(shareurl)
                                         copyUrl();
                                         layer.close(index);
                                     }
                                 })
-
-                            }
+                        }else if (data.url==="err3"){
+                            layer.open({title:"错误！",content:"系统错误！请您稍后再次尝试！"})
+                        }else {
+                            layer.open({
+                                title:"提示！"
+                                ,btn:["复制到粘贴板"]
+                                ,btnAlign: 'c'
+                                ,content:
+                                    "您的分享地址为：<br />"+
+                                    "<textarea name='s_url' rows=2  style='resize: none;width: 100%'>"+baseurlpath+'share/file/'+sharecode+"</textarea>"
+                                ,yes : function (index, layero){
+                                    copyUrl();
+                                    layer.close(index);
+                                }
+                            })
 
                         }
-                    })
+
                     }
+
+
+
+
+
                 }else if (obj.event === "rename"){
 
                     //prompt层

@@ -183,6 +183,14 @@
       <version>2.6</version>
     </dependency>
 
+    <!--跨域请求
+
+    <dependency>
+        <groupId>com.thetransactioncompany</groupId>
+        <artifactId>cors-filter</artifactId>
+        <version>2.10</version>
+    </dependency>
+    -->
 
 
     <!--暂时没用的-->

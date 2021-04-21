@@ -2,6 +2,7 @@ package cn.limexc.service.Impl;
 
 import cn.limexc.dao.ShareFileDao;
 import cn.limexc.model.ShareFile;
+import cn.limexc.model.UserFile;
 import cn.limexc.service.ShareService;
 import org.springframework.stereotype.Service;
 
@@ -46,5 +47,16 @@ public class ShareServiceImpl implements ShareService {
     public Integer createShare(ShareFile shareFile) {
         //先这么干，后面把controller中的转过来，先实现功能再说
         return shareFileDao.insertUserShare(shareFile);
+    }
+
+    public List<UserFile> getShareUFList(Integer id){
+        List<UserFile> uf = shareFileDao.selestsharelist(id);
+
+        return uf;
+    }
+
+    @Override
+    public Integer deleteSF(Integer uid, Integer ufid) {
+        return shareFileDao.deleteShareFile(uid,ufid);
     }
 }

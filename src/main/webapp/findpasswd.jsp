@@ -81,7 +81,7 @@
 
                     },
                     error : function() {
-                        alert("异常！");
+                        layui.layer.alert("未知错误，请联系管理员");
                     }
                 });
 
