@@ -15,9 +15,6 @@
     if (session.getAttribute("user")==null){
         pageContext.forward("/login.jsp");
     }
-    //初步处理不是管理员就访问管理界面的
-    //String userSession = session.getAttribute();
-    //if ()
 %>
 
 <div class="layui-layout layui-layout-admin">
@@ -26,8 +23,8 @@
         <!-- 头部区域（可配合layui已有的水平导航） -->
         <ul class="layui-nav layui-layout-left">
             <li class="layui-nav-item"><a href="${pageContext.request.contextPath}/admin/sysinfopage" target="info_body">系统信息</a></li>
-            <li class="layui-nav-item"><a href="http://www.baidu.com" target="info_body">文件管理</a></li>
-            <li class="layui-nav-item"><a href="" target="info_body">用户管理</a></li>
+            <li class="layui-nav-item"><a href="${pageContext.request.contextPath}/admin/filelistpage" target="info_body">文件管理</a></li>
+            <li class="layui-nav-item"><a href="${pageContext.request.contextPath}/admin/userlistpage" target="info_body">用户管理</a></li>
         </ul>
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item">
@@ -50,13 +47,13 @@
                     <a href="${pageContext.request.contextPath}/admin/sysinfopage" target="info_body">系统信息</a>
                 </li>
                 <li class="layui-nav-item">
-                    <a href="javascript:;" target="info_body">文件管理</a>
+                    <a href="${pageContext.request.contextPath}/admin/filelistpage" target="info_body">文件管理</a>
                 </li>
                 <li class="layui-nav-item">
-                    <a href="javascript:;" target="info_body">用户管理</a>
+                    <a href="${pageContext.request.contextPath}/admin/userlistpage" target="info_body">用户管理</a>
                 </li>
                 <li class="layui-nav-item">
-                    <a href="javascript:;" target="info_body">其他管理</a>
+                    <a href="${pageContext.request.contextPath}/admin/othersetpage" target="info_body">其他管理</a>
                 </li>
             </ul>
         </div>

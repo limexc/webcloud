@@ -70,7 +70,7 @@ public class GetFileType {
                 break;
             case "txt":
             case "md":
-                type = "dtd_none";
+                type = "dtd_txt";
                 break;
             case "pdf":
                 type = "dtd_pdf";

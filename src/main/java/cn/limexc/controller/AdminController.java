@@ -82,5 +82,32 @@ public class AdminController {
         return map;
     }
 
+    /**
+     * 用于转跳 系统全部用户列表页
+     * @return userlist
+     */
+    @RequestMapping(value = "/userlistpage")
+    public String userListpage(){
+        return "userlist";
+    }
+
+    /**
+     * 用于转跳 系统全部文件管理页面
+     * @return filelist
+     */
+    @RequestMapping(value = "/filelistpage")
+    public String fileListPage(){
+        return "filelist";
+    }
+
+    /**
+     * 用于转跳 系统其他设置 页面
+     * @return othersetpage
+     */
+    @RequestMapping(value = "/othersetpage")
+    public  String otherSetting(){
+        return "otherset";
+    }
+
 
 }

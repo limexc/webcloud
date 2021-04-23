@@ -28,7 +28,7 @@
                                             <br>
                                         </div>
                                         <div class="panel-content">
-                                            <h1 class="no-margins" style="text-align:center" id="user_row">1234</h1>
+                                            <h1 class="no-margins" style="text-align:center" id="user_row">0</h1>
                                             <br>
                                             <h3>系统用户总数</h3>
                                         </div>
@@ -46,7 +46,7 @@
                                             <br>
                                         </div>
                                         <div class="panel-content">
-                                            <h1 class="no-margins" style="text-align:center" id="file_row">1234</h1>
+                                            <h1 class="no-margins" style="text-align:center" id="file_row">0</h1>
                                             <br>
                                             <h3>系统存储文件总数</h3>
                                         </div>
@@ -64,9 +64,9 @@
                                             <br>
                                         </div>
                                         <div class="panel-content">
-                                            <h1 class="no-margins" style="text-align:center" id="now_size">12GB</h1>
+                                            <h1 class="no-margins" style="text-align:center" id="now_size">0GB</h1>
                                             <br>
-                                            <h3 id="free_size">存储空间剩余：56GB</h3>
+                                            <h3 id="free_size">存储空间剩余：0GB</h3>
                                         </div>
                                     </div>
                                 </div>
@@ -108,12 +108,14 @@
             elem: '#newUserTable'
             ,url: '${pageContext.request.contextPath}/admin/system/newuser' //数据接口
             ,page: false //开启分页
+            ,cellMinWidth: 80
+            ,height: 'full-340'
             ,cols: [[ //表头
                 {title: "ID",width:'5%',type:"numbers"},
                 {field: 'username', title: '用户名', width:'25%'}
                 ,{field: 'email', title: '邮箱', width:'25%'}
                 ,{field: 'create_at', title: '注册时间', width:'25%'}
-                ,{field: 'storage', title: '存储空间', width: '20%'}
+                ,{field: 'storage', title: '存储空间', minWidth:100,width:"20%"}
             ]]
         });
 
