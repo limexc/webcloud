@@ -25,6 +25,12 @@ public interface FileService {
     //通过文件名查询文件或文件夹
     List<UserFile> selectFiles(Integer id,String key);
 
+    //返回系统所有的文件数
+    int getFileRow();
+
+    //获取系统存储文件的大小
+    String getAllFileSize();
+
 
     //创建虚拟文件夹
     Map<String,Object> mkDir(String newpath, String name, int page, User user);

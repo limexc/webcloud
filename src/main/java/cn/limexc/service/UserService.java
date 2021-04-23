@@ -15,9 +15,6 @@ public interface UserService {
     //用户注册
     Integer regUser(User user);
 
-    //插入用户头像
-
-
     //用户信息更新
 
 
@@ -44,10 +41,32 @@ public interface UserService {
      */
     Boolean haveUserByName(String name);
 
-
+    /**
+     * 通过邮箱查找用户，用来做找回密码的验证
+     * @param email 邮箱
+     * @return  是否
+     */
     Boolean haveUserByEmail(String email);
 
+    /**
+     * 修改用户的 头像  地址
+     * @param profile 头像地址
+     * @param uid     用户 id
+     * @return        影响的行数
+     */
     Integer updateImage(String profile,Integer uid);
 
+    /**
+     * 查询前 top 个用户基本信息，用于系统信息页展示
+     * @param top 数字
+     * @return    列表
+     */
+    List<User> getNewUser(String top);
+
+    /**
+     * 获取users表中 用户的行数
+     * @return  行数
+     */
+    int getUserRow();
 
 }

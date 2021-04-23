@@ -196,7 +196,7 @@ public class FileController {
         if (proFile==null){
             System.out.println("错误，没有此文件，或用户已将文件删除");
         }else {
-            System.out.println("即将下载的文件： "+proFile.getPath());
+            //System.out.println("即将下载的文件： "+proFile.getPath());
             File df = new File(proFile.getPath());
             new DownLoadFile().downloadFile(rep,df,proFile.getName());
         }

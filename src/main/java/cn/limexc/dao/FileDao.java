@@ -51,6 +51,20 @@ public interface FileDao {
      */
     FileModel selectFileMd5(@Param("md5") String md5);
 
+    /**
+     * 获取文件的行数
+     * @return  行数
+     */
+    @Select("SELECT COUNT(*) FROM file")
+    int selectFileRow();
+
+    /**
+     * 获取当前系统 文件总大小
+     * @return  总大小
+     */
+    @Select("SELECT SUM(filesize) FROM file")
+    long selectAllFileSize();
+
 
     /**
      * 新文件信息插入数据库

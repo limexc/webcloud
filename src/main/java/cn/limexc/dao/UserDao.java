@@ -37,6 +37,12 @@ public interface UserDao {
     int selectMaxId();
 
     /**
+     * 获取数据库内用户的行数，用来为系统信息页展示提供数据
+     * @return
+     */
+    @Select("SELECT COUNT(*) FROM users")
+    int selectUserRow();
+    /**
      * 查询邮箱数据
      * @param email  邮箱
      * @return       查询到的行数
@@ -78,5 +84,9 @@ public interface UserDao {
     //根据uid更新头像
     @Update("UPDATE users SET `profile`=#{profile} WHERE id = #{uid}")
     Integer updateProFile(@Param("profile") String profile,@Param("uid") Integer uid);
+
+    //查询注册时间前 top  的用户
+    @Select("SELECT id,username,email,create_at, storage FROM users ORDER BY create_at DESC LIMIT ${top}")
+    List<User> selectNewUser(@Param("top") String top);
 
 }

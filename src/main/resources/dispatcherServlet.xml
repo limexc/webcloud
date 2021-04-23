@@ -32,6 +32,13 @@
             <mvc:mapping path="/**" />
             <bean class="cn.limexc.handler.LoginInterceptor" />
         </mvc:interceptor>
+        <!--配置拦截器-->
+        <!--这样配置，将拦截访问springmvc指定路径下的url-->
+        <mvc:interceptor>
+            <mvc:mapping path="/admin/**"/>
+            <mvc:mapping path="/*/admin/**"/>
+            <bean class="cn.limexc.handler.AuthorityInterceptor" />
+        </mvc:interceptor>
     </mvc:interceptors>
     <mvc:annotation-driven />
 

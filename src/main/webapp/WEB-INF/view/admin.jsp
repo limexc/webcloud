@@ -25,17 +25,9 @@
         <div class="layui-logo">网盘管理</div>
         <!-- 头部区域（可配合layui已有的水平导航） -->
         <ul class="layui-nav layui-layout-left">
-            <li class="layui-nav-item"><a href="http://www.w3school.com.cn" target="info_body">系统信息</a></li>
+            <li class="layui-nav-item"><a href="${pageContext.request.contextPath}/admin/sysinfopage" target="info_body">系统信息</a></li>
             <li class="layui-nav-item"><a href="http://www.baidu.com" target="info_body">文件管理</a></li>
-            <li class="layui-nav-item"><a href="">用户管理</a></li>
-            <li class="layui-nav-item">
-                <a href="javascript:;">其它系统</a>
-                <dl class="layui-nav-child">
-                    <dd><a href="">邮件管理</a></dd>
-                    <dd><a href="">消息管理</a></dd>
-                    <dd><a href="">授权管理</a></dd>
-                </dl>
-            </li>
+            <li class="layui-nav-item"><a href="" target="info_body">用户管理</a></li>
         </ul>
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item">
@@ -54,25 +46,18 @@
         <div class="layui-side-scroll">
             <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
             <ul class="layui-nav layui-nav-tree"  lay-filter="test">
-                <li class="layui-nav-item layui-nav-itemed">
-                    <a class="" href="javascript:;">系统信息</a>
-                    <dl class="layui-nav-child">
-                        <dd><a href="javascript:;">列表一</a></dd>
-                        <dd><a href="javascript:;">列表二</a></dd>
-                        <dd><a href="javascript:;">列表三</a></dd>
-                        <dd><a href="">超链接</a></dd>
-                    </dl>
+                <li class="layui-nav-item">
+                    <a href="${pageContext.request.contextPath}/admin/sysinfopage" target="info_body">系统信息</a>
                 </li>
                 <li class="layui-nav-item">
-                    <a href="javascript:;">文件管理</a>
-                    <dl class="layui-nav-child">
-                        <dd><a href="javascript:;">列表一</a></dd>
-                        <dd><a href="javascript:;">列表二</a></dd>
-                        <dd><a href="">超链接</a></dd>
-                    </dl>
+                    <a href="javascript:;" target="info_body">文件管理</a>
                 </li>
-                <li class="layui-nav-item"><a href="">用户管理</a></li>
-                <li class="layui-nav-item"><a href="">其他管理</a></li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;" target="info_body">用户管理</a>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;" target="info_body">其他管理</a>
+                </li>
             </ul>
         </div>
     </div>
@@ -80,7 +65,7 @@
     <div class="layui-body">
         <!-- 内容主体区域 -->
         <div style="padding: 60px; overflow: auto; width: 98%; height: 85%;background-color: cornflowerblue">
-            <iframe name="info_body" frameborder="0" height="96%" width="96%" src="admin/welcome.html"></iframe>
+            <iframe name="info_body" frameborder="0" height="96%" width="96%" src="${pageContext.request.contextPath}/admin/sysinfopage"></iframe>
 
 
 
@@ -108,12 +93,10 @@
     load_menu_setting();
 
     function load_menu_setting() {
-        alert("加载菜单")
         $.ajax({
             url:"${pageContext.request.contextPath}/user/menu_setting",
             type : "post",
             success:function(data) {
-                alert("成功了\n"+data)
                 $("#menu_user_setting").html(data);
 
             },

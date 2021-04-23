@@ -59,6 +59,16 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
+    public int getFileRow() {
+        return fileDao.selectFileRow();
+    }
+
+    @Override
+    public String getAllFileSize() {
+        return new ByteUnitConversion().readableFileSize(fileDao.selectAllFileSize());
+    }
+
+    @Override
     public int reName(UserFile uf,User user) {
         int sum=0;
         List<UserFile> ufs = fileDao.selectFileList(user);

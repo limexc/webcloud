@@ -2,8 +2,6 @@ package cn.limexc.model;
 
 import org.springframework.stereotype.Component;
 
-import java.math.BigInteger;
-
 
 @Component
 public class User {
@@ -13,7 +11,7 @@ public class User {
     private String password;
     private String email;
     private Integer status;
-    private BigInteger storage;
+    private String storage;
     private String create_at;
     private String delete_at;
     private String alisa;
@@ -78,11 +76,11 @@ public class User {
         this.status = status;
     }
 
-    public BigInteger getStorage() {
+    public String getStorage() {
         return storage;
     }
 
-    public void setStorage(BigInteger storage) {
+    public void setStorage(String storage) {
         this.storage = storage;
     }
 
