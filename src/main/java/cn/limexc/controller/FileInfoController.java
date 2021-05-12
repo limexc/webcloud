@@ -38,15 +38,17 @@ public class FileInfoController {
     private List<UserFile> userFile;
     private FileModel file;
 
-    @RequestMapping(value = "/userfile*")
+    @RequestMapping(value = "/userfile")
     @ResponseBody
     public Map<String, Object> userFile(HttpSession session, HttpServletRequest request, HttpServletResponse response) {
         String method = request.getParameter("method");
+        String datatype = request.getParameter("data");
+
         User user = (User) session.getAttribute("user");
         //分页参数
-        String pages =request.getParameter("page");
-        String limit =request.getParameter("limit");
-        System.out.println("第"+pages+"页；每页："+limit);
+        //String pages =request.getParameter("page");
+        //String limit =request.getParameter("limit");
+        //System.out.println("第"+pages+"页；每页："+limit);
         //返回到前端的数据
         Map<String, Object> tableData = new HashMap<String, Object>();
         tableData.put("code", 0);
@@ -72,7 +74,15 @@ public class FileInfoController {
             int page = Integer.parseInt(Catalogue);
             if (page > 0) {
                 PathAnalysis pa = new PathAnalysis();
-                List<UserFile> ufs = fileService.listUserFile(user);
+                //判断传入的参数，是否请求的回收站的文件
+                List<UserFile> ufs;
+                if ("recycle".equals(datatype)){
+                    ufs = fileService.listUserFile(user,"1");
+                }else {
+                    ufs = fileService.listUserFile(user,"0");
+                }
+
+
                 List<UserFile> fms = pa.SuperiorCatalogue(ufs, newpath, page);
 
                 JSONArray data = new JSONArray();
@@ -105,7 +115,16 @@ public class FileInfoController {
         } else if ("index".equals(method)) {
 
             PathAnalysis pa = new PathAnalysis();
-            List<UserFile> ufs = fileService.listUserFile(user);
+            //判断传入的参数，是否请求的回收站的文件
+            List<UserFile> ufs;
+            if ("recycle".equals(datatype)){
+                //若datatype为recycle那么删除全部状态为1的
+                ufs = fileService.listUserFile(user,"1");
+                //为什么要展示删除的文件路径结构？
+
+            }else{
+                ufs = fileService.listUserFile(user,"0");
+            }
             List<UserFile> ufs1 = pa.getIndexPath(ufs);
 
             JSONArray data = new JSONArray();
@@ -115,6 +134,10 @@ public class FileInfoController {
                 JSONObject tempj = new JSONObject();
                 tempj.put("id",temp.getId());
                 tempj.put("filesize", temp.getFilesize());
+                //正常展示不管，删除文件夹展示正常的文件名
+                //if (temp.getFilesize().equals("-")){
+                //    temp = fileService.getUFInfoByUFid(temp.getId());
+                //}
                 tempj.put("vfname", temp.getVfname());
                 tempj.put("uptime", temp.getUptime());
                 tempj.put("iconsign", temp.getIconsign());
@@ -140,14 +163,24 @@ public class FileInfoController {
             int page = Integer.parseInt(Catalogue);
             String newpath="";
             System.out.println(currentpath);
-            if(currentpath!=null) {
+
+            if(currentpath!=null&&filename!=null) {
                 newpath= currentpath+filename+"/";
+            }else if(currentpath!=null) {
+                newpath= currentpath+"/";
             }else {
                 newpath="/"+filename+"/";
             }
             PathAnalysis pa= new PathAnalysis();
 
-            List<UserFile> ufs = fileService.listUserFile(user);
+            //判断传入的参数，是否请求的回收站的文件
+            List<UserFile> ufs;
+            if ("recycle".equals(datatype)){
+                ufs = fileService.listUserFile(user,"1");
+            }else {
+                ufs = fileService.listUserFile(user,"0");
+            }
+
             List<UserFile> fms=pa.getSubdirectories(ufs, newpath, page);
 
             JSONArray data =new JSONArray();
@@ -222,7 +255,7 @@ public Map<String, Object> userFileList(HttpSession session, HttpServletRequest 
     //分页参数
     String pages =request.getParameter("page");
     String limit =request.getParameter("limit");
-    System.out.println("第"+pages+"页；每页："+limit);
+    //System.out.println("第"+pages+"页；每页："+limit);
     //获取传入的文件类型参数
     String filetype = request.getParameter("filetype")+"%";
     System.out.println("请求查询的文件类型："+filetype);
@@ -255,7 +288,7 @@ public Map<String, Object> userFileList(HttpSession session, HttpServletRequest 
     tableData.put("data",data);
 
 
-    System.out.println("更新完毕！");
+    //System.out.println("更新完毕！");
     return tableData;
 
 }
@@ -313,10 +346,17 @@ public Map<String, Object> userFileList(HttpSession session, HttpServletRequest 
     @ResponseBody
     public void deluserfile(HttpSession session,HttpServletRequest req,@RequestBody Map<String, String> map){
         User user= (User) session.getAttribute("user");
+        //获取删除的 真实动作：回收站|彻底删除
+        String action = req.getParameter("action");
+        String action2 = req.getParameter("action2");
+        if ("re".equals(action2)){
+            action = "re";
+        }
+
         System.out.println(map.get("id"));
         UserFile uf = new UserFile();
         uf.setId(Integer.parseInt(map.get("id")));
-        fileService.rmDirOrFile(uf,user);
+        fileService.rmDirOrFile(uf,user,action);
 
     }
 
@@ -361,6 +401,7 @@ public Map<String, Object> userFileList(HttpSession session, HttpServletRequest 
         User user = (User) session.getAttribute("user");
         String key = req.getParameter("key");
         String type = req.getParameter("type");
+        String dataaction = req.getParameter("data");
         System.out.println(user.getUsername()+"要搜索的文件："+key);
         key="%"+key+"%";
         List<UserFile> ufs = fileService.selectFiles(user.getId(),key);
@@ -372,6 +413,11 @@ public Map<String, Object> userFileList(HttpSession session, HttpServletRequest 
                     if (!fileService.getFileInfoByUFid(String.valueOf(uf.getId())).getFiletype().startsWith(type)) {
                         it.remove();
                     }
+                    if ("recycle".equals(dataaction)){
+                        if (uf.getStatus()=="1"){
+                            it.remove();
+                        }
+                    }
                 }
             }
         }
@@ -382,5 +428,11 @@ public Map<String, Object> userFileList(HttpSession session, HttpServletRequest 
 
         return map;
     }
+
+    @RequestMapping("/recyclepage")
+    public String recyclePage(){
+        return "recycle";
+    }
+
 
 }

@@ -69,7 +69,7 @@
 
                     </dl>
                 </li>
-                <li class="layui-nav-item"><a href="${pageContext.request.contextPath}/system/logout">退了</a></li>
+                <li class="layui-nav-item"><a href="${pageContext.request.contextPath}/system/logout">退出登陆</a></li>
             </ul>
         </div>
 
@@ -91,6 +91,9 @@
         </li>
         <li class="layui-nav-item">
             <a href="${pageContext.request.contextPath}/share/listpage" target="info_body">我的分享</a>
+        </li>
+        <li class="layui-nav-item">
+            <a href="${pageContext.request.contextPath}/info/recyclepage" target="info_body">回收站</a>
         </li>
         <li style="height: 20px"></li>
             <div style="height: 60px;">

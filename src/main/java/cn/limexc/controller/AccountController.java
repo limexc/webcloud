@@ -55,7 +55,7 @@ public class AccountController {
     }
 
     @RequestMapping(value = "/system/login")
-    public String userlogin(HttpServletRequest request, Model model, HttpSession session){
+    public String userlogin(HttpServletRequest request, Model model, HttpSession session,HttpServletResponse rep){
         String email;
         String password;
         User user = null;
@@ -85,6 +85,13 @@ public class AccountController {
 
 
             if (user!=null){
+
+                //判断用户状态是否为封禁
+                if (user.getStatus().equals(1)){
+                    request.setAttribute("ststus", "err");
+                    return "forward:/login.jsp";
+                }
+
                 //将完整的用户信息重新存入
                 user=userService.userallinfo(user.getId());
 
@@ -103,14 +110,15 @@ public class AccountController {
                 session.setAttribute("group",group);
                 session.setAttribute("profile",user.getProfile());
                 session.setAttribute("size",new ByteUnitConversion().readableFileSize(Long.parseLong(String.valueOf(user.getStorage()))));
-                //session.setAttribute("status",user.getStatus());
-                //存储用户的权限？没有实体类对应啊？
-                session.setAttribute("power",group.getPower());
                 if (user.getStatus()==0){
                     session.setAttribute("status","正常");
                 }else {
-                    session.setAttribute("status","冻结");
+                    session.setAttribute("status","封禁");
                 }
+
+
+                //存储用户的权限？没有实体类对应啊？
+                session.setAttribute("power",group.getPower());
 
                 //获取用户的容量信息   应该每次请求都重新获取用户空间容量的相关信息
                 /**

@@ -16,6 +16,12 @@ public interface UserService {
     Integer regUser(User user);
 
     //用户信息更新
+    //更改用户状态
+    Boolean changeUserStatus(Integer uid);
+    //更改用户存储空间
+    Boolean changeUserStorage(String storage,Integer uid);
+    //更改用户名
+    Boolean changeUserName(String name,Integer uid);
 
 
     //用户修改密码|未登录
@@ -69,4 +75,5 @@ public interface UserService {
      */
     int getUserRow();
 
+    Boolean delUser(User user);
 }

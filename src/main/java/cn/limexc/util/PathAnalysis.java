@@ -66,7 +66,7 @@ public class PathAnalysis {
 
             if (path.startsWith(currentpath)) {
                 if (m.get(temps[page]) == null) {
-                    if (path.equals(currentpath)|| cpath[l] == '/' ) {
+                    if (cpath[l-1] == '/' || path.equals(currentpath) ) {
                         UserFile fm = new UserFile();
                         fm.setVfname(temps[page]);
                         m.put(temps[page], "");

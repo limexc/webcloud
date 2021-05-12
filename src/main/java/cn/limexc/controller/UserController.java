@@ -147,5 +147,33 @@ public class UserController {
         User user = (User) session.getAttribute("user");
         userService.updateImage(req.getParameter("src"), user.getId());
     }
+    @RequestMapping("/setUserName")
+    public  void  resetName(HttpSession session,HttpServletRequest req){
+        User user = (User) session.getAttribute("user");
+        String name = req.getParameter("name");
+        userService.changeUserName(name, user.getId());
+    }
+
+    @RequestMapping("/del_user")
+    public void deluser(HttpSession session,HttpServletRequest req,HttpServletResponse rep){
+        User user = (User) session.getAttribute("user");
+        String enter = req.getParameter("enter");
+        ResultData rd = new ResultData();
+        Boolean isOk=false;
+        enter = enter.toUpperCase();
+        if ("YES".equals(enter)){
+            isOk = userService.delUser(user);
+            if (isOk){
+                //向前端回传一下
+                rd.setData("yes");
+                rd.writeToResponse(rep);
+            }else {
+                //回传错误消息
+                rd.setData("no");
+                rd.writeToResponse(rep);
+            }
+        }
+
+    }
 
 }

@@ -1,8 +1,10 @@
 package cn.limexc.service.Impl;
 
 import cn.limexc.dao.FileDao;
+import cn.limexc.dao.ShareFileDao;
 import cn.limexc.dao.UserDao;
 import cn.limexc.model.FileModel;
+import cn.limexc.model.ShareFile;
 import cn.limexc.model.User;
 import cn.limexc.model.UserFile;
 import cn.limexc.service.FileService;
@@ -14,13 +16,11 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.io.File;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class FileServiceImpl implements FileService {
@@ -29,6 +29,8 @@ public class FileServiceImpl implements FileService {
     private FileDao fileDao;
     @Resource
     private UserDao userDao;
+    @Resource
+    private ShareFileDao shareFileDao;
 
     @Override
     public List<FileModel> listAllFile() {
@@ -36,19 +38,28 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public List<UserFile> listUserFile(User user) {
+    public List<UserFile> listUserFile(User user,String ststus) {
 
         List<UserFile> userFiles = fileDao.selectFileList(user);
         //循环修改filsize的值，数据库中存储原始未转换数据方便对用户空间的控制。
-        String  tmp=null;
-        for (UserFile uf:userFiles) {
+        String  tmp  =null;
+
+        Iterator it = userFiles.iterator();
+        while (it.hasNext()){
+            UserFile uf = (UserFile) it.next();
             if (uf.getFilesize()!=null){
                 tmp = new ByteUnitConversion().readableFileSize(Long.parseLong(uf.getFilesize()));
                 uf.setFilesize(tmp);
             }else {
                 uf.setFilesize("-");
             }
+            //删除文件状态匹配的
+            if (ststus.equals(uf.getStatus())){
+                //System.out.println(uf.toString());
+                it.remove();
+            }
         }
+
 
         return userFiles;
     }
@@ -160,6 +171,11 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
+    public FileModel getFileInfoByFid(String fid) {
+        return fileDao.getFileInfoByFid(fid);
+    }
+
+    @Override
     public UserFile getUFInfoByUFid(Integer ufid) {
         return fileDao.selectUserFileById(ufid);
     }
@@ -265,38 +281,90 @@ public class FileServiceImpl implements FileService {
      */
 
     @Override
-    public int rmDirOrFile(UserFile userFile,User user) {
+    public int rmDirOrFile(UserFile userFile,User user,String action) {
         //受影响的行数
         int sum=0;
+        ShareFile shareFile;
         //判断是文件夹还是文件
         userFile=fileDao.selectUserFileById(userFile.getId());
         System.out.println("这里是service"+userFile.toString());
-        if (userFile.getFid()!=null){
+        //是文件（有实体文件id）
+        if (userFile.getFid()!=null && action.equals("del")){
+            //若传入的参数为彻底删除，那么直接删除文件，同时数据库会因为外键自动删除分享链接
             return sum=fileDao.deleteUserFile(userFile);
+        }else if (userFile.getFid()!=null && action.equals("recycle")){
+            //如果传入的是文件，且传入的参数是移入回收站，那么修改文件status属性，同时删除共享链接（有的话）
+            //判断是否有共享链接  通过ufid进行查询
+            shareFile = shareFileDao.selectUserShareByUFid(userFile.getId());
+            //删除共享链接
+            if (shareFile!=null){
+                shareFileDao.deleteShareFile(user.getId(), userFile.getId());
+            }
+            //设置置状态
+            userFile.setStatus("0");
+            return fileDao.updateUFileStatus(userFile);
+        }else if (userFile.getFid()!=null && action.equals("re")){
+            //设置置状态
+            userFile.setStatus("1");
+            return fileDao.updateUFileStatus(userFile);
         }
-
 
         //查询该用户的所有文件
         List<UserFile> ufs = fileDao.selectFileList(user);
-        //循环，查找同一文件夹下下的文件，删除 | 让文件的vpath唯一 感觉可以和删除文件方法合并。
+        //循环，查找同一文件夹下的文件，删除 | 让文件的vpath唯一 感觉可以和删除文件方法合并。
         for (int i=0;i<ufs.size();i++){
             UserFile temp = ufs.get(i);
             String path = temp.getVpath();
 
             char[] cpath = path.toCharArray();
-            //有问题，后面的不一定是/
+            //有问题，后面的不一定是 /
             int l = userFile.getVpath().length();
 
             if (path.startsWith(userFile.getVpath())){
-                if (path.equals(userFile.getVpath())||cpath[l]=='/'){
-                    System.out.println("要删除的目录"+path);
-                    sum += fileDao.deleteUserFile(temp);
+                if (path.equals(userFile.getVpath()) || cpath[l]=='/'){
+                    //文件夹不会存在共享，但是文件夹下的文件会存在共享，同样需要删除处理
+                    shareFile = shareFileDao.selectUserShareByUFid(temp.getId());
+                    if (shareFile!=null && action.equals("recycle")){
+                        //删除共享链接
+                        shareFileDao.deleteShareFile(user.getId(), temp.getId());
+                        //设置置状态
+                        temp.setStatus("0");
+                        sum +=fileDao.updateUFileStatus(temp);
+                    }else if (action.equals("recycle")){
+                        //没有共享，直接设置状态
+                        temp.setStatus("0");
+                        sum +=fileDao.updateUFileStatus(temp);
+                    }else if (action.equals("del")){
+                        System.out.println("要删除的目录"+path);
+                        sum += fileDao.deleteUserFile(temp);
+                    }else if (action.equals("re")) {
+                        //直接设置状态 | 还原文件
+                        temp.setStatus("1");
+                        sum += fileDao.updateUFileStatus(temp);
+                    }
                 }
-
 
             }
         }
         return sum;
+    }
+
+    public boolean deleteFileAdmin(String fid){
+        boolean isDelete = false;
+        //通过fid查找并删除实体文件
+        FileModel fileModel = fileDao.getFileInfoByFid(fid);
+        int a = fileDao.deleteFile(fid);
+        if (a>0){
+            try {
+                File file = new File(fileModel.getRealpath());
+                if(file.delete()) {
+                    isDelete = true;
+                }
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return isDelete;
     }
 
     @Override

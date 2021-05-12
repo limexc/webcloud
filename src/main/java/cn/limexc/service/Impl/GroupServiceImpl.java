@@ -31,4 +31,23 @@ public class GroupServiceImpl implements GroupService {
     public Group getUserGroup(Integer uid) {
         return groupDao.selectGroupByUid(uid);
     }
+
+    @Override
+    public Boolean changeUserGroup(Integer uid) {
+        Boolean isOk=false;
+        //获取当前用户用户组
+        Group group = groupDao.selectGroupByUid(uid);
+        Integer gid = group.getId();
+        if (gid==1){
+            if (groupDao.updateUserGruop(uid,2)==1){
+                isOk=true;
+            }
+        }else if (gid==2) {
+            if (groupDao.updateUserGruop(uid,1)==1){
+                isOk=true;
+            }
+        }
+
+        return isOk;
+    }
 }

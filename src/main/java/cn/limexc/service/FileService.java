@@ -14,7 +14,7 @@ public interface FileService {
     List<FileModel> listAllFile();
 
     //列出用户的文件
-    List<UserFile> listUserFile(User user);
+    List<UserFile> listUserFile(User user,String ststus);
 
     //通过筛选列出用户文件
     List<UserFile> listUserFileByType(User user,String type);
@@ -36,8 +36,10 @@ public interface FileService {
     Map<String,Object> mkDir(String newpath, String name, int page, User user);
 
     //删除虚拟文件夹，涉及删除文件夹下的文件
-    int rmDirOrFile(UserFile userFile,User user);
+    int rmDirOrFile(UserFile userFile,User user,String action);
 
+    //删除实体文件
+    boolean deleteFileAdmin(String fid);
 
     //添加未上传过的文件,基础文件不涉及虚拟命名等问题
     int addFile(FileModel file);
@@ -50,6 +52,9 @@ public interface FileService {
 
     //通过文件ufid获取文件路径及虚拟文件名信息
     FileModel getFileInfoByUFid(String ufid);
+
+    //通过文件fid获取文件路径及虚拟文件名信息
+    FileModel getFileInfoByFid(String ufid);
 
     //通过文件ufid获取userfile信息
     UserFile getUFInfoByUFid(Integer ufid);

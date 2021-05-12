@@ -13,6 +13,7 @@ public class UserFile {
     private Integer uid;
     private Integer fid;
     private String iconsign;
+    private String status;
 
     public UserFile() {
     }
@@ -28,7 +29,13 @@ public class UserFile {
         this.iconsign = iconsign;
     }
 
+    public String getStatus() {
+        return status;
+    }
 
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public Integer getId() {
         return id;
@@ -106,6 +113,7 @@ public class UserFile {
                 ", uid=" + uid +
                 ", fid=" + fid +
                 ", iconsign='" + iconsign + '\'' +
+                ", status='" + status + '\'' +
                 '}';
     }
 }

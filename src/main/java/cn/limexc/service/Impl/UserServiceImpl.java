@@ -37,6 +37,15 @@ public class UserServiceImpl implements UserService {
         return userDao.selectUserInfoById(id);
     }
 
+    @Override
+    public Boolean changeUserName(String name, Integer uid) {
+        Boolean isOk = false;
+        if (userDao.updateUserName(name,uid)==1){
+            isOk=true;
+        }
+        return isOk;
+    }
+
     //除密码外所有信息
     @Override
     public User userallinfo(Integer id) {
@@ -124,5 +133,72 @@ public class UserServiceImpl implements UserService {
     @Override
     public int getUserRow() {
         return userDao.selectUserRow();
+    }
+
+    @Override
+    public Boolean changeUserStatus(Integer uid) {
+        Boolean isOk = false;
+        Integer tempstatus = userinfo(uid).getStatus();
+        if (tempstatus==0){
+            userDao.updateUserStatus(1,uid);
+            return isOk=true;
+        }else if (tempstatus==1){
+            userDao.updateUserStatus(0,uid);
+            return isOk=true;
+        }
+        return isOk;
+    }
+
+    @Override
+    public Boolean changeUserStorage(String  storage, Integer uid) {
+        Boolean isOk = false;
+        //判断storage
+        //去掉字符串中的空格 以及其他非法字符
+        //1. 一个正则表达式
+        String regExp="[\n`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。， 、？]";
+        //2. 这里是将特殊字符换为空字符串,""代表直接去掉
+        String replace = "";
+        //3. 要处理的字符串
+        storage = storage.replaceAll(regExp,replace);
+        storage = storage.replace(" ",replace);
+        System.out.println("去除特殊字符后的值："+ storage);
+        //转换字符串中的字母全为大写
+        storage = storage.toUpperCase();
+        //末尾匹配 TB T 、GB G、 MB M、 B
+        String regExpTy= "[TGMKB]";
+        long longStorage = 0;
+        if (storage.endsWith("TB")||storage.endsWith("T")){
+            storage = storage.replaceAll(regExpTy,replace);
+            longStorage = Long.parseLong(storage)*1024*1024*1024*1024;
+        }else if (storage.endsWith("GB")||storage.endsWith("G")){
+            storage = storage.replaceAll(regExpTy,replace);
+            System.out.println(storage);
+            longStorage = Long.parseLong(storage);
+            longStorage = longStorage*1024*1024*1024;
+        }else if (storage.endsWith("MB")||storage.endsWith("M")){
+            storage = storage.replaceAll(regExpTy,replace);
+            longStorage = Long.parseLong(storage)*1024*1024;
+
+        }else if (storage.endsWith("KB")||storage.endsWith("K")){
+            storage = storage.replaceAll(regExpTy,replace);
+            longStorage = Long.parseLong(storage)*1024;
+
+        }else if (storage.endsWith("B")){
+            storage = storage.replaceAll(regExpTy,replace);
+            longStorage = Long.parseLong(storage);
+
+        }if (userDao.updateUserStorage(longStorage,uid)==1){
+            isOk=true;
+        }
+        return isOk;
+    }
+
+    @Override
+    public Boolean delUser(User user) {
+        Integer i = userDao.deleteUser(user);
+        if (i==1){
+            return true;
+        }
+        return false;
     }
 }

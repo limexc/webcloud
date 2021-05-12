@@ -7,11 +7,11 @@
     <!--我™当时为什么不用注解做这些东西...淦...-->
 
     <select id="selectAllFileList" resultType="cn.limexc.model.FileModel">
-        SELECT id,filename,md5,create_time,realpath,filesize FROM file;
+        SELECT id,filename,md5,create_time,realpath,filesize,filetype FROM file;
     </select>
 
     <select id="selectFileList" resultType="cn.limexc.model.UserFile">
-        SELECT user_file.id,file.filename,file.filesize,user_file.vfname,user_file.vpath,user_file.uptime,file.filetype,user_file.fid,user_file.uid
+        SELECT user_file.id,file.filename,file.filesize,user_file.vfname,user_file.vpath,user_file.uptime,file.filetype,user_file.fid,user_file.uid,user_file.status
         FROM  (user_file LEFT JOIN users ON users.id=user_file.uid)LEFT JOIN file ON file.id=user_file.fid
         WHERE users.id = #{user.id}
     </select>
@@ -20,7 +20,7 @@
     <select id="selectFileListLimit" resultType="cn.limexc.model.UserFile">
         SELECT file.filesize as filesize,user_file.vfname as vfname,
         user_file.vpath as vpath,user_file.id as id,
-        user_file.uptime as uptime,file.filetype as filetype
+        user_file.uptime as uptime,file.filetype as filetype,user_file.status as status
         FROM (user_file LEFT JOIN users ON users.id=user_file.uid)LEFT JOIN file ON file.id=user_file.fid
         WHERE users.id = #{id}
         <!--LIMIT #{page},#{limit} 看看用分页工具进行分页-->
@@ -49,8 +49,8 @@
 
     <!--userfile表中的id字段为自增的-->
     <insert id="insertUserFile">
-        INSERT INTO user_file (uid,vpath,fid,vfname,uptime,iconsign)
-        VALUE (#{userFile.uid},#{userFile.vpath},#{userFile.fid},#{userFile.vfname},#{userFile.uptime},#{userFile.iconsign})
+        INSERT INTO user_file (uid,vpath,fid,vfname,uptime,iconsign,status)
+        VALUE (#{userFile.uid},#{userFile.vpath},#{userFile.fid},#{userFile.vfname},#{userFile.uptime},#{userFile.iconsign},1)
     </insert>
     
     <!--根据id删除某一行记录-->
@@ -77,7 +77,7 @@
 
     <select id="selectFilesByKey" resultType="cn.limexc.model.UserFile">
         SELECT file.filesize as filesize,user_file.vfname as vfname,
-               user_file.vpath as vpath,user_file.id as id,user_file.uptime as uptime,file.filetype as filetype
+               user_file.vpath as vpath,user_file.id as id,user_file.uptime as uptime,file.filetype as filetype,user_file.status as status
         FROM (user_file LEFT JOIN users ON users.id=user_file.uid)LEFT JOIN file ON file.id=user_file.fid
         WHERE users.id = #{uid}  AND  user_file.vfname LIKE #{key}
     </select>

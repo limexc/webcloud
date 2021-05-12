@@ -1,6 +1,7 @@
 package cn.limexc.dao;
 
 import cn.limexc.model.User;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -55,13 +56,13 @@ public interface UserDao {
      * @param id id
      * @return   用户user基本信息
      */
-    @Select("select id,username,email,alisa from users where id=#{id}")
+    @Select("select id,username,email,alisa,status from users where id=#{id}")
     User selectUserInfoById(@Param("id") Integer id);
 
-    @Select("select id,username,email from users where username=#{name}")
+    @Select("select id,username,email,status from users where username=#{name}")
     User selectUserByUsername(@Param("name") String name);
 
-    @Select("select id,username,email from users where email=#{email} ")
+    @Select("select id,username,email,status from users where email=#{email} ")
     User selectUserByEmail(@Param("email") String email);
 
     //查询用户的所有信息
@@ -88,5 +89,20 @@ public interface UserDao {
     //查询注册时间前 top  的用户
     @Select("SELECT id,username,email,create_at, storage FROM users ORDER BY create_at DESC LIMIT ${top}")
     List<User> selectNewUser(@Param("top") String top);
+
+    //更新用户状态字段
+    @Update("UPDATE users SET `status`=#{status} WHERE id=#{uid}")
+    Integer updateUserStatus(@Param("status")Integer status,@Param("uid") Integer uid);
+
+    //更新用户存储空间字段
+    @Update("UPDATE users SET `storage`=#{storage} WHERE id=#{uid}")
+    Integer updateUserStorage(@Param("storage")long storage,@Param("uid") Integer uid);
+    //更新用户名字段
+    @Update("UPDATE users SET `username`=#{name} WHERE id=#{uid}")
+    Integer updateUserName(@Param("name")String name,@Param("uid") Integer uid);
+
+    //删除用户数据
+    @Delete("DELETE FROM users WHERE id=#{user.id}")
+    Integer deleteUser(@Param("user") User user);
 
 }

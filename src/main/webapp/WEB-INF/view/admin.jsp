@@ -22,6 +22,7 @@
         <div class="layui-logo">网盘管理</div>
         <!-- 头部区域（可配合layui已有的水平导航） -->
         <ul class="layui-nav layui-layout-left">
+            <li class="layui-nav-item"><a href="${pageContext.request.contextPath}" >返回主页</a></li>
             <li class="layui-nav-item"><a href="${pageContext.request.contextPath}/admin/sysinfopage" target="info_body">系统信息</a></li>
             <li class="layui-nav-item"><a href="${pageContext.request.contextPath}/admin/filelistpage" target="info_body">文件管理</a></li>
             <li class="layui-nav-item"><a href="${pageContext.request.contextPath}/admin/userlistpage" target="info_body">用户管理</a></li>
@@ -29,13 +30,13 @@
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item">
                 <a href="javascript:;">
-                    <img src="${pageContext.request.contextPath}/static/images/dls.jpeg" class="layui-nav-img">
+                    <img src="${sessionScope.get("profile")}" class="layui-nav-img">
                     ${user.username}
                 </a>
                 <dl class="layui-nav-child" id="menu_user_setting">
                 </dl>
             </li>
-            <li class="layui-nav-item"><a href="${pageContext.request.contextPath}/system/logout">退了</a></li>
+            <li class="layui-nav-item"><a href="${pageContext.request.contextPath}/system/logout">退出登陆</a></li>
         </ul>
     </div>
 
@@ -52,9 +53,11 @@
                 <li class="layui-nav-item">
                     <a href="${pageContext.request.contextPath}/admin/userlistpage" target="info_body">用户管理</a>
                 </li>
+                <!--
                 <li class="layui-nav-item">
                     <a href="${pageContext.request.contextPath}/admin/othersetpage" target="info_body">其他管理</a>
                 </li>
+                -->
             </ul>
         </div>
     </div>

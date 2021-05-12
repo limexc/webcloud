@@ -5,6 +5,7 @@ import cn.limexc.model.Group;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -22,4 +23,6 @@ public interface GroupDao {
     @Insert("insert into user_group(uid,gid) values(#{uid},#{gid})")
     Integer insterGroupUser(@Param("uid")Integer uid,@Param("gid")Integer gid);
 
+    @Update("UPDATE user_group SET gid=#{gid} WHERE uid=#{uid}")
+    Integer updateUserGruop(@Param("uid")Integer uid,@Param("gid")Integer gid);
 }

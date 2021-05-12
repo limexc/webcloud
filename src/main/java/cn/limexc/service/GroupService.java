@@ -24,4 +24,11 @@ public interface GroupService {
      * @return group信息
      */
     Group getUserGroup(Integer uid);
+
+    /**
+     * 转换用户所在组
+     * @param uid 用户id
+     * @return    true or false
+     */
+    Boolean changeUserGroup(Integer uid);
 }

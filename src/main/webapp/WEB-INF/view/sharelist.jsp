@@ -57,8 +57,8 @@
 
         table.render({
             elem: '#file_table'
-            //模拟数据
             ,url:'${pageContext.request.contextPath}/share/list'
+            //模拟数据
             //,url:'/demo/table/user/'
             ,page:false
             ,cols: [[

@@ -30,7 +30,7 @@
                     <img src="" />
 
                 </div>
-                <div class="file_info">
+                <div class="file_info" style="position: absolute;margin-left: 40%">
 
 
 
@@ -46,7 +46,7 @@
                                 </td>
                             </tr>
                         </table>
-
+                        <br><br>
                         <button type="button" id="download_btn" >下载文件</button>
                     </div>
 

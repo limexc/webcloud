@@ -74,9 +74,17 @@
         //监听行单击事件（双击事件为：rowDouble  单击事件：row）  START
         table.on('row(file_table)', function(obj){
             let objdata = obj.data;
-
+            /*获取到Url里面的参数*/
+            (function ($) {
+                $.getUrlParam = function (name) {
+                    let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+                    let r = window.location.search.substr(1).match(reg);
+                    if (r != null) return unescape(r[2]); return null;
+                }
+            })(jQuery);
+            let now_file_type = $.getUrlParam('filetype');
             layer.alert(
-                "<img height='200' width='200' style='display:block;margin:0 auto;' src='${pageContext.request.contextPath}/static/images/dls.jpeg'></img><br>"+
+                //"<img height='200' width='200' style='display:block;margin:0 auto;' src='${pageContext.request.contextPath}/static/images/dls.jpeg'></img><br>"+
                 "<span>文件名："+objdata.vfname+"</span><br>"+
                 "<span>文件大小："+objdata.filesize+"</span><br>"+
                 "<span>修改时间："+objdata.uptime+"</span><br>",
@@ -100,7 +108,32 @@
                     //view_file  查看
                     btn2:function(index, layero){
                         //do something
-                        alert("查看")
+                        function view_file(type,ufid){
+                            let temp_file_view_url ="${pageContext.request.contextPath}/static/pages/fileview.jsp?type="+type+"&ufid="+ufid+"&fid=null"
+                            layer.open({
+                                type: 2,
+                                title: '文件预览',
+                                shade: 0,
+                                //maxmin: true,
+                                area: ['700px','500px'],
+                                content:[temp_file_view_url,"no"]
+                            });
+                        }
+                        //根据判断的内容来展示文件
+                        //let temp_file_view_url = '${pageContext.request.contextPath}/file/download?ufid='+objdata.id;
+                        if (now_file_type==="music"){
+                            view_file("music",objdata.id);
+                            //alert(now_file_type)
+                        }else if (now_file_type==="video"){
+                            view_file("video",objdata.id);
+                            //alert(now_file_type)
+                        }else if (now_file_type==="pic"){
+                            view_file("pic",objdata.id);
+                            //alert(now_file_type)
+                        }else {
+                            alert("当前文件暂不支持预览")
+                        }
+
                         layer.close(index); //如果设定了yes回调，需进行手工关闭
                     },
                     //分享
@@ -233,9 +266,24 @@
                 btn:["删除","取消"],
                 yes:function (index, layero){
                     $.ajax({
-                        url: "#"
-                        //做些事情
+                        url: '${pageContext.request.contextPath}/info/deletfile?action=recycle',
+                        type: "post",
+                        dataType:"json",
+                        contentType: 'application/json;charset=UTF-8',
+                        data:JSON.stringify({
+                            "id":objdata.id
+                        }),
+                        success : function(data,xhr) {
+                            if(xhr.status === 200) {
+                                layer.msg('删除成功', {
+                                    icon: 1,//状态图标
+                                    Time: 4000//展示时间为4s
+                                });//这里用于检测上传状态是否成功
+                                //table.reload('fileListTable');
+                            }
+                        }
                     })
+
                     obj.del();
                     layer.close(index);
                 },

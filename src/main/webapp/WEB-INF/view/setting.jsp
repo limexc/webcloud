@@ -27,21 +27,22 @@
 <script src="${pageContext.request.contextPath}/static/layui/layui.js" charset="utf-8"></script>
 
 
-<div>
+<div style="padding-left: 10%">
+    <span style="font-size: 24px">头像</span><br>
     <div style="display: inline-block;width: 200px;height: 200px;">
         <a id="user_img">
             <img width="200px" height="200px" src="${sessionScope.get("profile")}">
         </a>
-    </div><br>
-    <span>用户名：${user.username}</span> <a id="change_name_a">修改</a> <br>
-    <span>用户组：${group.name}</span><br>
-    <span>用户邮箱：${user.email}</span><br>
-    <span>注册时间：${user.create_at}</span><br>
-    <span>账户状态：${status}</span><br>
-    <span>空间大小：${size}</span><br>
-    <span style="color: red">注销账户</span>
-</div>
+    </div><br><br>
+    <span style="font-size: 24px">用户名：${user.username} </span>  <a style="color: red;font-size: 16px" id="change_name_a"> 修改</a> <br><br>
+    <span style="font-size: 24px">用户组：${group.name}</span><br><br>
+    <span style="font-size: 24px">用户邮箱：${user.email}</span><br><br>
+    <span style="font-size: 24px">注册时间：${user.create_at}</span><br><br>
+    <span style="font-size: 24px">账户状态：${status}</span><br><br>
+    <span style="font-size: 24px">空间大小：${size}</span><br><br>
+    <span><a style="color: red;font-size: 24px" id="deluser_a">注销账户</a></span>
 
+</div>
 
 <script>
     layui.use(['layer','jquery'],function () {
@@ -53,7 +54,72 @@
             alertUp();
         })
 
+        $("#change_name_a").click(function (){
+            changeName();
+        })
+        $("#deluser_a").click(function (){
+            deluser();
+        })
+
     })
+
+    function deluser(){
+        layer.prompt({
+            formType: 0,
+            title: '请在下方输入”YES“来确认删除账户'
+        }, function(value, index, elem){
+            $.ajax({
+                url: "${pageContext.request.contextPath}/user/del_user",
+                type: "post",
+                data:{
+                    "enter":value
+                },
+                success:function (data){
+                    if (data==="yes"){
+                        layer.msg("账户已删除")
+                    }else {
+                        layer.msg("删除失败")
+                    }
+                },
+                error:function (){
+                    layer.msg("错误")
+                }
+            })
+
+            layer.close(index);
+        });
+    }
+
+    function changeName(){
+        layer.prompt({
+            formType: 0,
+            value: "${user.username}",
+            title: '设置用户名',
+            //area: ['800px', '350px'] //自定义文本域宽高
+        }, function(value, index, elem){
+            $.ajax({
+                url: "${pageContext.request.contextPath}/user/setUserName",
+                type: "post",
+                data:{
+                    "name":value
+                },
+                success:function (data){
+                    if (data==="yes"){
+                        layer.msg("修改成功")
+                        table.reload('userListTable');
+                    }else {
+                        layer.msg("修改失败")
+                    }
+                },
+                error:function (){
+                    alert("错误")
+                }
+            })
+
+            layer.close(index);
+        });
+
+    }
 
     function alertUp(){
 

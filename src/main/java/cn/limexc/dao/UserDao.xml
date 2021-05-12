@@ -5,7 +5,7 @@
 
 <mapper namespace="cn.limexc.dao.UserDao">
     <select id="selectUserList" resultType="User">
-        select id,username,email from users limit 0,100
+        select id,username,email,create_at,status,storage from users
     </select>
 
 

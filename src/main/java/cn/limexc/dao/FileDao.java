@@ -3,8 +3,10 @@ package cn.limexc.dao;
 import cn.limexc.model.FileModel;
 import cn.limexc.model.User;
 import cn.limexc.model.UserFile;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -96,6 +98,17 @@ public interface FileDao {
     int deleteUserFile(@Param("userFile")UserFile userFile);
 
     /**
+     * 管理员删除文件
+     * @param fid 文件信息
+     * @return  影响的行数
+     */
+    @Delete("DELETE FROM file WHERE id=#{fid}")
+    int deleteFile(@Param("fid")String fid);
+
+    @Update("UPDATE user_file SET status =#{userFile.status} WHERE id=#{userFile.id}")
+    int updateUFileStatus(@Param("userFile")UserFile userFile);
+
+    /**
      * 更新、修改文件或目录名称【虚拟】
      * @param userFile 用户文件啊
      * @return
@@ -112,7 +125,20 @@ public interface FileDao {
 
     FileModel getFileInfoByUFid(@Param("ufid")String ufid);
 
+    /**
+     *
+     * @param fid
+     * @return
+     */
+    @Select("SELECT realpath,filename FROM file WHERE id=#{fid}")
+    FileModel getFileInfoByFid(@Param("fid")String fid);
 
+    /**
+     *
+     * @param uid
+     * @param key
+     * @return
+     */
     List<UserFile> selectFilesByKey(@Param("uid")Integer uid,@Param("key")String key);
 
     //用户文件大小和，用来做容量的控制

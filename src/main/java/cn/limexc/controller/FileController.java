@@ -143,7 +143,41 @@ public class FileController {
             File df = new File(file.getRealpath());
             new DownLoadFile().downloadFile(rep,df,file.getFilename());
         }
+    }
 
+    //下载文件,get/post请求均可
+    @RequestMapping(value = "/adownload*")
+    public void downFileAdmin(HttpServletRequest req, HttpServletResponse rep){
+        //用fileid做标识
+        String fid=req.getParameter("fid");
+        file=fileService.getFileInfoByFid(fid);
+        if (file==null){
+            System.out.println("错误，没有此文件");
+        }else {
+            System.out.println("即将下载的文件： "+file.getRealpath()+"  文件重命名为："+file.getFilename());
+            File df = new File(file.getRealpath());
+            new DownLoadFile().downloadFile(rep,df,file.getFilename());
+        }
+
+    }
+
+    /**
+     * 管理员删除文件  数据库+本地文件
+     * @return 返回前端的json数据
+     */
+    @RequestMapping("/del_file")
+    @ResponseBody
+    public JSON deletFile(HttpServletRequest req){
+        JSONObject json=new JSONObject();
+        String fid=req.getParameter("fid");
+        if (fileService.deleteFileAdmin(fid)){
+            json.put("del","ok");
+        }else {
+            json.put("del","err");
+        }
+
+
+        return json;
     }
 
     //头像上传
