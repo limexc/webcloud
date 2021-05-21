@@ -377,8 +377,9 @@ public class FileServiceImpl implements FileService {
         }else {
             //因为BigInteger使用科学计数法，所有使用new BigDecimal 进行转换
             temp= new BigDecimal(size);
+
             //return new BigInteger(size);
-            return new BigInteger(String.valueOf(temp));
+            return new BigInteger(temp.stripTrailingZeros().toPlainString());
         }
 
 

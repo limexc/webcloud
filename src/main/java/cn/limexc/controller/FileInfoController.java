@@ -248,50 +248,50 @@ public class FileInfoController {
  return tableData;
  */
 
-@RequestMapping(value = "/filelistbytype")
-@ResponseBody
-public Map<String, Object> userFileList(HttpSession session, HttpServletRequest request, HttpServletResponse response) {
-    User user = (User) session.getAttribute("user");
-    //分页参数
-    String pages =request.getParameter("page");
-    String limit =request.getParameter("limit");
-    //System.out.println("第"+pages+"页；每页："+limit);
-    //获取传入的文件类型参数
-    String filetype = request.getParameter("filetype")+"%";
-    System.out.println("请求查询的文件类型："+filetype);
+    @RequestMapping(value = "/filelistbytype")
+    @ResponseBody
+    public Map<String, Object> userFileList(HttpSession session, HttpServletRequest request, HttpServletResponse response) {
+        User user = (User) session.getAttribute("user");
+        //分页参数
+        String pages =request.getParameter("page");
+        String limit =request.getParameter("limit");
+        //System.out.println("第"+pages+"页；每页："+limit);
+        //获取传入的文件类型参数
+        String filetype = request.getParameter("filetype")+"%";
+        System.out.println("请求查询的文件类型："+filetype);
 
-    //通过传入的类型参数查找数据库相关字段
-    List<UserFile> ufs = fileService.listUserFileByType(user,filetype);
+        //通过传入的类型参数查找数据库相关字段
+        List<UserFile> ufs = fileService.listUserFileByType(user,filetype);
 
 
-    //返回到前端的数据
-    Map<String, Object> tableData = new HashMap<String, Object>();
-    tableData.put("code", 0);
+        //返回到前端的数据
+        Map<String, Object> tableData = new HashMap<String, Object>();
+        tableData.put("code", 0);
 
-    JSONArray data =new JSONArray();
+        JSONArray data =new JSONArray();
 
-    for (int i = 0; i < ufs.size(); i++) {
-        UserFile temp = ufs.get(i);
-        JSONObject tempj = new JSONObject();
-        tempj.put("id", temp.getId());
-        tempj.put("filesize", new ByteUnitConversion().readableFileSize(Long.parseLong(temp.getFilesize())));
-        tempj.put("vfname", temp.getVfname());
-        tempj.put("uptime", temp.getUptime());
-        tempj.put("iconsign", temp.getIconsign());
-        data.add(tempj);
+        for (int i = 0; i < ufs.size(); i++) {
+            UserFile temp = ufs.get(i);
+            JSONObject tempj = new JSONObject();
+            tempj.put("id", temp.getId());
+            tempj.put("filesize", new ByteUnitConversion().readableFileSize(Long.parseLong(temp.getFilesize())));
+            tempj.put("vfname", temp.getVfname());
+            tempj.put("uptime", temp.getUptime());
+            tempj.put("iconsign", temp.getIconsign());
+            data.add(tempj);
+        }
+
+        JSONObject msg = new JSONObject();
+
+
+        tableData.put("msg",msg);
+        tableData.put("data",data);
+
+
+        //System.out.println("更新完毕！");
+        return tableData;
+
     }
-
-    JSONObject msg = new JSONObject();
-
-
-    tableData.put("msg",msg);
-    tableData.put("data",data);
-
-
-    //System.out.println("更新完毕！");
-    return tableData;
-
-}
 
 
     //判断文件是否存在，若存在数据写入数据库
@@ -301,6 +301,14 @@ public Map<String, Object> userFileList(HttpSession session, HttpServletRequest 
 
         //HttpRequest req, HttpResponse rep, HttpSession session
         User user = (User) session.getAttribute("user");
+
+        //文件上传前重新取一下
+        Map<String,Object> storageInfoMap = fileService.userStorage(user);
+        session.setAttribute("percentage",storageInfoMap.get("percentage"));
+        session.setAttribute("isout",storageInfoMap.get("isOut"));
+
+        Boolean isOut = (Boolean) session.getAttribute("isout");
+
         //System.out.println("用户："+user.getId()+"当前http请求方式为:"+req.getMethod());
         //获取并转换单位
         String filesize = new ByteUnitConversion().readableFileSize(Long.parseLong(map.get("filesize")));
@@ -315,7 +323,8 @@ public Map<String, Object> userFileList(HttpSession session, HttpServletRequest 
 
         ResultData rd = new ResultData();
 
-        if (file!=null){
+
+        if (file!=null && !isOut){
             System.out.println("----------"+file.toString());
             //数据存在
             UserFile uf=new UserFile();
@@ -332,9 +341,13 @@ public Map<String, Object> userFileList(HttpSession session, HttpServletRequest 
             fileService.addVFile(uf);
             rd.setData("yes");
             rd.writeToResponse(rep);
-        } else {
+        } else if (file==null && !isOut) {
             System.out.println("数据不存在，准备上传");
             rd.setData("no");
+            rd.writeToResponse(rep);
+        }else {
+            //空间超出 返回err
+            rd.setData("err");
             rd.writeToResponse(rep);
         }
 

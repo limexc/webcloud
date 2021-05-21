@@ -55,11 +55,12 @@ function change(node) {
             data:JSON.stringify(jsondata),
 
             success: function (data) {
-                if (data=="yes"){
+                //alert(data)
+                if (data==="yes"){
                     $("#up_tips").html("上传成功！")
                     //秒传后重新加载窗口
                     //window.parent.location.reload();
-                }else{
+                }else if (data==="no"){
                     var formatdata = new FormData();
                     formatdata.append("md5value",e);
                     formatdata.append("currentpath",currentpath);
@@ -92,6 +93,8 @@ function change(node) {
                             alert("上传失败")
                         }
                     })
+                }else {
+                    layer.alert("您的可以空间不足，请联系管理员扩容！")
                 }
 
             },

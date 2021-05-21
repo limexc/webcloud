@@ -50,6 +50,11 @@ public class UserController {
         return "setting";
     }
 
+    @RequestMapping(value = "/msg_page")
+    public String userMsgPage(){
+        return "UserMsgList";
+    }
+
 
     @RequestMapping(value = "/main")
     public String index(HttpSession session){
@@ -99,6 +104,7 @@ public class UserController {
         session.setAttribute("user",user);
         StringBuffer html=new StringBuffer();
         html.append("<dd><a href=\"/CloudWeb/user/set_page\" target=\"info_body\">基本资料</a></dd>");
+        html.append("<dd><a href=\"/CloudWeb/user/msg_page\" target=\"info_body\">工单</a></dd>");
         html.append("<dd><a href=\"/CloudWeb/user/repwdpage\" target=\"info_body\">安全设置</a></dd>");
         System.out.println("来加载菜单等信息了");
         //更新一下存储空间信息

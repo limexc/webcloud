@@ -89,7 +89,7 @@ public class AccountController {
                 //判断用户状态是否为封禁
                 if (user.getStatus().equals(1)){
                     request.setAttribute("ststus", "err");
-                    return "forward:/login.jsp";
+                    return "statusTips";
                 }
 
                 //将完整的用户信息重新存入
@@ -134,6 +134,8 @@ public class AccountController {
                 session.setAttribute("percentage",storageInfoMap.get("percentage"));
                 session.setAttribute("isout",storageInfoMap.get("isOut"));
                 //在前端判断isout如果超出的，禁用上传功能，在后端--用户登陆系统的时候需要判断，并禁止上传。
+
+
 
                 for (Map.Entry<String, Object> map : storageInfoMap.entrySet()) {
 

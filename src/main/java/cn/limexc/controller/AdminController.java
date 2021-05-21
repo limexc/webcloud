@@ -2,23 +2,26 @@ package cn.limexc.controller;
 
 import cn.limexc.model.FileModel;
 import cn.limexc.model.Group;
+import cn.limexc.model.Massage;
 import cn.limexc.model.User;
 import cn.limexc.service.FileService;
 import cn.limexc.service.GroupService;
+import cn.limexc.service.MsgService;
 import cn.limexc.service.UserService;
-import cn.limexc.util.ByteUnitConversion;
-import cn.limexc.util.DiskSize;
-import cn.limexc.util.ResultData;
+import cn.limexc.util.*;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +42,9 @@ public class AdminController {
     private FileService fileService;
     @Resource
     private GroupService groupService;
+    @Resource
+    private MsgService msgService;
+
     @Value("${file.path}")
     private String filePath;
 
@@ -71,13 +77,26 @@ public class AdminController {
     }
 
     /**
-     * 用于转跳 系统其他设置 页面
+     * 用于转跳 用户请求信息 页面
      * @return othersetpage
      */
-    @RequestMapping(value = "/othersetpage")
-    public  String otherSetting(){
-        return "otherset";
+    @RequestMapping(value = "/massagepage")
+    public  String otherSetting(HttpServletResponse rep,HttpServletRequest req){
+        String type = req.getParameter("type");
+        rep.setCharacterEncoding("UTF-8");
+        req.setAttribute("type", type);
+        return "massage";
     }
+
+    /**
+
+     */
+    @RequestMapping(value = "/sendmailpage")
+    public  String sendmailpage(HttpServletResponse rep,HttpServletRequest req){
+        return "sendmail";
+    }
+
+
 
     /**
      * 系统信息展示数据
@@ -193,11 +212,12 @@ public class AdminController {
         ResultData rd = new ResultData();
         String uid=req.getParameter("userid");
         //String status=req.getParameter("status");
-
+        String mail = userService.userinfo(Integer.parseInt(uid)).getEmail();
         Boolean isOK = userService.changeUserStatus(Integer.parseInt(uid));
 
         if (isOK){
             rd.setData("yes");
+            new SendMailMsg().mailMsg(mail);
         }else {
             rd.setData("no");
         }
@@ -216,9 +236,11 @@ public class AdminController {
         //String status=req.getParameter("status");
 
         Boolean isOK = groupService.changeUserGroup(Integer.parseInt(uid));
+        String mail = userService.userinfo(Integer.parseInt(uid)).getEmail();
 
         if (isOK){
             rd.setData("yes");
+            new SendMailMsg().mailMsg(mail);
         }else {
             rd.setData("no");
         }
@@ -236,16 +258,146 @@ public class AdminController {
         ResultData rd = new ResultData();
         String uid=req.getParameter("userid");
         String storage=req.getParameter("storage");
+        String mail = userService.userinfo(Integer.parseInt(uid)).getEmail();
 
         Boolean isOK = userService.changeUserStorage(storage,Integer.parseInt(uid));
 
         if (isOK){
             rd.setData("yes");
+            new SendMailMsg().mailMsg(mail);
         }else {
             rd.setData("no");
         }
 
         rd.writeToResponse(rep);
     }
+
+    /**
+     * 用户请求信息列表
+     * @return
+     */
+    @RequestMapping(value = "/system/msglist")
+    @ResponseBody
+    public  Map<String,Object> getMsgList(HttpServletRequest request) {
+        String type = request.getParameter("type");
+        System.out.println(type);
+        Map<String, Object> msgData = new HashMap<String, Object>();
+        msgData.put("code", 0);
+        msgData.put("msg","");
+        List<Massage> msgs = msgService.listMsgByType(Integer.parseInt(type));
+
+        JSONArray data =new JSONArray();
+        for (Massage msg:msgs) {
+            JSONObject jsonMsg = new JSONObject();
+
+            jsonMsg.put("id", msg.getId());
+            //通过uid获得用户名
+            jsonMsg.put("username", userService.userallinfo(msg.getUid()).getUsername());
+            jsonMsg.put("status", msg.getStatus());
+            jsonMsg.put("title", msg.getTitle());
+            jsonMsg.put("create_time", msg.getCreate_time());
+            jsonMsg.put("info", msg.getInfo());
+            jsonMsg.put("size", msg.getSize());
+            jsonMsg.put("replay", msg.getReply());
+
+
+            data.add(jsonMsg);
+        }
+
+
+        msgData.put("data",data);
+        return msgData;
+    }
+
+    /**
+     * 上面是工单的列表
+     * 下面做工单的功能
+     * 需要传入工单的id，用来确定某个工单
+     */
+    @RequestMapping("/system/set_msg_status")
+    @ResponseBody
+    public void doMsg(@RequestBody Map jsmp,HttpServletRequest req,HttpServletResponse rep){
+
+        Massage msg = new Massage();
+        msg.setId((Integer) jsmp.get("id"));
+        msg = msgService.getMsgAdmin(msg.getId());
+        msg.setStatus((Integer) jsmp.get("status"));
+        msg.setReply((String) jsmp.get("rep"));
+
+        if (msg.getSize()!=null && msg.getStatus()!=2){
+            userService.changeUserStorage(msg.getSize(), msg.getUid());
+
+            String mail = userService.userinfo(msg.getUid()).getEmail();
+            new SendMailMsg().mailMsg(mail);
+        }
+
+        System.out.printf(msg.toString());
+        ResultData rd = new ResultData();
+        if (msgService.upMsg(msg)){
+            rd.setData("ok");
+        }else {
+            rd.setData("err");
+        }
+        rd.writeToResponse(rep);
+    }
+
+    @RequestMapping(value = "/system/getSelectEmail",method= RequestMethod.POST)
+    @ResponseBody
+    public void getSelectEmail(HttpServletResponse response){
+        //获取系统中全部用户的用户名和邮箱
+        List<User> users = userService.listUser();
+
+        StringBuffer html=new StringBuffer();
+        html.append("<option value=\"\">请选择</option>");
+        html.append("\n");
+        int i= 0;
+        //通过循环将数据转换
+        for (User user : users){
+            if (i==0){
+               html.append("<option value=\""+user.getEmail()+"\" selected=\"\">"+user.getUsername() +"</option>");
+               html.append("\n");
+            }else {
+                html.append("<option value=\""+user.getEmail()+"+\">"+user.getUsername() +"</option>");
+                html.append("\n");
+            }
+            i++;
+        }
+
+        try {
+            response.setCharacterEncoding("UTF-8");
+            response.setHeader("contentType", "text/html; charset=utf-8");
+            response.getWriter().write(String.valueOf(html));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @RequestMapping("/system/sendmail")
+    public void sendMailAdmin( HttpServletResponse rep,@RequestBody Map jsmp){
+
+        String email = (String) jsmp.get("email_add");
+        String title = (String) jsmp.get("title");
+
+        StringBuffer text=new StringBuffer();
+        text.append("<h3>用户："+email+" 您好</h3>");
+        text.append((String) jsmp.get("info"));
+        text.append("<p>此邮件由系统自动发送，请勿回复此邮件。</p></br></br>" +
+                "<p style=\"disable:block; left:60px;\">咸闲贤鱼</p></br>"+
+                "<p>"+ TimeUtils.getUtils().getForMatTime()+"</p>"
+        );
+        MailUtils mail = new MailUtils(email,title,text.toString());
+
+        //System.out.printf(msg.toString());
+        ResultData rd = new ResultData();
+
+        if (mail.sendMail()){
+            rd.setData("ok");
+        }else {
+            rd.setData("err");
+        }
+        rd.writeToResponse(rep);
+    }
+
 
 }

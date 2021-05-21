@@ -53,11 +53,22 @@
                 <li class="layui-nav-item">
                     <a href="${pageContext.request.contextPath}/admin/userlistpage" target="info_body">用户管理</a>
                 </li>
-                <!--
+
                 <li class="layui-nav-item">
-                    <a href="${pageContext.request.contextPath}/admin/othersetpage" target="info_body">其他管理</a>
+                    <a href="javascript:;">工单请求</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="${pageContext.request.contextPath}/admin/massagepage?type=0" target="info_body">未处理工单</a></dd>
+                        <dd><a href="${pageContext.request.contextPath}/admin/massagepage?type=3" target="info_body">正在处理工单</a></dd>
+                        <dd><a href="${pageContext.request.contextPath}/admin/massagepage?type=2" target="info_body">已驳回工单</a></dd>
+                        <dd><a href="${pageContext.request.contextPath}/admin/massagepage?type=1" target="info_body">已完成工单</a></dd>
+                        <!--<dd><a href="">跳转项</a></dd>-->
+                    </dl>
                 </li>
-                -->
+
+                <li class="layui-nav-item">
+                    <a href="${pageContext.request.contextPath}/admin/sendmailpage" target="info_body">发送邮件</a>
+                </li>
+
             </ul>
         </div>
     </div>

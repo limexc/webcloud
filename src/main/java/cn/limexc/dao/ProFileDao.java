@@ -4,6 +4,7 @@ import cn.limexc.model.ProFile;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.springframework.stereotype.Repository;
 
 /**
  * @author zhiyuanxzy@gmail.com
@@ -11,6 +12,7 @@ import org.apache.ibatis.annotations.Select;
  * @create 2021-04-21 23:36
  * @since jdk1.8.0
  */
+@Repository
 public interface ProFileDao {
     //向数据库插入数据
     @Insert("INSERT INTO `profile`(name,path,url) VALUES (#{name},#{path},#{url})")

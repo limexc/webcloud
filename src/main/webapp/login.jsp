@@ -21,7 +21,7 @@
 
 	<!--登陆对话框窗体-->
     <div class="login">
-        <h1>WEB CLOUD</h1>
+        <h1>网 盘</h1>
 		<div class="login_main">
 			<form name="loginform" method="post" action="${pageContext.request.contextPath}/system/login">
                 <span class="login_tips">邮箱</span><br />

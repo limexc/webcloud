@@ -57,6 +57,7 @@
         $("#change_name_a").click(function (){
             changeName();
         })
+
         $("#deluser_a").click(function (){
             deluser();
         })
