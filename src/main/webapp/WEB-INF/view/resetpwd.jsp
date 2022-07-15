@@ -44,7 +44,7 @@
             <div class="layui-input-inline">
                 <input type="password" name="pass1" lay-verify="pass" placeholder="请输入密码" autocomplete="off" class="layui-input">
             </div>
-            <div class="layui-form-mid layui-word-aux">请填写6到12位密码</div>
+            <div class="layui-form-mid layui-word-aux">请填写6到32位密码</div>
         </div>
 
         <div class="layui-form-item">
@@ -72,8 +72,8 @@
             //自定义验证规则
             form.verify({
                 pass: [
-                    /^[\S]{6,12}$/
-                    ,'密码必须6到12位，且不能出现空格'
+                    /^[\S]{6,32}$/
+                    ,'密码必须6到32位，且不能出现空格'
                 ]
 
             });

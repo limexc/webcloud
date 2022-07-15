@@ -113,7 +113,7 @@
                     }
                 },
                 error:function (){
-                    alert("错误")
+                    //alert("错误")
                 }
             })
 
@@ -131,7 +131,7 @@
             shade: false,
             maxmin: false, //开启最大化最小化按钮
             area: ['400px', '400px'],
-            content: 'http://localhost:8080${pageContext.request.contextPath}/static/pages/upimage.html'
+            content: 'http://localhost:8081${pageContext.request.contextPath}/static/pages/upimage.html'
         });
 
     }

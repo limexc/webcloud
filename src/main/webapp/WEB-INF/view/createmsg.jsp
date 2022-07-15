@@ -53,7 +53,7 @@
         </div>
 
         <div class="layui-form-item">
-            <label class="layui-form-label">当前时间：<span onload="getCurrentTime()"></span></label>
+            <!--<label class="layui-form-label">当前时间：<span onload="getCurrentTime()"></span></label>-->
         </div>
 
 

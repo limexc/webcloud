@@ -112,7 +112,7 @@
 
             //发送邮件
             //将响应交给后台servlet
-            $.post("http://localhost:8080/CloudWeb/system/sendmail",{
+            $.post("http://localhost:8081/CloudWeb/system/sendmail",{
                 email:useremail.val()
             });
             console.log("请求已发送")

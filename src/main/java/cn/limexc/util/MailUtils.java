@@ -15,7 +15,7 @@ public class MailUtils {
     static String postname="咸闲贤鱼";
     static String host="smtp.mxhichina.com";
     static String sendUser="notice@limexc.cn";
-    static String password="######你的密码######";
+    static String password="**********";
 
 
     public MailUtils(String toMail, String subject, String text) {
@@ -67,6 +67,7 @@ public class MailUtils {
         // 获取默认session对象
         // 构建授权信息，用于进行SMTP进行身份验证
         Session session = Session.getDefaultInstance(sysInfo,new Authenticator(){
+            @Override
             public PasswordAuthentication getPasswordAuthentication()
             {//发件人邮件用户名、授权码
                 return new PasswordAuthentication(sendUser, password);
@@ -82,14 +83,14 @@ public class MailUtils {
             MimeMessage message = new MimeMessage(getSysInfo());
             nick=javax.mail.internet.MimeUtility.encodeText(postname);
             // Set From: 头部头字段
-            //message.setFrom(new InternetAddress(sendUser));
+            // message.setFrom(new InternetAddress(sendUser));
             message.setFrom(new InternetAddress(nick+" <"+sendUser+">"));
             // Set To: 头部头字段
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(toMail));
             // Set Subject: 头部头字段
             message.setSubject(subject);
             // 设置消息体
-            //message.setText(text);
+            // message.setText(text);
             // 设置 HTML消息
             message.setContent(text,"text/html;charset=UTF-8");
             // 发送消息

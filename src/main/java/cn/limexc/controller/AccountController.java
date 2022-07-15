@@ -5,9 +5,13 @@ import cn.limexc.model.User;
 import cn.limexc.service.FileService;
 import cn.limexc.service.GroupService;
 import cn.limexc.service.UserService;
-import cn.limexc.util.*;
+import cn.limexc.util.ByteUnitConversion;
+import cn.limexc.util.MailUtils;
+import cn.limexc.util.ResultData;
+import cn.limexc.util.StrMd5Utils;
+import cn.limexc.util.TimeUtils;
+import cn.limexc.util.VeCodeUtils;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -55,7 +59,7 @@ public class AccountController {
     }
 
     @RequestMapping(value = "/system/login")
-    public String userlogin(HttpServletRequest request, Model model, HttpSession session,HttpServletResponse rep){
+    public String userlogin(HttpServletRequest req, HttpSession session,HttpServletResponse rep){
         String email;
         String password;
         User user = null;
@@ -64,8 +68,8 @@ public class AccountController {
         //req.setCharacterEncoding("UTF-8");
         //resp.setContentType("text/html;charset=UTF-8");
 
-        email = request.getParameter("account");
-        password = request.getParameter("password");
+        email = req.getParameter("account");
+        password = req.getParameter("password");
 
         //正则表达式判断是否为邮箱  --- 可以抽取放在util中
         String mailcheck = "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
@@ -88,7 +92,7 @@ public class AccountController {
 
                 //判断用户状态是否为封禁
                 if (user.getStatus().equals(1)){
-                    request.setAttribute("ststus", "err");
+                    req.setAttribute("ststus", "err");
                     return "statusTips";
                 }
 
@@ -149,12 +153,18 @@ public class AccountController {
 
                 return "redirect:/user/main";
             }
-            return "forward:/login.jsp";
-        }else {
-            //当时为啥要加个model？等后期检查一下
-            model.addAttribute("msg","登录失败，请检查用户名密码");
-            return "forward:/login.jsp";
         }
+        //当时为啥要加个model？等后期检查一下
+        //model.addAttribute("msg", "登录失败，请检查用户名密码");
+
+        rep.setCharacterEncoding("UTF-8");
+        if (password != null){
+            req.setAttribute("msg", "err");
+        }
+
+
+        return "forward:/login.jsp";
+
 
     }
 

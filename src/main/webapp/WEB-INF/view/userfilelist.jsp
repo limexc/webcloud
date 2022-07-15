@@ -122,6 +122,10 @@
                     ,last: false //不显示尾页
                 },
                 */
+                initSort: {
+                    field: 'filesize' //排序字段，对应 cols 设定的各字段名
+                    ,type: 'asc' //排序方式  asc: 升序、desc: 降序、null: 默认排序
+                },
                 title: true   //表头
                 ,toolbar: true //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
                 ,cols: [[
@@ -287,7 +291,12 @@
                                 "currentpath" : currentpath
                             }),
                             success : function(data,textStatus,xhr) {
-                                if(xhr.status === 200) {
+                                if(data==="err"){
+                                    layer.msg('已存在相同文件名', {
+                                        icon: 2,//状态图标
+                                        Time: 2000//展示时间为4s
+                                    });
+                                }else if(xhr.status === 200) {
                                     layer.msg('重命名成功', {
                                         icon: 1,//状态图标
                                         Time: 4000//展示时间为4s
@@ -314,7 +323,7 @@
 
 
                 }else if (obj.event === "fileclick") {
-                    alert("你点击了："+objdata.vfname)
+                    //alert("你点击了："+objdata.vfname)
                     console.log(obj.data)
                     if (objdata.filesize === "-") {
                         table.reload('fileListTable',

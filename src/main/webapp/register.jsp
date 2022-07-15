@@ -107,7 +107,7 @@
             if (isOkReg_Email+isOkReg_Name+isOkReg_passwd+isOkReg_regcode===4){
 
                 $.ajax({
-                    url:"http://localhost:8080/CloudWeb/system/reg/updata",
+                    url:"http://localhost:8081/CloudWeb/system/reg/updata",
                     type:"post",
                     async:true,
                     cache:false,
@@ -123,7 +123,7 @@
 
                             setTimeout(reurl,1000*3);
                             function reurl(){
-                                window.location.replace("http://localhost:8080/CloudWeb/");
+                                window.location.replace("http://localhost:8081/CloudWeb/");
                             }
 
                         }else if (data==="false"){
@@ -152,7 +152,7 @@
             $("#veco_tips").html("验证码有误");
         }else{
             $.ajax({
-                url:"http://localhost:8080/CloudWeb/system/reg/service",
+                url:"http://localhost:8081/CloudWeb/system/reg/service",
                 type:"post",
                 async:true,
                 cache:false,
@@ -182,8 +182,8 @@
             $("#pwd_tips").html("登录密码不能为空");
             isOkReg_passwd =false;
         }
-        if(value.length<3){
-            $("#pwd_tips").html("登录密码长度必须大于3");
+        if(value.length<6){
+            $("#pwd_tips").html("登录密码长度必须大于6");
             isOkReg_passwd =false;
         }
 
@@ -197,8 +197,8 @@
         if(value===""){
             $("#pwd_tips").html("登录确认密码不能为空");
             isOkReg_passwd =false;
-        }else if(value.length<3){
-            $("#pwd_tips").html("登录确认密码长度必须大于3");
+        }else if(value.length<6){
+            $("#pwd_tips").html("登录确认密码长度必须大于6");
             isOkReg_passwd =false;
         }else if(value!==$("#passwd1").val()){
             $("#pwd_tips").html("两次密码不同");
@@ -228,7 +228,7 @@
         }else {
             alert("发送ajax校验username")
             $.ajax({
-                url:"http://localhost:8080/CloudWeb/system/reg/service",
+                url:"http://localhost:8081/CloudWeb/system/reg/service",
                 data:{loginName:username},
                 async:true,
                 cache:false,
@@ -262,7 +262,7 @@
         }else {
             alert("发送ajax校验Email")
             $.ajax({
-                url:"http://localhost:8080/CloudWeb/system/reg/service",
+                url:"http://localhost:8081/CloudWeb/system/reg/service",
                 data:{email:value},
                 async:true,
                 cache:false,

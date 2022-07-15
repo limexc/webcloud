@@ -49,7 +49,7 @@ function change(node) {
         $.ajax({
 
             type:"post",
-            url:"http://localhost:8080/CloudWeb/info/getmd5",
+            url:"http://localhost:8081/CloudWeb/info/getmd5",
             dataType:"json",
             contentType: 'application/json;charset=UTF-8',
             data:JSON.stringify(jsondata),
@@ -68,7 +68,7 @@ function change(node) {
 
                     $.ajax({
                         method:"post",
-                        url: "http://localhost:8080/CloudWeb/file/upload",
+                        url: "http://localhost:8081/CloudWeb/file/upload",
                         enctype: "multipart/form-data",
                         //不处理数据
                         contentType:false,

@@ -8,7 +8,12 @@ import cn.limexc.service.FileService;
 import cn.limexc.service.GroupService;
 import cn.limexc.service.MsgService;
 import cn.limexc.service.UserService;
-import cn.limexc.util.*;
+import cn.limexc.util.ByteUnitConversion;
+import cn.limexc.util.DiskSize;
+import cn.limexc.util.MailUtils;
+import cn.limexc.util.ResultData;
+import cn.limexc.util.SendMailMsg;
+import cn.limexc.util.TimeUtils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -324,7 +329,7 @@ public class AdminController {
         msg.setStatus((Integer) jsmp.get("status"));
         msg.setReply((String) jsmp.get("rep"));
 
-        if (msg.getSize()!=null && msg.getStatus()!=2){
+        if (msg.getSize()!=null && !msg.getSize().equals("") && msg.getStatus()!=2){
             userService.changeUserStorage(msg.getSize(), msg.getUid());
 
             String mail = userService.userinfo(msg.getUid()).getEmail();

@@ -4,7 +4,11 @@ import cn.limexc.model.FileModel;
 import cn.limexc.model.User;
 import cn.limexc.model.UserFile;
 import cn.limexc.service.FileService;
-import cn.limexc.util.*;
+import cn.limexc.util.ByteUnitConversion;
+import cn.limexc.util.GetIcon;
+import cn.limexc.util.PathAnalysis;
+import cn.limexc.util.ResultData;
+import cn.limexc.util.TimeUtils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.stereotype.Controller;
@@ -375,14 +379,19 @@ public class FileInfoController {
 
     @RequestMapping(value = "/rename",method = RequestMethod.POST)
     @ResponseBody
-    public void rename(HttpSession session,@RequestBody Map<String, String> map){
+    public void rename(HttpSession session,@RequestBody Map<String, String> map,HttpServletResponse rep){
         User user = (User) session.getAttribute("user");
 
         UserFile uf = new UserFile();
         uf.setId(Integer.parseInt(map.get("id")));
         uf.setVfname(map.get("rename"));
         System.out.println(uf.getId()+"  "+uf.getVfname());
-        fileService.reName(uf,user);
+        int code = fileService.reName(uf,user);
+        if (code==9){
+            ResultData rd = new ResultData();
+            rd.setData("err");
+            rd.writeToResponse(rep);
+        }
     }
 
     /**

@@ -18,6 +18,8 @@ public interface FileDao {
      */
     List<FileModel> selectAllFileList();
 
+    @Select("SELECT vfname FROM user_file WHERE uid=#{uid}")
+    List<String> selectFileName(@Param("uid")Integer uid);
 
     /**
      * 获取文件列表，用于查询用户的文件列表
@@ -146,4 +148,6 @@ public interface FileDao {
             "FROM  (user_file LEFT JOIN users ON users.id=user_file.uid)LEFT JOIN file ON file.id=user_file.fid " +
             "WHERE users.id = #{id}")
     String sumUserFileSize(@Param("id") Integer id);
+
+
 }

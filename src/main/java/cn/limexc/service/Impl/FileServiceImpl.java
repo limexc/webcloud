@@ -20,7 +20,11 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class FileServiceImpl implements FileService {
@@ -35,6 +39,11 @@ public class FileServiceImpl implements FileService {
     @Override
     public List<FileModel> listAllFile() {
         return fileDao.selectAllFileList();
+    }
+
+    @Override
+    public List<String> getVfname(Integer uid) {
+        return fileDao.selectFileName(uid);
     }
 
     @Override
@@ -85,6 +94,14 @@ public class FileServiceImpl implements FileService {
         List<UserFile> ufs = fileDao.selectFileList(user);
         UserFile userFile = fileDao.selectUserFileById(uf.getId());
         String vpath = userFile.getVpath();
+        List<String> vnames = fileDao.selectFileName(user.getId());
+
+        for (String vname:vnames){
+            if (vname.equals(userFile.getVfname())){
+                return 9;
+            }
+        }
+
         //判断传入的userFile是目录还是文件，文件的话都有 fid
         if (userFile.getFid()!=null){
             //文件的话直接改名，同时也要将路径最后的文件名进行修改

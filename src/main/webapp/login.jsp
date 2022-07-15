@@ -8,7 +8,16 @@
 	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/default.css" />
     <script type="application/javascript" src="${pageContext.request.contextPath}/static/js/jquery-3.6.0.js"></script>
 
-	
+    <!--Layui框架-->
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/layui/css/layui.css"  media="all">
+    <script src="${pageContext.request.contextPath}/static/layui/layui.js" charset="utf-8"></script>
+
+    <!--css以及js文件引入  end-->
+
+
 </head>
 <body>
 
@@ -36,6 +45,19 @@
 
 		</div>
     </div>
+<script>
+    let loginmsg = "${requestScope.get("msg")}";
+
+    window.onload = function (){
+        if (loginmsg === "err"){
+            layui.use("layer",function() {
+                var layer = layui.layer;
+                layer.msg("用户名或密码错误");
+            })
+        }
+    }
+
+</script>
 
 
     <div id="background_wrap"></div>

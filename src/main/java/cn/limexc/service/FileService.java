@@ -19,6 +19,8 @@ public interface FileService {
     //通过筛选列出用户文件
     List<UserFile> listUserFileByType(User user,String type);
 
+    List<String> getVfname(Integer uid);
+
     //修改虚拟文件名
     int reName(UserFile userFile,User user);
 
